@@ -53,7 +53,7 @@ const Player = React.createClass({
                 <LeftNav ref="leftNav" docked={true} menuItems={menuItems} />
                 <header>
                     <div onClick={this._triggerLeftNav}>=</div>
-                    MIKESMAGS
+                    MIKESMAGS!!!
                 </header>
             </article>
         )
