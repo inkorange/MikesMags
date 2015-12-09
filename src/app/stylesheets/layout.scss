@@ -1,0 +1,18 @@
+body, html {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    background: rgb(240,240,240);
+    //box-shadow: 0 -200px 400px rgba(0,0,0,.1) inset;
+}
+
+header {
+    padding: 10px;
+    background: white;
+    text-align: center;
+    img {
+        height: 60px;
+    }
+
+}

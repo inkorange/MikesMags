@@ -1,0 +1,34 @@
+{
+  "name": "datastore-subscription-handler",
+  "version": "0.0.1",
+  "description": "TruMedia Networks Prototype",
+  "scripts": {
+    "start": "gulp"
+  },
+  "devDependencies": {
+    "babelify": "^6.1.2",
+    "browser-sync": "^1.8.1",
+    "browserify": "^7.0.3",
+    "gulp": "^3.9.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-notify": "^2.1.0",
+    "gulp-sass": "^2.1.0",
+    "gulp-util": "^3.0.1",
+    "path": "^0.12.7",
+    "pretty-hrtime": "^0.2.2",
+    "require-dir": "^0.1.0",
+    "vinyl-source-stream": "^1.0.0",
+    "watchify": "^2.2.1",
+    "react-d3": "^0.4.0"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "gulp-concat": "^2.6.0",
+    "gulp-path": "^2.0.2",
+    "material-ui": "^0.13.0",
+    "http-rewrite-middleware": "^0.1.6",
+    "react": "^0.14.0",
+    "react-addons-update": "^0.14.0",
+    "react-dom": "^0.14.0"
+  }
+}
