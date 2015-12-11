@@ -8,11 +8,54 @@ body, html {
 }
 
 header {
-    padding: 10px;
+    padding: 10px 0 0 0;
     background: white;
-    text-align: center;
+    box-shadow: 0 0 5px rgba(0,0,0,.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 2;
     img {
         height: 60px;
+        margin-left: calc(50% - 100px);
     }
+    nav {
+        background: rgb(245,245,245);
+        margin-top: 20px;
+        padding: 0;
+        z-index: 1;
+        text-align:center;
+        > div {
+            padding: 0 0 20px 0;
+            div {
+                text-align: left;
+            }
+        }
+    }
+}
 
+.magazineContent {
+    padding-top: 180px;
+    @media only screen and (max-width: 600px) {
+        padding-top: 210px;
+    }
+    max-width: 1000px;
+    margin: 10px auto;
+    z-index: 1;
+    .magCard {
+        display: inline-block;
+        width: calc(20% - 20px);
+        @media only screen and (max-width: 1000px) {
+            width: calc(25% - 20px);
+        }
+        @media only screen and (max-width: 800px) {
+            width: calc(33% - 20px);
+        }
+        @media only screen and (max-width: 600px) {
+            width: calc(50% - 20px);
+        }
+        margin: 10px;
+    }
 }

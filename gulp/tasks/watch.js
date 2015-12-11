@@ -10,5 +10,6 @@ gulp.task('watch', ['setWatch', 'build'], function() {
   gulp.watch(config.markup.src, ['markup']);
   gulp.watch('./src/app/stylesheets/**/*.scss', ['sass']);
   gulp.watch('./src/**/*.php', ['api']);
-  gulp.watch('./src/app/images/**/*.*', ['assets']);
+  gulp.watch('./src/app/images/**', ['assets']);
+  gulp.watch('./src/app/.htaccess', ['htaccess']);
 });

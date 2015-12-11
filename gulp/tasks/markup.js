@@ -4,6 +4,7 @@ var vendorconfig = require('../config').vendor;
 var modelconfig = require('../config').model;
 var assetsconfig = require('../config').assets;
 var apiconfig = require('../config').api;
+var htaccess = require('../config').htaccess;
 
 gulp.task('markup', function() {
   return gulp.src(markupconfig.src)
@@ -35,3 +36,8 @@ gulp.task('assets', function() {
       .pipe(gulp.dest(assetsconfig.dest));
 });
 
+gulp.task('htaccess', function() {
+  console.log('htaccess', htaccess.src, htaccess.dest);
+  return gulp.src(htaccess.src + '/.htaccess')
+      .pipe(gulp.dest(htaccess.dest));
+});

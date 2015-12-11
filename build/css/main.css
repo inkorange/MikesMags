@@ -410,11 +410,71 @@ body, html {
 }
 
 header {
-  padding: 10px;
+  padding: 10px 0 0 0;
   background: white;
-  text-align: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 2;
 }
 
 header img {
   height: 60px;
+  margin-left: calc(50% - 100px);
+}
+
+header nav {
+  background: whitesmoke;
+  margin-top: 20px;
+  padding: 0;
+  z-index: 1;
+  text-align: center;
+}
+
+header nav > div {
+  padding: 0 0 20px 0;
+}
+
+header nav > div div {
+  text-align: left;
+}
+
+.magazineContent {
+  padding-top: 180px;
+  max-width: 1000px;
+  margin: 10px auto;
+  z-index: 1;
+}
+
+@media only screen and (max-width: 600px) {
+  .magazineContent {
+    padding-top: 210px;
+  }
+}
+
+.magazineContent .magCard {
+  display: inline-block;
+  width: calc(20% - 20px);
+  margin: 10px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .magazineContent .magCard {
+    width: calc(25% - 20px);
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .magazineContent .magCard {
+    width: calc(33% - 20px);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .magazineContent .magCard {
+    width: calc(50% - 20px);
+  }
 }

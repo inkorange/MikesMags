@@ -32,6 +32,10 @@ module.exports = {
     src: src + "/app/vendor/**",
         dest: dest + '/js'
   },
+    htaccess: {
+        src: src + "/app/**",
+        dest: dest + '/'
+    },
   browserify: {
     // Enable source maps
     debug: false,

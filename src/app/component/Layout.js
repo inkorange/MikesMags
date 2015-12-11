@@ -1,22 +1,23 @@
 import React from 'react'
 import { render } from 'react-dom'
+import { Router, Route, Link, History } from 'react-router'
 
 // elements
-const LeftNav = require('material-ui/lib/left-nav');
+const TextField = require('material-ui/lib/text-field');
+const SelectField = require('material-ui/lib/select-field');
 
-// model
-import Store from '../models/Store';
-
-const Player = React.createClass({
+const Layout = React.createClass({
     contextTypes: {
         location: React.PropTypes.object
     },
 
+    mixins: [ History ],
+
     getInitialState: function() {
         return {
-            magdata: {}
-        }
-    },    
+
+        };
+    },
     
     getDefaultProps: function () {
         return { 
@@ -24,41 +25,45 @@ const Player = React.createClass({
         };
     },
 
-    _getAppData: function() {
-        $.when(
-            $.ajax('api/getMags.php')
-        ).done(function(data) {
-            Store.setStore('magdata', data, {persist: true});
-        });
-    },
-
     componentDidMount: function() {
-        this._getAppData();
     },
 
-    _triggerLeftNav: function() {
-        this.refs.leftNav.toggle();
-    },
-    
     render() {
-
         var menuItems = [
             { route: 'get-started', text: 'Get Started' },
             { route: 'customization', text: 'Customization' },
             { route: 'components', text: 'Components' }
         ];
 
+        let magItems = [
+            { payload: '0', text: 'All Magazines' },
+            { payload: '1', text: 'Life' },
+            { payload: '2', text: 'Woman\'s Day' },
+            { payload: '3', text: 'Playboy' }
+        ];
         return (
             <article className="MainLayout">
-                <LeftNav ref="leftNav" docked={true} menuItems={menuItems} />
                 <header>
-                    <div onClick={this._triggerLeftNav}>=</div>
-                    MIKESMAGS!!!
+                    <img src="images/mikesmagslogo.svg" />
+                    <nav>
+                        <div>
+                        <TextField
+                            hintText="Narrow Your Search..."
+                            defaultValue={this.state.search}
+                            onChange={this._updateSearch}
+                            style={{marginRight: '20px'}}
+                        />
+                        <SelectField
+                            style={{position: 'relative', top: '18px'}}
+                            menuItems={magItems} />
+                        </div>
+                    </nav>
                 </header>
+                {this.props.children}
             </article>
         )
     }
  
 });
 
-module.exports = Player;
+module.exports = Layout;
