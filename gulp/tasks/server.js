@@ -3,6 +3,7 @@ const express = require('express')
 const path = require('path')
 const port = process.env.PORT || 3003
 const app = express()
+//const php = require("php");
 
 var options = require('../config').server;
 
@@ -11,6 +12,8 @@ gulp.task('webserver', function() {
     app.use(express.static(options.dest));
     app.use(options.css.root, express.static(options.css.dest));
     app.use(options.js.root, express.static(options.js.dest));
+
+    //app.use("/", php.cgi('/api/*.php'));
 
     // handle every other route with index.html, which will contain
     // a script tag to your application's JavaScript file(s).
@@ -21,11 +24,12 @@ gulp.task('webserver', function() {
       response.sendFile(path.resolve(options.dest, options.css.root, file + ".css"))
     })
 
-    // passing through api/php requests
+    /*
     app.get('/api/*.php', function (request, response){
         var file = request.params.file
         response.sendFile(path.resolve(options.dest, options.api.root, file + ".php"))
     })
+    */
 
     // passing through JS directory requests
     app.get('*:file.js', function (request, response){

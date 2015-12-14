@@ -1,5 +1,6 @@
 [
 <?php
+    //header('Access-Control-Allow-Origin: *');
 	require "db_initialize.php";
     $sql = "SELECT * FROM magazines ORDER BY date desc";
     $cnt = 0;

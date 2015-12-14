@@ -3,20 +3,14 @@ import { render } from 'react-dom'
 import { Router, Route, Link } from 'react-router'
 
 // elements
-const LeftNav = require('material-ui/lib/left-nav');
-const TextField = require('material-ui/lib/text-field');
-const SelectField = require('material-ui/lib/select-field');
-
 const Card = require('material-ui/lib/card/card');
-const CardActions = require('material-ui/lib/card/card-actions');
-const CardExpandable = require('material-ui/lib/card/card-expandable');
-const CardHeader = require('material-ui/lib/card/card-header');
 const CardMedia = require('material-ui/lib/card/card-media');
 const CardText = require('material-ui/lib/card/card-text');
 const CardTitle = require('material-ui/lib/card/card-title');
 
 // model
 import Store from '../models/Store';
+import Global from '../models/Global';
 
 const Magazines = React.createClass({
     contextTypes: {
@@ -42,8 +36,9 @@ const Magazines = React.createClass({
 
     _getAppData: function() {
         var _this = this;
+        var apiURL = Global.apiEndpoint;
         $.when(
-            $.ajax('api/getMags.php')
+            $.ajax(apiURL + 'getMags.php')
         ).done(function(data) {
                 Store.setStore('magdata', JSON.parse(data), {persist: true},
                     _this.setState({

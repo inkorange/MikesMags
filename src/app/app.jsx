@@ -18,12 +18,13 @@ const history = useBasename(createHistory)({
 render((
     <Router history={history} >
         <Route path="/" component={Layout}>
-            <IndexRoute component={Magazines}/>
+
             // Trailer Loads  Routes
             <Route name="addMag" path="/addMag" component={AddMagazine} />
             <Redirect from="/addMag/" to="/addMag" />
 
-            <Route path="*" component={Magazines}/>
+            <IndexRoute component={Magazines}/>
+
         </Route>
     </Router>
 ),  document.getElementById('app'))

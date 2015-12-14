@@ -3,9 +3,12 @@ import { render } from 'react-dom'
 import { Router, Route, Link } from 'react-router'
 
 // elements
+const MagListing = require('../elements/MagListing');
+const MagEdit = require('../elements/MagEdit');
 
 // model
 import Store from '../models/Store';
+import Global from '../models/Global';
 
 const AddMagazine = React.createClass({
     contextTypes: {
@@ -23,21 +26,38 @@ const AddMagazine = React.createClass({
         };
     },
 
+    _getAppData: function() {
+        var _this = this;
+        var apiURL = Global.apiEndpoint;
+        $.when(
+            $.ajax(apiURL + 'getMags.php')
+        ).done(function(data) {
+                Store.setStore('magdata', JSON.parse(data), {persist: true},
+                    _this.setState({
+                        'magdata' : JSON.parse(data)
+                    })
+                );
+            })
+            .fail(function() {
+                // if failed internet connection, get it from localStorage
+                _this.setState({
+                    'magdata' : Store.getStore('magdata')
+                })
+            });
+    },
+
     componentDidMount: function() {
+        this._getAppData();
     },
 
     render() {
-
         return (
-            <article className="MainLayout">
-                <header>
-                    <img src="images/mikesmagslogo.svg" />
-                </header>
+            <section className="magazineContent">
+                <MagListing magdata={this.state.magdata}/>
+                <MagEdit />
 
-                <section className="addMagazineContent">
-                    ADD MAGAZINE
-                </section>
-            </article>
+
+            </section>
         )
     }
 

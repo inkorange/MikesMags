@@ -447,6 +447,7 @@ header nav > div div {
   max-width: 1000px;
   margin: 10px auto;
   z-index: 1;
+  position: relative;
 }
 
 @media only screen and (max-width: 600px) {
@@ -477,4 +478,19 @@ header nav > div div {
   .magazineContent .magCard {
     width: calc(50% - 20px);
   }
+}
+
+.magazineContent .MagListing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 300px;
+  background: #e6e6e6;
+}
+
+.magazineContent .MagEdit {
+  margin-left: 300px;
+  min-height: 50px;
+  background: yellow;
 }
