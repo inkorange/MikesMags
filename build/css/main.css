@@ -481,10 +481,13 @@ header nav > div div {
 }
 
 .magazineContent .MagListing {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
+  float: left;
+  /*
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        */
   width: 300px;
   background: #e6e6e6;
 }

@@ -32769,7 +32769,7 @@ var AddMagazine = _react2['default'].createClass({
 
 module.exports = AddMagazine;
 
-},{"../elements/MagEdit":303,"../elements/MagListing":304,"../models/Global":305,"../models/Store":306,"react":299,"react-dom":107,"react-router":127}],301:[function(require,module,exports){
+},{"../elements/MagEdit":303,"../elements/MagListing":305,"../models/Global":306,"../models/Store":307,"react":299,"react-dom":107,"react-router":127}],301:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -32955,7 +32955,7 @@ var Magazines = _react2['default'].createClass({
 
 module.exports = Magazines;
 
-},{"../models/Global":305,"../models/Store":306,"material-ui/lib/card/card":38,"material-ui/lib/card/card-media":35,"material-ui/lib/card/card-text":36,"material-ui/lib/card/card-title":37,"react":299,"react-dom":107,"react-router":127}],303:[function(require,module,exports){
+},{"../models/Global":306,"../models/Store":307,"material-ui/lib/card/card":38,"material-ui/lib/card/card-media":35,"material-ui/lib/card/card-text":36,"material-ui/lib/card/card-title":37,"react":299,"react-dom":107,"react-router":127}],303:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -33012,7 +33012,61 @@ var MagEdit = _react2['default'].createClass({
 
 module.exports = MagEdit;
 
-},{"../models/Global":305,"../models/Store":306,"material-ui/lib/select-field":58,"material-ui/lib/text-field":73,"react":299,"react-dom":107}],304:[function(require,module,exports){
+},{"../models/Global":306,"../models/Store":307,"material-ui/lib/select-field":58,"material-ui/lib/text-field":73,"react":299,"react-dom":107}],304:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+// models
+
+var _modelsStore = require('../models/Store');
+
+var _modelsStore2 = _interopRequireDefault(_modelsStore);
+
+var MagItem = _react2['default'].createClass({
+    displayName: 'MagItem',
+
+    contextTypes: {
+        location: _react2['default'].PropTypes.object
+    },
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            magdata: {}
+        };
+    },
+
+    getInitialState: function getInitialState() {
+        return {};
+    },
+
+    broadcastEdit: function broadcastEdit() {
+        _modelsStore2['default'].setStore('clickedit', this.props.magData);
+    },
+
+    componentDidMount: function componentDidMount() {},
+
+    render: function render() {
+        return _react2['default'].createElement(
+            'div',
+            { className: 'magItem', onClick: this.broadcastEdit },
+            this.props.magData.date,
+            ' | ',
+            this.props.magData.summary
+        );
+    }
+
+});
+
+module.exports = MagItem;
+
+},{"../models/Store":307,"react":299,"react-dom":107}],305:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -33030,6 +33084,7 @@ var _modelsStore = require('../models/Store');
 var _modelsStore2 = _interopRequireDefault(_modelsStore);
 
 // elements
+var MagItem = require('./MagItem');
 
 var MagListing = _react2['default'].createClass({
     displayName: 'MagListing',
@@ -33047,7 +33102,6 @@ var MagListing = _react2['default'].createClass({
     getInitialState: function getInitialState() {
         return {};
     },
-    update: function update() {},
 
     componentDidMount: function componentDidMount() {},
 
@@ -33056,13 +33110,7 @@ var MagListing = _react2['default'].createClass({
             'section',
             { className: 'MagListing' },
             this.props.magdata.map(function (mdata, key) {
-                return _react2['default'].createElement(
-                    'div',
-                    { key: key, className: 'magItem' },
-                    mdata.date,
-                    ' | ',
-                    mdata.summary
-                );
+                return _react2['default'].createElement(MagItem, { key: key, magData: mdata });
             }, this)
         );
     }
@@ -33071,14 +33119,14 @@ var MagListing = _react2['default'].createClass({
 
 module.exports = MagListing;
 
-},{"../models/Store":306,"react":299,"react-dom":107}],305:[function(require,module,exports){
+},{"../models/Store":307,"./MagItem":304,"react":299,"react-dom":107}],306:[function(require,module,exports){
 'use strict';
 
 module.exports = {
     apiEndpoint: 'http://localhost:8888/MikesMags/build/api/'
 };
 
-},{}],306:[function(require,module,exports){
+},{}],307:[function(require,module,exports){
 /*
  DataStore | Chris West inkorange.com
  Cross component data management container with tie ins to Local Storage persistence

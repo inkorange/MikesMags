@@ -4,17 +4,15 @@ import { render } from 'react-dom'
 // models
 import Store from '../models/Store';
 
-// elements
-const MagItem = require('./MagItem');
 
-const MagListing = React.createClass({
+const MagItem = React.createClass({
     contextTypes: {
         location: React.PropTypes.object
     },
 
     getDefaultProps: function () {
         return {
-            magdata: []
+            magdata: {}
         };
     },
 
@@ -23,21 +21,21 @@ const MagListing = React.createClass({
         }
     },
 
+    broadcastEdit: function() {
+        Store.setStore('clickedit', this.props.magData)
+    },
+
     componentDidMount: function() {
     },
 
     render() {
         return (
-            <section className="MagListing">
-                {this.props.magdata.map(function(mdata, key) {
-                    return (
-                        <MagItem key={key} magData={mdata} />
-                    )
-                }, this)}
-            </section>
+            <div className="magItem" onClick={this.broadcastEdit}>
+                {this.props.magData.date} | {this.props.magData.summary}
+            </div>
         )
     }
 
 });
 
-module.exports = MagListing;
+module.exports = MagItem;
