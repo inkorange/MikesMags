@@ -72,9 +72,16 @@ header {
         background: rgb(230,230,230);
     }
     .MagEdit {
+        padding: 40px;
         margin-left: 300px;
         min-height: 50px;
-        background: yellow;
+
+    }
+}
+
+.MagDatePicker {
+    + div {
+        margin-top: 150px;
     }
 }
 

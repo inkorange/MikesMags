@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-
+import m from 'moment'
 // models
 import Store from '../models/Store';
 
@@ -22,16 +22,17 @@ const MagItem = React.createClass({
     },
 
     broadcastEdit: function() {
-        Store.setStore('clickedit', this.props.magData)
+        Store.setStore('clickededit', this.props.magData);
     },
 
     componentDidMount: function() {
+        //this.props.magdata.date = new Date(this.props.magdata.date);
     },
 
     render() {
         return (
             <div className="magItem" onClick={this.broadcastEdit}>
-                {this.props.magData.date} | {this.props.magData.summary}
+                {m(this.props.magData.date).format('ll')} | {this.props.magData.summary}
             </div>
         )
     }

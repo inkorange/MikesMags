@@ -38,7 +38,7 @@ var history = (0, _history.useBasename)(_history.createHistory)({
     )
 ), document.getElementById('app'));
 
-},{"./component/AddMagazine":300,"./component/Layout":301,"./component/Magazines":302,"history":18,"react":299,"react-dom":107,"react-router":127,"react-tap-event-plugin":137}],2:[function(require,module,exports){
+},{"./component/AddMagazine":323,"./component/Layout":324,"./component/Magazines":325,"history":18,"react":322,"react-dom":130,"react-router":150,"react-tap-event-plugin":160}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -2708,7 +2708,85 @@ var BeforeAfterWrapper = React.createClass({
 });
 
 module.exports = BeforeAfterWrapper;
-},{"./mixins/style-propable":52,"./styles/auto-prefix":59,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"react":299}],34:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./styles/auto-prefix":73,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"react":322}],34:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var ContextPure = require('../mixins/context-pure');
+var StylePropable = require('../mixins/style-propable');
+var Styles = require('../utils/styles');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var FlatButtonLabel = React.createClass({
+  displayName: 'FlatButtonLabel',
+
+  mixins: [ContextPure, StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    label: React.PropTypes.node,
+    style: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  statics: {
+    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+      return {
+        spacingDesktopGutterLess: muiTheme.rawTheme.spacing.desktopGutterLess
+      };
+    }
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var label = _props.label;
+    var style = _props.style;
+
+    var contextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+
+    var mergedRootStyles = this.mergeStyles({
+      position: 'relative',
+      padding: '0 ' + contextKeys.spacingDesktopGutterLess + 'px'
+    }, style);
+
+    return React.createElement(
+      'span',
+      { style: this.prepareStyles(mergedRootStyles) },
+      label
+    );
+  }
+
+});
+
+module.exports = FlatButtonLabel;
+},{"../mixins/context-pure":64,"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../utils/styles":110,"react":322}],35:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -2811,7 +2889,7 @@ var CardExpandable = React.createClass({
 });
 
 module.exports = CardExpandable;
-},{"../icon-button":45,"../mixins/context-pure":51,"../mixins/style-propable":52,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"../svg-icons/hardware/keyboard-arrow-down":70,"../svg-icons/hardware/keyboard-arrow-up":71,"../utils/extend":83,"react":299}],35:[function(require,module,exports){
+},{"../icon-button":58,"../mixins/context-pure":64,"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../svg-icons/hardware/keyboard-arrow-down":84,"../svg-icons/hardware/keyboard-arrow-up":85,"../utils/extend":104,"react":322}],36:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -2955,7 +3033,7 @@ var CardMedia = React.createClass({
 });
 
 module.exports = CardMedia;
-},{"../mixins/style-propable":52,"../styles":61,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"react":299}],36:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles":75,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],37:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3030,7 +3108,7 @@ var CardText = React.createClass({
 });
 
 module.exports = CardText;
-},{"../mixins/style-propable":52,"../styles":61,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"react":299}],37:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles":75,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],38:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3139,7 +3217,7 @@ var CardTitle = React.createClass({
 });
 
 module.exports = CardTitle;
-},{"../mixins/style-propable":52,"../styles":61,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"react":299}],38:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles":75,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],39:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3229,7 +3307,7 @@ var Card = React.createClass({
 });
 
 module.exports = Card;
-},{"../mixins/style-propable":52,"../paper":54,"./card-expandable":34,"react":299}],39:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../paper":68,"./card-expandable":35,"react":322}],40:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3307,7 +3385,2271 @@ var ClearFix = React.createClass({
 });
 
 module.exports = ClearFix;
-},{"./before-after-wrapper":33,"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"react":299}],40:[function(require,module,exports){
+},{"./before-after-wrapper":33,"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"react":322}],41:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var DateTime = require('../utils/date-time');
+var DayButton = require('./day-button');
+var ClearFix = require('../clearfix');
+
+var CalendarMonth = React.createClass({
+  displayName: 'CalendarMonth',
+
+  propTypes: {
+    displayDate: React.PropTypes.object.isRequired,
+    selectedDate: React.PropTypes.object.isRequired,
+    autoOk: React.PropTypes.bool,
+    maxDate: React.PropTypes.object,
+    minDate: React.PropTypes.object,
+    onDayTouchTap: React.PropTypes.func,
+    shouldDisableDate: React.PropTypes.func
+  },
+
+  render: function render() {
+    var styles = {
+      lineHeight: '32px',
+      textAlign: 'center',
+      padding: '16px 14px 0 14px'
+    };
+
+    return React.createElement(
+      'div',
+      { style: styles },
+      this._getWeekElements()
+    );
+  },
+
+  isSelectedDateDisabled: function isSelectedDateDisabled() {
+    return this._selectedDateDisabled;
+  },
+
+  _getWeekElements: function _getWeekElements() {
+    var _this = this;
+
+    var weekArray = DateTime.getWeekArray(this.props.displayDate);
+
+    return weekArray.map(function (week, i) {
+      return React.createElement(
+        ClearFix,
+        { key: i },
+        _this._getDayElements(week, i)
+      );
+    }, this);
+  },
+
+  _getDayElements: function _getDayElements(week, i) {
+    var _this2 = this;
+
+    return week.map(function (day, j) {
+      var isSameDate = DateTime.isEqualDate(_this2.props.selectedDate, day);
+      var disabled = _this2._shouldDisableDate(day);
+      var selected = !disabled && isSameDate;
+
+      if (isSameDate) {
+        if (disabled) {
+          _this2._selectedDateDisabled = true;
+        } else {
+          _this2._selectedDateDisabled = false;
+        }
+      }
+
+      return React.createElement(DayButton, {
+        key: 'db' + i + j,
+        date: day,
+        onTouchTap: _this2._handleDayTouchTap,
+        selected: selected,
+        disabled: disabled });
+    }, this);
+  },
+
+  _handleDayTouchTap: function _handleDayTouchTap(e, date) {
+    if (this.props.onDayTouchTap) this.props.onDayTouchTap(e, date);
+  },
+
+  _shouldDisableDate: function _shouldDisableDate(day) {
+    if (day === null) return false;
+    var disabled = !DateTime.isBetweenDates(day, this.props.minDate, this.props.maxDate);
+    if (!disabled && this.props.shouldDisableDate) disabled = this.props.shouldDisableDate(day);
+
+    return disabled;
+  }
+
+});
+
+module.exports = CalendarMonth;
+},{"../clearfix":40,"../utils/date-time":101,"./day-button":49,"react":322}],42:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var IconButton = require('../icon-button');
+var Toolbar = require('../toolbar/toolbar');
+var ToolbarGroup = require('../toolbar/toolbar-group');
+var NavigationChevronLeft = require('../svg-icons/navigation/chevron-left');
+var NavigationChevronRight = require('../svg-icons/navigation/chevron-right');
+var SlideInTransitionGroup = require('../transition-groups/slide-in');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+
+var styles = {
+  root: {
+    position: 'relative',
+    padding: 0,
+    backgroundColor: 'inherit'
+  },
+  title: {
+    position: 'absolute',
+    top: 17,
+    lineHeight: '14px',
+    fontSize: 14,
+    height: 14,
+    width: '100%',
+    fontWeight: '500',
+    textAlign: 'center'
+  }
+};
+
+var CalendarToolbar = React.createClass({
+  displayName: 'CalendarToolbar',
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  propTypes: {
+    DateTimeFormat: React.PropTypes.func.isRequired,
+    locale: React.PropTypes.string.isRequired,
+    displayDate: React.PropTypes.object.isRequired,
+    nextMonth: React.PropTypes.bool,
+    onMonthChange: React.PropTypes.func,
+    prevMonth: React.PropTypes.bool
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      nextMonth: true,
+      prevMonth: true
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme),
+      transitionDirection: 'up'
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+
+    var direction = undefined;
+
+    if (nextProps.displayDate !== this.props.displayDate) {
+      direction = nextProps.displayDate > this.props.displayDate ? 'up' : 'down';
+      this.setState({
+        transitionDirection: direction
+      });
+    }
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var DateTimeFormat = _props.DateTimeFormat;
+    var locale = _props.locale;
+    var displayDate = _props.displayDate;
+
+    var dateTimeFormatted = new DateTimeFormat(locale, {
+      month: 'long',
+      year: 'numeric'
+    }).format(displayDate);
+
+    var nextButtonIcon = this.state.muiTheme.isRtl ? React.createElement(NavigationChevronRight, null) : React.createElement(NavigationChevronLeft, null);
+    var prevButtonIcon = this.state.muiTheme.isRtl ? React.createElement(NavigationChevronLeft, null) : React.createElement(NavigationChevronRight, null);
+
+    return React.createElement(
+      Toolbar,
+      { className: 'mui-date-picker-calendar-toolbar', style: styles.root, noGutter: true },
+      React.createElement(
+        SlideInTransitionGroup,
+        {
+          style: styles.title,
+          direction: this.state.transitionDirection },
+        React.createElement(
+          'div',
+          { key: dateTimeFormatted },
+          dateTimeFormatted
+        )
+      ),
+      React.createElement(
+        ToolbarGroup,
+        { key: 0, float: 'left' },
+        React.createElement(
+          IconButton,
+          {
+            style: styles.button,
+            disabled: !this.props.prevMonth,
+            onTouchTap: this._prevMonthTouchTap },
+          nextButtonIcon
+        )
+      ),
+      React.createElement(
+        ToolbarGroup,
+        { key: 1, float: 'right' },
+        React.createElement(
+          IconButton,
+          {
+            style: styles.button,
+            disabled: !this.props.nextMonth,
+            onTouchTap: this._nextMonthTouchTap },
+          prevButtonIcon
+        )
+      )
+    );
+  },
+
+  _prevMonthTouchTap: function _prevMonthTouchTap() {
+    if (this.props.onMonthChange && this.props.prevMonth) this.props.onMonthChange(-1);
+  },
+
+  _nextMonthTouchTap: function _nextMonthTouchTap() {
+    if (this.props.onMonthChange && this.props.nextMonth) this.props.onMonthChange(1);
+  }
+
+});
+
+module.exports = CalendarToolbar;
+},{"../icon-button":58,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../svg-icons/navigation/chevron-left":87,"../svg-icons/navigation/chevron-right":88,"../toolbar/toolbar":92,"../toolbar/toolbar-group":91,"../transition-groups/slide-in":97,"react":322}],43:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+var StylePropable = require('../mixins/style-propable');
+var Colors = require('../styles/colors');
+var DateTime = require('../utils/date-time');
+var YearButton = require('./year-button');
+
+var CalendarYear = React.createClass({
+  displayName: 'CalendarYear',
+
+  mixins: [StylePropable],
+
+  propTypes: {
+    displayDate: React.PropTypes.object.isRequired,
+    onYearTouchTap: React.PropTypes.func,
+    selectedDate: React.PropTypes.object.isRequired,
+    minDate: React.PropTypes.object,
+    maxDate: React.PropTypes.object
+  },
+
+  componentDidMount: function componentDidMount() {
+    this._scrollToSelectedYear();
+  },
+
+  componentDidUpdate: function componentDidUpdate() {
+    this._scrollToSelectedYear();
+  },
+
+  render: function render() {
+    var years = this._getYears();
+    var styles = {
+      position: 'relative',
+      height: 'inherit',
+      lineHeight: '36px',
+      textAlign: 'center',
+      padding: '8px 14px 0 14px',
+      backgroundColor: Colors.white,
+      overflowX: 'hidden',
+      overflowY: 'scroll'
+    };
+
+    return React.createElement(
+      'div',
+      { style: styles },
+      years
+    );
+  },
+
+  _getYears: function _getYears() {
+    var minYear = this.props.minDate.getFullYear();
+    var maxYear = this.props.maxDate.getFullYear();
+
+    var years = [];
+    var dateCheck = DateTime.clone(this.props.selectedDate);
+    for (var year = minYear; year <= maxYear; year++) {
+      dateCheck.setFullYear(year);
+      if (!DateTime.isBetweenDates(dateCheck, this.props.minDate, this.props.maxDate)) continue;
+      var selected = this.props.selectedDate.getFullYear() === year;
+      var selectedProps = {};
+      if (selected) {
+        selectedProps = { ref: 'selectedYearButton' };
+      }
+
+      var yearButton = React.createElement(YearButton, _extends({
+        key: 'yb' + year,
+        year: year,
+        onTouchTap: this._handleYearTouchTap,
+        selected: selected
+      }, selectedProps));
+
+      years.push(yearButton);
+    }
+
+    return years;
+  },
+
+  _scrollToSelectedYear: function _scrollToSelectedYear() {
+    if (this.refs.selectedYearButton === undefined) return;
+
+    var container = ReactDOM.findDOMNode(this);
+    var yearButtonNode = ReactDOM.findDOMNode(this.refs.selectedYearButton);
+
+    var containerHeight = container.clientHeight;
+    var yearButtonNodeHeight = yearButtonNode.clientHeight || 32;
+
+    var scrollYOffset = yearButtonNode.offsetTop + yearButtonNodeHeight / 2 - containerHeight / 2;
+    container.scrollTop = scrollYOffset;
+  },
+
+  _handleYearTouchTap: function _handleYearTouchTap(e, year) {
+    if (this.props.onYearTouchTap) this.props.onYearTouchTap(e, year);
+  }
+
+});
+
+module.exports = CalendarYear;
+},{"../mixins/style-propable":65,"../styles/colors":74,"../utils/date-time":101,"./year-button":50,"react":322,"react-dom":130}],44:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var StylePropable = require('../mixins/style-propable');
+var WindowListenable = require('../mixins/window-listenable');
+var DateTime = require('../utils/date-time');
+var KeyCode = require('../utils/key-code');
+var Transitions = require('../styles/transitions');
+var CalendarMonth = require('./calendar-month');
+var CalendarYear = require('./calendar-year');
+var CalendarToolbar = require('./calendar-toolbar');
+var DateDisplay = require('./date-display');
+var SlideInTransitionGroup = require('../transition-groups/slide-in');
+var ClearFix = require('../clearfix');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+
+var Calendar = React.createClass({
+  displayName: 'Calendar',
+
+  mixins: [StylePropable, WindowListenable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  propTypes: {
+    DateTimeFormat: React.PropTypes.func.isRequired,
+    locale: React.PropTypes.string.isRequired,
+    disableYearSelection: React.PropTypes.bool,
+    initialDate: React.PropTypes.object,
+    open: React.PropTypes.bool,
+    minDate: React.PropTypes.object,
+    maxDate: React.PropTypes.object,
+    onDayTouchTap: React.PropTypes.func,
+    shouldDisableDate: React.PropTypes.func
+  },
+
+  windowListeners: {
+    'keydown': '_handleWindowKeyDown'
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      disableYearSelection: false,
+      initialDate: new Date(),
+      minDate: DateTime.addYears(new Date(), -100),
+      maxDate: DateTime.addYears(new Date(), 100)
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme),
+      displayDate: DateTime.getFirstDayOfMonth(this.props.initialDate),
+      displayMonthDay: true,
+      selectedDate: this.props.initialDate,
+      transitionDirection: 'left',
+      transitionEnter: true
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+
+    if (nextProps.initialDate !== this.props.initialDate) {
+      var d = nextProps.initialDate || new Date();
+      this.setState({
+        displayDate: DateTime.getFirstDayOfMonth(d),
+        selectedDate: d
+      });
+    }
+  },
+
+  render: function render() {
+    var yearCount = DateTime.yearDiff(this.props.maxDate, this.props.minDate) + 1;
+    var weekCount = DateTime.getWeekArray(this.state.displayDate).length;
+    var toolbarInteractions = this._getToolbarInteractions();
+    var isLandscape = this.props.mode === 'landscape';
+    var styles = {
+      root: {
+        fontSize: 12
+      },
+      calendarContainer: {
+        width: isLandscape ? 320 : '100%',
+        height: weekCount === 5 ? 284 : weekCount === 6 ? 324 : 244,
+        float: isLandscape ? 'right' : 'none',
+        transition: Transitions.easeOut('150ms', 'height'),
+        overflow: 'hidden'
+      },
+      yearContainer: {
+        width: 280,
+        overflow: 'hidden',
+        height: yearCount < 6 ? yearCount * 56 + 10 : weekCount === 5 ? 284 : weekCount === 6 ? 324 : 244,
+        float: isLandscape ? 'right' : 'none'
+      },
+      dateDisplay: {
+        width: isLandscape ? 120 : '',
+        height: isLandscape ? weekCount === 5 ? 238 : weekCount === 6 ? 278 : 198 : 'auto',
+        float: isLandscape ? 'left' : 'none'
+      },
+      weekTitle: {
+        padding: '0 14px',
+        lineHeight: '12px',
+        opacity: '0.5',
+        height: 12,
+        fontWeight: '500',
+        margin: 0
+      },
+      weekTitleDay: {
+        listStyle: 'none',
+        float: 'left',
+        width: 37,
+        textAlign: 'center',
+        margin: '0 2px'
+      }
+    };
+
+    var weekTitleDayStyle = this.prepareStyles(styles.weekTitleDay);
+    var _props = this.props;
+    var DateTimeFormat = _props.DateTimeFormat;
+    var locale = _props.locale;
+
+    return React.createElement(
+      ClearFix,
+      { style: this.mergeStyles(styles.root) },
+      React.createElement(DateDisplay, {
+        DateTimeFormat: DateTimeFormat,
+        locale: locale,
+        disableYearSelection: this.props.disableYearSelection,
+        style: styles.dateDisplay,
+        selectedDate: this.state.selectedDate,
+        handleMonthDayClick: this._handleMonthDayClick,
+        handleYearClick: this._handleYearClick,
+        monthDaySelected: this.state.displayMonthDay,
+        mode: this.props.mode,
+        weekCount: weekCount }),
+      this.state.displayMonthDay && React.createElement(
+        'div',
+        { style: this.prepareStyles(styles.calendarContainer) },
+        React.createElement(CalendarToolbar, {
+          DateTimeFormat: DateTimeFormat,
+          locale: locale,
+          displayDate: this.state.displayDate,
+          onMonthChange: this._handleMonthChange,
+          prevMonth: toolbarInteractions.prevMonth,
+          nextMonth: toolbarInteractions.nextMonth }),
+        React.createElement(
+          ClearFix,
+          {
+            elementType: 'ul',
+            style: styles.weekTitle },
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'S'
+          ),
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'M'
+          ),
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'T'
+          ),
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'W'
+          ),
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'T'
+          ),
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'F'
+          ),
+          React.createElement(
+            'li',
+            { style: weekTitleDayStyle },
+            'S'
+          )
+        ),
+        React.createElement(
+          SlideInTransitionGroup,
+          {
+            direction: this.state.transitionDirection },
+          React.createElement(CalendarMonth, {
+            key: this.state.displayDate.toDateString(),
+            ref: 'calendar',
+            displayDate: this.state.displayDate,
+            onDayTouchTap: this._handleDayTouchTap,
+            selectedDate: this.state.selectedDate,
+            minDate: this.props.minDate,
+            maxDate: this.props.maxDate,
+            shouldDisableDate: this.props.shouldDisableDate })
+        )
+      ),
+      !this.state.displayMonthDay && React.createElement(
+        'div',
+        { style: this.prepareStyles(styles.yearContainer) },
+        this._yearSelector()
+      )
+    );
+  },
+
+  _yearSelector: function _yearSelector() {
+    if (this.props.disableYearSelection) return;
+
+    return React.createElement(CalendarYear, {
+      key: 'years',
+      displayDate: this.state.displayDate,
+      onYearTouchTap: this._handleYearTouchTap,
+      selectedDate: this.state.selectedDate,
+      minDate: this.props.minDate,
+      maxDate: this.props.maxDate });
+  },
+
+  getSelectedDate: function getSelectedDate() {
+    return this.state.selectedDate;
+  },
+
+  isSelectedDateDisabled: function isSelectedDateDisabled() {
+    return this.refs.calendar.isSelectedDateDisabled();
+  },
+
+  _addSelectedDays: function _addSelectedDays(days) {
+    this._setSelectedDate(DateTime.addDays(this.state.selectedDate, days));
+  },
+
+  _addSelectedMonths: function _addSelectedMonths(months) {
+    this._setSelectedDate(DateTime.addMonths(this.state.selectedDate, months));
+  },
+
+  _addSelectedYears: function _addSelectedYears(years) {
+    this._setSelectedDate(DateTime.addYears(this.state.selectedDate, years));
+  },
+
+  _setDisplayDate: function _setDisplayDate(d, newSelectedDate) {
+    var newDisplayDate = DateTime.getFirstDayOfMonth(d);
+    var direction = newDisplayDate > this.state.displayDate ? 'left' : 'right';
+
+    if (newDisplayDate !== this.state.displayDate) {
+      this.setState({
+        displayDate: newDisplayDate,
+        transitionDirection: direction,
+        selectedDate: newSelectedDate || this.state.selectedDate
+      });
+    }
+  },
+
+  _setSelectedDate: function _setSelectedDate(date) {
+    var adjustedDate = date;
+    if (DateTime.isBeforeDate(date, this.props.minDate)) {
+      adjustedDate = this.props.minDate;
+    } else if (DateTime.isAfterDate(date, this.props.maxDate)) {
+      adjustedDate = this.props.maxDate;
+    }
+
+    var newDisplayDate = DateTime.getFirstDayOfMonth(adjustedDate);
+    if (newDisplayDate !== this.state.displayDate) {
+      this._setDisplayDate(newDisplayDate, adjustedDate);
+    } else {
+      this.setState({
+        selectedDate: adjustedDate
+      });
+    }
+  },
+
+  _handleDayTouchTap: function _handleDayTouchTap(e, date) {
+    this._setSelectedDate(date);
+    if (this.props.onDayTouchTap) this.props.onDayTouchTap(e, date);
+  },
+
+  _handleMonthChange: function _handleMonthChange(months) {
+    this.setState({ displayDate: DateTime.addMonths(this.state.displayDate, months) });
+  },
+
+  _handleYearTouchTap: function _handleYearTouchTap(e, year) {
+    var date = DateTime.clone(this.state.selectedDate);
+    date.setFullYear(year);
+    this._setSelectedDate(date, e);
+  },
+
+  _getToolbarInteractions: function _getToolbarInteractions() {
+    return {
+      prevMonth: DateTime.monthDiff(this.state.displayDate, this.props.minDate) > 0,
+      nextMonth: DateTime.monthDiff(this.state.displayDate, this.props.maxDate) < 0
+    };
+  },
+
+  _handleMonthDayClick: function _handleMonthDayClick() {
+    this.setState({
+      displayMonthDay: true
+    });
+  },
+
+  _handleYearClick: function _handleYearClick() {
+    this.setState({
+      displayMonthDay: false
+    });
+  },
+
+  _handleWindowKeyDown: function _handleWindowKeyDown(e) {
+    if (this.props.open) {
+
+      switch (e.keyCode) {
+        case KeyCode.UP:
+          if (e.altKey && e.shiftKey) {
+            this._addSelectedYears(-1);
+          } else if (e.shiftKey) {
+            this._addSelectedMonths(-1);
+          } else {
+            this._addSelectedDays(-7);
+          }
+          break;
+
+        case KeyCode.DOWN:
+          if (e.altKey && e.shiftKey) {
+            this._addSelectedYears(1);
+          } else if (e.shiftKey) {
+            this._addSelectedMonths(1);
+          } else {
+            this._addSelectedDays(7);
+          }
+          break;
+
+        case KeyCode.RIGHT:
+          if (e.altKey && e.shiftKey) {
+            this._addSelectedYears(1);
+          } else if (e.shiftKey) {
+            this._addSelectedMonths(1);
+          } else {
+            this._addSelectedDays(1);
+          }
+          break;
+
+        case KeyCode.LEFT:
+          if (e.altKey && e.shiftKey) {
+            this._addSelectedYears(-1);
+          } else if (e.shiftKey) {
+            this._addSelectedMonths(-1);
+          } else {
+            this._addSelectedDays(-1);
+          }
+          break;
+      }
+    }
+  }
+
+});
+
+module.exports = Calendar;
+},{"../clearfix":40,"../mixins/style-propable":65,"../mixins/window-listenable":66,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/transitions":81,"../transition-groups/slide-in":97,"../utils/date-time":101,"../utils/key-code":106,"./calendar-month":41,"./calendar-toolbar":42,"./calendar-year":43,"./date-display":45,"react":322}],45:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var StylePropable = require('../mixins/style-propable');
+var Transitions = require('../styles/transitions');
+var SlideInTransitionGroup = require('../transition-groups/slide-in');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var DateDisplay = React.createClass({
+  displayName: 'DateDisplay',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    DateTimeFormat: React.PropTypes.func.isRequired,
+    locale: React.PropTypes.string.isRequired,
+    disableYearSelection: React.PropTypes.bool,
+    monthDaySelected: React.PropTypes.bool,
+    selectedDate: React.PropTypes.object.isRequired,
+    style: React.PropTypes.object,
+    weekCount: React.PropTypes.number
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      disableYearSelection: false,
+      monthDaySelected: true,
+      weekCount: 4
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      selectedYear: !this.props.monthDaySelected,
+      transitionDirection: 'up',
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+
+    var direction = undefined;
+
+    if (nextProps.selectedDate !== this.props.selectedDate) {
+      direction = nextProps.selectedDate > this.props.selectedDate ? 'up' : 'down';
+      this.setState({
+        transitionDirection: direction
+      });
+    }
+
+    if (nextProps.monthDaySelected !== undefined) {
+      this.setState({ selectedYear: !nextProps.monthDaySelected });
+    }
+  },
+
+  getTheme: function getTheme() {
+    return this.state.muiTheme.datePicker;
+  },
+
+  getStyles: function getStyles() {
+    var theme = this.getTheme();
+    var isLandscape = this.props.mode === 'landscape';
+
+    var styles = {
+      root: {
+        backgroundColor: theme.selectColor,
+        borderTopLeftRadius: 2,
+        borderTopRightRadius: 2,
+        color: theme.textColor,
+        height: 60,
+        padding: 20
+      },
+
+      monthDay: {
+        root: {
+          display: 'inline-block',
+          fontSize: 36,
+          fontWeight: '400',
+          lineHeight: '36px',
+          height: isLandscape ? 76 : 38,
+          opacity: this.state.selectedYear ? 0.7 : 1.0,
+          transition: Transitions.easeOut(),
+          width: '100%'
+        },
+
+        title: {
+          cursor: !this.state.selectedYear ? 'default' : 'pointer'
+        }
+      },
+
+      year: {
+        root: {
+          margin: 0,
+          fontSize: 16,
+          fontWeight: '400',
+          lineHeight: '16px',
+          height: 16,
+          opacity: this.state.selectedYear ? 1.0 : 0.7,
+          transition: Transitions.easeOut(),
+          marginBottom: 10
+        },
+
+        title: {
+          cursor: this.state.selectedYear && !this.props.disableYearSelection ? 'pointer' : 'default'
+        }
+      }
+    };
+
+    return styles;
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var DateTimeFormat = _props.DateTimeFormat;
+    var locale = _props.locale;
+    var selectedDate = _props.selectedDate;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['DateTimeFormat', 'locale', 'selectedDate', 'style']);
+
+    var year = this.props.selectedDate.getFullYear();
+    var styles = this.getStyles();
+
+    var dateTimeFormatted = new DateTimeFormat(locale, {
+      month: 'short',
+      weekday: 'short',
+      day: '2-digit'
+    }).format(this.props.selectedDate);
+
+    return React.createElement(
+      'div',
+      _extends({}, other, { style: this.prepareStyles(styles.root, this.props.style) }),
+      React.createElement(
+        SlideInTransitionGroup,
+        {
+          style: styles.year.root,
+          direction: this.state.transitionDirection },
+        React.createElement(
+          'div',
+          { key: year, style: styles.year.title, onTouchTap: this._handleYearClick },
+          year
+        )
+      ),
+      React.createElement(
+        SlideInTransitionGroup,
+        {
+          style: styles.monthDay.root,
+          direction: this.state.transitionDirection },
+        React.createElement(
+          'div',
+          {
+            key: dateTimeFormatted,
+            style: styles.monthDay.title,
+            onTouchTap: this._handleMonthDayClick },
+          dateTimeFormatted
+        )
+      )
+    );
+  },
+
+  _handleMonthDayClick: function _handleMonthDayClick() {
+    if (this.props.handleMonthDayClick && this.state.selectedYear) {
+      this.props.handleMonthDayClick();
+    }
+
+    this.setState({ selectedYear: false });
+  },
+
+  _handleYearClick: function _handleYearClick() {
+    if (this.props.handleYearClick && !this.props.disableYearSelection && !this.state.selectedYear) {
+      this.props.handleYearClick();
+    }
+
+    if (!this.props.disableYearSelection) {
+      this.setState({ selectedYear: true });
+    }
+  }
+
+});
+
+module.exports = DateDisplay;
+},{"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/transitions":81,"../transition-groups/slide-in":97,"react":322}],46:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+var ContextPure = require('../mixins/context-pure');
+var StylePropable = require('../mixins/style-propable');
+var WindowListenable = require('../mixins/window-listenable');
+var CssEvent = require('../utils/css-event');
+var KeyCode = require('../utils/key-code');
+var Calendar = require('./calendar');
+var Dialog = require('../dialog');
+var DatePickerInline = require('./date-picker-inline');
+var FlatButton = require('../flat-button');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+var DateTime = require('../utils/date-time');
+
+var DatePickerDialog = React.createClass({
+  displayName: 'DatePickerDialog',
+
+  mixins: [StylePropable, WindowListenable, ContextPure],
+
+  statics: {
+    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+      return {
+        buttonColor: muiTheme.datePicker.calendarTextColor
+      };
+    },
+    getChildrenClasses: function getChildrenClasses() {
+      return [Calendar, Dialog];
+    }
+  },
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    container: React.PropTypes.oneOf(['dialog', 'inline']),
+    DateTimeFormat: React.PropTypes.func,
+    locale: React.PropTypes.string,
+    wordings: React.PropTypes.object,
+    disableYearSelection: React.PropTypes.bool,
+    initialDate: React.PropTypes.object,
+    maxDate: React.PropTypes.object,
+    minDate: React.PropTypes.object,
+    onAccept: React.PropTypes.func,
+    onDismiss: React.PropTypes.func,
+    onShow: React.PropTypes.func,
+    style: React.PropTypes.object,
+    shouldDisableDate: React.PropTypes.func,
+    showYearSelector: React.PropTypes.bool,
+    autoOk: React.PropTypes.bool,
+    mode: React.PropTypes.oneOf(['portrait', 'landscape'])
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      DateTimeFormat: DateTime.DateTimeFormat,
+      container: 'dialog',
+      locale: 'en-US',
+      wordings: {
+        ok: 'OK',
+        cancel: 'Cancel'
+      }
+    };
+  },
+
+  windowListeners: {
+    keyup: '_handleWindowKeyUp'
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      open: false,
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var DateTimeFormat = _props.DateTimeFormat;
+    var locale = _props.locale;
+    var wordings = _props.wordings;
+    var initialDate = _props.initialDate;
+    var onAccept = _props.onAccept;
+    var style = _props.style;
+    var container = _props.container;
+    var onDismiss = _props.onDismiss;
+    var onShow = _props.onShow;
+
+    var other = _objectWithoutProperties(_props, ['DateTimeFormat', 'locale', 'wordings', 'initialDate', 'onAccept', 'style', 'container', 'onDismiss', 'onShow']);
+
+    var _constructor$getRelevantContextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+
+    var calendarTextColor = _constructor$getRelevantContextKeys.calendarTextColor;
+
+    var styles = {
+      root: {
+        fontSize: 14,
+        color: calendarTextColor
+      },
+
+      dialogContent: {
+        width: this.props.mode === 'landscape' ? 480 : 320
+      },
+
+      dialogBodyContent: {
+        padding: 0
+      },
+
+      actions: {
+        marginRight: 8
+      }
+    };
+
+    var actions = [React.createElement(FlatButton, {
+      key: 0,
+      label: wordings.cancel,
+      secondary: true,
+      style: styles.actions,
+      onTouchTap: this._handleCancelTouchTap })];
+
+    if (!this.props.autoOk) {
+      actions.push(React.createElement(FlatButton, {
+        key: 1,
+        label: wordings.ok,
+        secondary: true,
+        disabled: this.refs.calendar !== undefined && this.refs.calendar.isSelectedDateDisabled(),
+        style: styles.actions,
+        onTouchTap: this._handleOKTouchTap }));
+    }
+    // will change later when Popover is available.
+    var Container = container === 'inline' ? DatePickerInline : Dialog;
+    return React.createElement(
+      Container,
+      _extends({}, other, {
+        ref: 'dialog',
+        style: styles.root,
+        contentStyle: styles.dialogContent,
+        bodyStyle: styles.dialogBodyContent,
+        actions: actions,
+        onDismiss: typeof onDismiss === 'function' && onDismiss,
+        onShow: typeof onShow === 'function' && onShow,
+        repositionOnUpdate: false,
+        open: this.state.open,
+        onRequestClose: this.dismiss }),
+      React.createElement(Calendar, {
+        DateTimeFormat: DateTimeFormat,
+        locale: locale,
+        ref: 'calendar',
+        onDayTouchTap: this._onDayTouchTap,
+        initialDate: this.props.initialDate,
+        open: this.state.open,
+        minDate: this.props.minDate,
+        maxDate: this.props.maxDate,
+        shouldDisableDate: this.props.shouldDisableDate,
+        showYearSelector: this.props.showYearSelector,
+        mode: this.props.mode })
+    );
+  },
+
+  show: function show() {
+    this.setState({
+      open: true
+    });
+  },
+
+  dismiss: function dismiss() {
+    this.setState({
+      open: false
+    });
+  },
+
+  _onDayTouchTap: function _onDayTouchTap() {
+    if (this.props.autoOk) {
+      setTimeout(this._handleOKTouchTap, 300);
+    }
+  },
+
+  _handleCancelTouchTap: function _handleCancelTouchTap() {
+    this.dismiss();
+  },
+
+  _handleOKTouchTap: function _handleOKTouchTap() {
+    if (this.props.onAccept && !this.refs.calendar.isSelectedDateDisabled()) {
+      this.props.onAccept(this.refs.calendar.getSelectedDate());
+    }
+
+    this.dismiss();
+  },
+
+  _handleWindowKeyUp: function _handleWindowKeyUp(e) {
+    if (this.state.open) {
+      switch (e.keyCode) {
+        case KeyCode.ENTER:
+          this._handleOKTouchTap();
+          break;
+      }
+    }
+  }
+
+});
+
+module.exports = DatePickerDialog;
+},{"../dialog":51,"../flat-button":56,"../mixins/context-pure":64,"../mixins/style-propable":65,"../mixins/window-listenable":66,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../utils/css-event":100,"../utils/date-time":101,"../utils/key-code":106,"./calendar":44,"./date-picker-inline":47,"react":322,"react-dom":130}],47:[function(require,module,exports){
+'use strict';
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var Paper = require('../paper');
+
+var DatePickerInline = React.createClass({
+  displayName: 'DatePickerInline',
+
+  propTypes: {
+    open: React.PropTypes.bool
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      open: false
+    };
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var actions = _props.actions;
+    var children = _props.children;
+    var open = _props.open;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['actions', 'children', 'open', 'style']);
+
+    if (!open) {
+      return React.createElement('span', null);
+    }
+
+    var styles = {
+      actions: {
+        marginRight: 8,
+        paddingBottom: 12,
+        textAlign: 'right'
+      },
+      container: {
+        zIndex: 3,
+        width: '100%',
+        position: 'relative',
+        display: 'block'
+      },
+      subContainer: {
+        position: 'absolute',
+        height: 'auto'
+      }
+    };
+    return React.createElement(
+      'div',
+      { style: styles.container },
+      React.createElement(
+        'div',
+        { style: styles.subContainer },
+        React.createElement(
+          Paper,
+          other,
+          children,
+          React.createElement(
+            'div',
+            { style: styles.actions },
+            actions
+          )
+        )
+      )
+    );
+  }
+
+});
+
+module.exports = DatePickerInline;
+},{"../paper":68,"react":322}],48:[function(require,module,exports){
+(function (process){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var StylePropable = require('../mixins/style-propable');
+var WindowListenable = require('../mixins/window-listenable');
+var DateTime = require('../utils/date-time');
+var DatePickerDialog = require('./date-picker-dialog');
+var TextField = require('../text-field');
+var ThemeManager = require('../styles/theme-manager');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+
+var DatePicker = React.createClass({
+  displayName: 'DatePicker',
+
+  mixins: [StylePropable, WindowListenable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  propTypes: {
+    container: React.PropTypes.oneOf(['dialog', 'inline']),
+    DateTimeFormat: React.PropTypes.func,
+    locale: React.PropTypes.string,
+    wordings: React.PropTypes.object,
+    autoOk: React.PropTypes.bool,
+    defaultDate: React.PropTypes.object,
+    formatDate: React.PropTypes.func,
+    hideToolbarYearChange: React.PropTypes.bool,
+    maxDate: React.PropTypes.object,
+    minDate: React.PropTypes.object,
+    mode: React.PropTypes.oneOf(['portrait', 'landscape']),
+    onDismiss: React.PropTypes.func,
+    onChange: React.PropTypes.func,
+    onFocus: React.PropTypes.func,
+    onShow: React.PropTypes.func,
+    onTouchTap: React.PropTypes.func,
+    shouldDisableDate: React.PropTypes.func,
+    showYearSelector: React.PropTypes.bool,
+    style: React.PropTypes.object,
+    textFieldStyle: React.PropTypes.object,
+    value: React.PropTypes.object
+  },
+
+  windowListeners: {
+    keyup: '_handleWindowKeyUp'
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      formatDate: DateTime.format,
+      autoOk: false,
+      showYearSelector: false,
+      style: {}
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      date: this._isControlled() ? this._getControlledDate() : this.props.defaultDate,
+      dialogDate: new Date(),
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    if (this._isControlled()) {
+      var newDate = this._getControlledDate(nextProps);
+      if (!DateTime.isEqualDate(this.state.date, newDate)) {
+        this.setState({
+          date: newDate
+        });
+      }
+    }
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var container = _props.container;
+    var DateTimeFormat = _props.DateTimeFormat;
+    var locale = _props.locale;
+    var wordings = _props.wordings;
+    var autoOk = _props.autoOk;
+    var defaultDate = _props.defaultDate;
+    var formatDate = _props.formatDate;
+    var maxDate = _props.maxDate;
+    var minDate = _props.minDate;
+    var mode = _props.mode;
+    var onDismiss = _props.onDismiss;
+    var onFocus = _props.onFocus;
+    var onShow = _props.onShow;
+    var onTouchTap = _props.onTouchTap;
+    var showYearSelector = _props.showYearSelector;
+    var style = _props.style;
+    var textFieldStyle = _props.textFieldStyle;
+    var valueLink = _props.valueLink;
+
+    var other = _objectWithoutProperties(_props, ['container', 'DateTimeFormat', 'locale', 'wordings', 'autoOk', 'defaultDate', 'formatDate', 'maxDate', 'minDate', 'mode', 'onDismiss', 'onFocus', 'onShow', 'onTouchTap', 'showYearSelector', 'style', 'textFieldStyle', 'valueLink']);
+
+    return React.createElement(
+      'div',
+      { style: this.prepareStyles(style) },
+      React.createElement(TextField, _extends({}, other, {
+        style: textFieldStyle,
+        ref: 'input',
+        value: this.state.date ? formatDate(this.state.date) : undefined,
+        onFocus: this._handleInputFocus,
+        onTouchTap: this._handleInputTouchTap })),
+      React.createElement(DatePickerDialog, {
+        container: container,
+        ref: 'dialogWindow',
+        DateTimeFormat: DateTimeFormat,
+        locale: locale,
+        wordings: wordings,
+        mode: mode,
+        initialDate: this.state.dialogDate,
+        onAccept: this._handleDialogAccept,
+        onShow: onShow,
+        onDismiss: onDismiss,
+        minDate: minDate,
+        maxDate: maxDate,
+        autoOk: autoOk,
+        showYearSelector: showYearSelector,
+        shouldDisableDate: this.props.shouldDisableDate,
+        hideToolbarYearChange: this.props.hideToolbarYearChange })
+    );
+  },
+
+  getDate: function getDate() {
+    return this.state.date;
+  },
+
+  setDate: function setDate(d) {
+    if (process.env.NODE_ENV !== 'production' && this._isControlled()) {
+      console.error('Cannot call DatePicker.setDate when value or valueLink is defined as a property.');
+    }
+    this.setState({
+      date: d
+    });
+  },
+
+  /**
+   * Open the date-picker dialog programmatically from a parent.
+   */
+  openDialog: function openDialog() {
+    this.setState({
+      dialogDate: this.getDate()
+    }, this.refs.dialogWindow.show);
+  },
+
+  /**
+   * Alias for `openDialog()` for an api consistent with TextField.
+   */
+  focus: function focus() {
+    this.openDialog();
+  },
+
+  _handleDialogAccept: function _handleDialogAccept(d) {
+    if (!this._isControlled()) {
+      this.setDate(d);
+    }
+    if (this.props.onChange) this.props.onChange(null, d);
+    if (this.props.valueLink) this.props.valueLink.requestChange(d);
+  },
+
+  _handleInputFocus: function _handleInputFocus(e) {
+    e.target.blur();
+    if (this.props.onFocus) this.props.onFocus(e);
+  },
+
+  _handleInputTouchTap: function _handleInputTouchTap(event) {
+    var _this = this;
+
+    if (this.props.onTouchTap) this.props.onTouchTap(event);
+
+    setTimeout(function () {
+      _this.openDialog();
+    }, 0);
+  },
+
+  _handleWindowKeyUp: function _handleWindowKeyUp() {
+    //TO DO: open the dialog if input has focus
+  },
+
+  _isControlled: function _isControlled() {
+    return this.props.hasOwnProperty('value') || this.props.hasOwnProperty('valueLink');
+  },
+
+  _getControlledDate: function _getControlledDate() {
+    var props = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+
+    if (DateTime.isDateObject(props.value)) {
+      return props.value;
+    } else if (props.valueLink && DateTime.isDateObject(props.valueLink.value)) {
+      return props.valueLink.value;
+    }
+  }
+
+});
+
+module.exports = DatePicker;
+}).call(this,require('_process'))
+},{"../mixins/style-propable":65,"../mixins/window-listenable":66,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../text-field":89,"../utils/date-time":101,"./date-picker-dialog":46,"_process":2,"react":322}],49:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var StylePropable = require('../mixins/style-propable');
+var Transition = require('../styles/transitions');
+var DateTime = require('../utils/date-time');
+var EnhancedButton = require('../enhanced-button');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var DayButton = React.createClass({
+  displayName: 'DayButton',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    date: React.PropTypes.object,
+    onTouchTap: React.PropTypes.func,
+    selected: React.PropTypes.bool,
+    disabled: React.PropTypes.bool
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      selected: false,
+      disabled: false
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      hover: false,
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  getTheme: function getTheme() {
+    return this.state.muiTheme.datePicker;
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var date = _props.date;
+    var onTouchTap = _props.onTouchTap;
+    var selected = _props.selected;
+
+    var other = _objectWithoutProperties(_props, ['date', 'onTouchTap', 'selected']);
+
+    var styles = {
+      root: {
+        boxSizing: 'border-box',
+        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+        position: 'relative',
+        float: 'left',
+        width: 41,
+        padding: '4px 2px'
+      },
+
+      label: {
+        position: 'relative',
+        color: this.state.muiTheme.rawTheme.palette.textColor
+      },
+
+      buttonState: {
+        position: 'absolute',
+        height: 36,
+        width: 36,
+        top: 2,
+        opacity: 0,
+        borderRadius: '50%',
+        transform: 'scale(0)',
+        transition: Transition.easeOut(),
+        backgroundColor: this.getTheme().selectColor
+      }
+    };
+
+    if (this.state.hover) {
+      styles.label.color = this.getTheme().selectTextColor;
+      styles.buttonState.opacity = '0.6';
+      styles.buttonState.transform = 'scale(1)';
+    }
+
+    if (this.props.selected) {
+      styles.label.color = this.getTheme().selectTextColor;
+      styles.buttonState.opacity = 1;
+      styles.buttonState.transform = 'scale(1)';
+    } else if (this.props.disabled) {
+      styles.root.opacity = '0.6';
+    }
+
+    if (DateTime.isEqualDate(this.props.date, new Date()) && !this.props.selected) {
+      styles.label.color = this.getTheme().color;
+    }
+
+    return this.props.date ? React.createElement(
+      EnhancedButton,
+      _extends({}, other, {
+        style: styles.root,
+        hoverStyle: styles.hover,
+        disabled: this.props.disabled,
+        disableFocusRipple: true,
+        disableTouchRipple: true,
+        onMouseEnter: this._handleMouseEnter,
+        onMouseLeave: this._handleMouseLeave,
+        onTouchTap: this._handleTouchTap,
+        onKeyboardFocus: this._handleKeyboardFocus }),
+      React.createElement('div', { style: this.prepareStyles(styles.buttonState) }),
+      React.createElement(
+        'span',
+        { style: this.prepareStyles(styles.label) },
+        this.props.date.getDate()
+      )
+    ) : React.createElement('span', { style: this.prepareStyles(styles.root) });
+  },
+
+  _handleMouseEnter: function _handleMouseEnter() {
+    if (!this.props.disabled) this.setState({ hover: true });
+  },
+
+  _handleMouseLeave: function _handleMouseLeave() {
+    if (!this.props.disabled) this.setState({ hover: false });
+  },
+
+  _handleTouchTap: function _handleTouchTap(e) {
+    if (!this.props.disabled && this.props.onTouchTap) this.props.onTouchTap(e, this.props.date);
+  },
+
+  _handleKeyboardFocus: function _handleKeyboardFocus(e, keyboardFocused) {
+    if (!this.props.disabled && this.props.onKeyboardFocus) this.props.onKeyboardFocus(e, keyboardFocused, this.props.date);
+  }
+
+});
+
+module.exports = DayButton;
+},{"../enhanced-button":53,"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/transitions":81,"../utils/date-time":101,"react":322}],50:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var StylePropable = require('../mixins/style-propable');
+var EnhancedButton = require('../enhanced-button');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var YearButton = React.createClass({
+  displayName: 'YearButton',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    year: React.PropTypes.number,
+    onTouchTap: React.PropTypes.func,
+    selected: React.PropTypes.bool
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      selected: false
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      hover: false,
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  getTheme: function getTheme() {
+    return this.state.muiTheme.datePicker;
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var className = _props.className;
+    var year = _props.year;
+    var onTouchTap = _props.onTouchTap;
+    var selected = _props.selected;
+
+    var other = _objectWithoutProperties(_props, ['className', 'year', 'onTouchTap', 'selected']);
+
+    var styles = {
+      root: {
+        boxSizing: 'border-box',
+        WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+        position: 'relative',
+        display: 'block',
+        margin: '0 auto',
+        width: 36,
+        fontSize: 14,
+        padding: '8px 2px'
+      },
+
+      label: {
+        position: 'relative',
+        top: -1,
+        color: this.state.muiTheme.rawTheme.palette.textColor
+      },
+
+      buttonState: {
+        position: 'absolute',
+        height: 32,
+        width: 32,
+        opacity: 0,
+        borderRadius: '50%',
+        transform: 'scale(0)',
+        backgroundColor: this.getTheme().selectColor
+      }
+    };
+
+    if (this.state.hover) {
+      styles.label.color = this.getTheme().selectTextColor;
+      styles.buttonState.opacity = 0.6;
+      styles.buttonState.transform = 'scale(1.5)';
+    }
+
+    if (selected) {
+      styles.label.color = this.getTheme().selectTextColor;
+      styles.buttonState.opacity = 1;
+      styles.buttonState.transform = 'scale(1.5)';
+    }
+
+    if (year === new Date().getFullYear()) {
+      styles.root.color = this.getTheme().color;
+    }
+
+    return React.createElement(
+      EnhancedButton,
+      _extends({}, other, {
+        style: styles.root,
+        disableFocusRipple: true,
+        disableTouchRipple: true,
+        onMouseEnter: this._handleMouseEnter,
+        onMouseLeave: this._handleMouseLeave,
+        onTouchTap: this._handleTouchTap }),
+      React.createElement('div', { style: this.prepareStyles(styles.buttonState) }),
+      React.createElement(
+        'span',
+        { style: this.prepareStyles(styles.label) },
+        year
+      )
+    );
+  },
+
+  _handleMouseEnter: function _handleMouseEnter() {
+    this.setState({ hover: true });
+  },
+
+  _handleMouseLeave: function _handleMouseLeave() {
+    this.setState({ hover: false });
+  },
+
+  _handleTouchTap: function _handleTouchTap(e) {
+    if (this.props.onTouchTap) this.props.onTouchTap(e, this.props.year);
+  }
+
+});
+
+module.exports = YearButton;
+},{"../enhanced-button":53,"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],51:[function(require,module,exports){
+(function (process){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+var WindowListenable = require('./mixins/window-listenable');
+var CssEvent = require('./utils/css-event');
+var KeyCode = require('./utils/key-code');
+var Transitions = require('./styles/transitions');
+var StylePropable = require('./mixins/style-propable');
+var FlatButton = require('./flat-button');
+var Overlay = require('./overlay');
+var Paper = require('./paper');
+var DefaultRawTheme = require('./styles/raw-themes/light-raw-theme');
+var ThemeManager = require('./styles/theme-manager');
+var warning = require('warning');
+
+var ReactTransitionGroup = require('react-addons-transition-group');
+
+var TransitionItem = React.createClass({
+  displayName: 'TransitionItem',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      style: {},
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  componentWillEnter: function componentWillEnter(callback) {
+    var spacing = this.state.muiTheme.rawTheme.spacing;
+
+    this.setState({
+      style: {
+        opacity: 1,
+        transform: 'translate3d(0, ' + spacing.desktopKeylineIncrement + 'px, 0)'
+      }
+    });
+
+    setTimeout(callback, 450); // matches transition duration
+  },
+
+  componentWillLeave: function componentWillLeave(callback) {
+    var _this = this;
+
+    this.setState({
+      style: {
+        opacity: 0,
+        transform: 'translate3d(0, 0, 0)'
+      }
+    });
+
+    setTimeout(function () {
+      if (_this.isMounted()) callback();
+    }, 450); // matches transition duration
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['style']);
+
+    return React.createElement(
+      'div',
+      _extends({}, other, { style: this.prepareStyles(this.state.style, style) }),
+      this.props.children
+    );
+  }
+});
+
+var Dialog = React.createClass({
+  displayName: 'Dialog',
+
+  mixins: [WindowListenable, StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  propTypes: {
+    actions: React.PropTypes.array,
+    autoDetectWindowHeight: React.PropTypes.bool,
+    autoScrollBodyContent: React.PropTypes.bool,
+    bodyStyle: React.PropTypes.object,
+    contentClassName: React.PropTypes.string,
+    contentStyle: React.PropTypes.object,
+    openImmediately: React.PropTypes.bool,
+    repositionOnUpdate: React.PropTypes.bool,
+    style: React.PropTypes.object,
+    title: React.PropTypes.node,
+    defaultOpen: React.PropTypes.bool,
+    open: React.PropTypes.bool,
+    modal: React.PropTypes.bool,
+    onDismiss: React.PropTypes.func,
+    onShow: React.PropTypes.func,
+    onRequestClose: React.PropTypes.func,
+    actionFocus: React.PropTypes.string,
+    titleStyle: React.PropTypes.object
+  },
+
+  windowListeners: {
+    keyup: '_handleWindowKeyUp',
+    resize: '_handleResize'
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      autoDetectWindowHeight: false,
+      autoScrollBodyContent: false,
+      actions: [],
+      repositionOnUpdate: true,
+      defaultOpen: false,
+      open: null
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    if (process.env.NODE_ENV !== 'production') {
+      this._testDeprecations();
+    }
+
+    var open = this.props.open;
+
+    if (open === null) {
+      open = this.props.openImmediately || this.props.defaultOpen;
+    }
+
+    return {
+      open: open,
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+
+    if (process.env.NODE_ENV !== 'production') {
+      this._testDeprecations();
+    }
+
+    if (nextProps.open !== this.props.open) {
+      if (nextProps.open && !this.state.open) {
+        this._show();
+      } else if (!nextProps.open && this.state.open) {
+        this._dismiss();
+      }
+    }
+  },
+
+  componentDidMount: function componentDidMount() {
+    this._positionDialog();
+    if (this.state.open) {
+      this.refs.dialogOverlay.preventScrolling();
+    }
+  },
+
+  componentDidUpdate: function componentDidUpdate() {
+    this._positionDialog();
+  },
+
+  getStyles: function getStyles() {
+    var spacing = this.state.muiTheme.rawTheme.spacing;
+
+    var main = {
+      position: 'fixed',
+      boxSizing: 'border-box',
+      WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+      zIndex: 10,
+      top: 0,
+      left: -10000,
+      width: '100%',
+      height: '100%',
+      transition: Transitions.easeOut('0ms', 'left', '450ms')
+    };
+
+    var content = {
+      boxSizing: 'border-box',
+      WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+      transition: Transitions.easeOut(),
+      position: 'relative',
+      width: '75%',
+      maxWidth: spacing.desktopKeylineIncrement * 12,
+      margin: '0 auto',
+      zIndex: 10
+    };
+
+    var body = {
+      padding: spacing.desktopGutter,
+      overflowY: this.props.autoScrollBodyContent ? 'auto' : 'hidden',
+      overflowX: 'hidden'
+    };
+
+    var gutter = spacing.desktopGutter + 'px ';
+    var title = {
+      margin: 0,
+      padding: gutter + gutter + '0 ' + gutter,
+      color: this.state.muiTheme.rawTheme.palette.textColor,
+      fontSize: 24,
+      lineHeight: '32px',
+      fontWeight: '400'
+    };
+
+    if (this.state.open) {
+      main = this.mergeStyles(main, {
+        left: 0,
+        transition: Transitions.easeOut('0ms', 'left', '0ms')
+      });
+    }
+
+    return {
+      main: this.mergeStyles(main, this.props.style),
+      content: this.mergeStyles(content, this.props.contentStyle),
+      paper: {
+        background: this.state.muiTheme.rawTheme.palette.canvasColor
+      },
+      body: this.mergeStyles(body, this.props.bodyStyle),
+      title: this.mergeStyles(title, this.props.titleStyle)
+    };
+  },
+
+  render: function render() {
+    var styles = this.getStyles();
+    var actions = this._getActionsContainer(this.props.actions);
+    var title = undefined;
+    if (this.props.title) {
+      // If the title is a string, wrap in an h3 tag.
+      // If not, just use it as a node.
+      title = Object.prototype.toString.call(this.props.title) === '[object String]' ? React.createElement(
+        'h3',
+        { style: this.prepareStyles(styles.title) },
+        this.props.title
+      ) : this.props.title;
+    }
+
+    return React.createElement(
+      'div',
+      { ref: 'container', style: this.prepareStyles(styles.main) },
+      React.createElement(
+        ReactTransitionGroup,
+        { component: 'div', ref: 'dialogWindow' },
+        this.state.open && React.createElement(
+          TransitionItem,
+          {
+            className: this.props.contentClassName,
+            style: styles.content },
+          React.createElement(
+            Paper,
+            {
+              style: styles.paper,
+              zDepth: 4 },
+            title,
+            React.createElement(
+              'div',
+              { ref: 'dialogContent', style: this.prepareStyles(styles.body) },
+              this.props.children
+            ),
+            actions
+          )
+        )
+      ),
+      React.createElement(Overlay, {
+        ref: 'dialogOverlay',
+        show: this.state.open,
+        autoLockScrolling: false,
+        onTouchTap: this._handleOverlayTouchTap })
+    );
+  },
+
+  isOpen: function isOpen() {
+    return this.state.open;
+  },
+
+  _testDeprecations: function _testDeprecations() {
+    process.env.NODE_ENV !== 'production' ? warning(!this.props.hasOwnProperty('openImmediately'), 'openImmediately has been deprecated in favor of defaultOpen') : undefined;
+
+    process.env.NODE_ENV !== 'production' ? warning(!(typeof this.props.onShow === 'function'), 'onShow will be removed in favor of explicitly setting open') : undefined;
+
+    process.env.NODE_ENV !== 'production' ? warning(!(typeof this.props.onDismiss === 'function'), 'onDismiss will be removed in favor of explicitly setting open and can be replaced by onRequestClose') : undefined;
+
+    process.env.NODE_ENV !== 'production' ? warning(!this.props.hasOwnProperty('modal'), 'modal will be removed in favor of explicitly setting open and onRequestClose') : undefined;
+  },
+
+  _getAction: function _getAction(actionJSON, key) {
+    var _this2 = this;
+
+    var props = {
+      key: key,
+      secondary: true,
+      onClick: actionJSON.onClick,
+      onTouchTap: function onTouchTap() {
+        if (actionJSON.onTouchTap) {
+          actionJSON.onTouchTap.call(undefined);
+        }
+        if (!(actionJSON.onClick || actionJSON.onTouchTap)) {
+          _this2._requestClose(true);
+        }
+      },
+      label: actionJSON.text,
+      style: {
+        marginRight: 8
+      }
+    };
+
+    if (actionJSON.ref) {
+      props.ref = actionJSON.ref;
+      props.keyboardFocused = actionJSON.ref === this.props.actionFocus;
+    }
+    if (actionJSON.id) {
+      props.id = actionJSON.id;
+    }
+
+    return React.createElement(FlatButton, props);
+  },
+
+  _getActionsContainer: function _getActionsContainer(actions) {
+    var actionContainer = undefined;
+    var actionObjects = [];
+    var actionStyle = {
+      boxSizing: 'border-box',
+      WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+      padding: 8,
+      marginBottom: 8,
+      width: '100%',
+      textAlign: 'right'
+    };
+
+    if (actions.length) {
+      for (var i = 0; i < actions.length; i++) {
+        var currentAction = actions[i];
+
+        //if the current action isn't a react object, create one
+        if (!React.isValidElement(currentAction)) {
+          currentAction = this._getAction(currentAction, i);
+        }
+
+        actionObjects.push(currentAction);
+      }
+
+      actionContainer = React.createElement(
+        'div',
+        { style: this.prepareStyles(actionStyle) },
+        actionObjects
+      );
+    }
+
+    return actionContainer;
+  },
+
+  _positionDialog: function _positionDialog() {
+    if (this.state.open) {
+      var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+      var container = ReactDOM.findDOMNode(this);
+      var dialogWindow = ReactDOM.findDOMNode(this.refs.dialogWindow);
+      var dialogContent = ReactDOM.findDOMNode(this.refs.dialogContent);
+      var minPaddingTop = 16;
+
+      //Reset the height in case the window was resized.
+      dialogWindow.style.height = '';
+      dialogContent.style.height = '';
+
+      var dialogWindowHeight = dialogWindow.offsetHeight;
+      var paddingTop = (clientHeight - dialogWindowHeight) / 2 - 64;
+      if (paddingTop < minPaddingTop) paddingTop = minPaddingTop;
+
+      //Vertically center the dialog window, but make sure it doesn't
+      //transition to that position.
+      if (this.props.repositionOnUpdate || !container.style.paddingTop) {
+        container.style.paddingTop = paddingTop + 'px';
+      }
+
+      // Force a height if the dialog is taller than clientHeight
+      if (this.props.autoDetectWindowHeight || this.props.autoScrollBodyContent) {
+        var styles = this.getStyles();
+        var maxDialogContentHeight = clientHeight - 2 * (styles.body.padding + 64);
+
+        if (this.props.title) maxDialogContentHeight -= dialogContent.previousSibling.offsetHeight;
+        if (this.props.actions.length) maxDialogContentHeight -= dialogContent.nextSibling.offsetHeight;
+
+        dialogContent.style.maxHeight = maxDialogContentHeight + 'px';
+      }
+    }
+  },
+
+  show: function show() {
+    process.env.NODE_ENV !== 'production' ? warning(false, 'show has been deprecated in favor of explicitly setting the open property.') : undefined;
+
+    this._show();
+  },
+
+  _onShow: function _onShow() {
+    if (this.props.onShow) {
+      this.props.onShow();
+    }
+  },
+
+  _show: function _show() {
+    this.refs.dialogOverlay.preventScrolling();
+    this.setState({
+      open: true
+    }, this._onShow);
+  },
+
+  dismiss: function dismiss() {
+    process.env.NODE_ENV !== 'production' ? warning(false, 'dismiss has been deprecated in favor of explicitly setting the open property.') : undefined;
+
+    this._dismiss();
+  },
+
+  _onDismiss: function _onDismiss() {
+    if (this.props.onDismiss) {
+      this.props.onDismiss();
+    }
+  },
+
+  _dismiss: function _dismiss() {
+    var _this3 = this;
+
+    CssEvent.onTransitionEnd(ReactDOM.findDOMNode(this), function () {
+      _this3.refs.dialogOverlay.allowScrolling();
+    });
+
+    this.setState({
+      open: false
+    }, this._onDismiss);
+  },
+
+  _requestClose: function _requestClose(buttonClicked) {
+    process.env.NODE_ENV !== 'production' ? warning(!this.props.hasOwnProperty('modal'), 'modal will be removed in favor of explicitly setting open and onRequestClose') : undefined;
+
+    if (!buttonClicked && this.props.modal) {
+      return;
+    }
+
+    // Close the dialog if the open state is not explicitly set.
+    if (this.props.open === null) {
+      this._dismiss();
+    }
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose(!!buttonClicked);
+    }
+  },
+
+  _handleOverlayTouchTap: function _handleOverlayTouchTap() {
+    this._requestClose(false);
+  },
+
+  _handleWindowKeyUp: function _handleWindowKeyUp(event) {
+    if (event.keyCode === KeyCode.ESC) {
+      this._requestClose(false);
+    }
+  },
+
+  _handleResize: function _handleResize() {
+    if (this.state.open) {
+      this.refs.dialogOverlay.preventScrolling();
+      this._positionDialog();
+    }
+  }
+
+});
+
+module.exports = Dialog;
+}).call(this,require('_process'))
+},{"./flat-button":56,"./mixins/style-propable":65,"./mixins/window-listenable":66,"./overlay":67,"./paper":68,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./utils/css-event":100,"./utils/key-code":106,"_process":2,"react":322,"react-addons-transition-group":126,"react-dom":130,"warning":127}],52:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -3669,7 +6011,7 @@ var DropDownMenu = React.createClass({
 
 module.exports = DropDownMenu;
 }).call(this,require('_process'))
-},{"./clearfix":39,"./menu/menu":48,"./mixins/style-propable":52,"./paper":54,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"./svg-icons/navigation/arrow-drop-down":72,"./utils/key-code":85,"_process":2,"react":299,"react-dom":107}],41:[function(require,module,exports){
+},{"./clearfix":40,"./menu/menu":61,"./mixins/style-propable":65,"./paper":68,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./svg-icons/navigation/arrow-drop-down":86,"./utils/key-code":106,"_process":2,"react":322,"react-dom":130}],53:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -3971,7 +6313,7 @@ var EnhancedButton = React.createClass({
 });
 
 module.exports = EnhancedButton;
-},{"./mixins/style-propable":52,"./ripples/focus-ripple":56,"./ripples/touch-ripple":57,"./styles/colors":60,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./utils/children":78,"./utils/events":82,"./utils/key-code":85,"react":299,"react-addons-pure-render-mixin":104}],42:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./ripples/focus-ripple":70,"./ripples/touch-ripple":71,"./styles/colors":74,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./utils/children":98,"./utils/events":103,"./utils/key-code":106,"react":322,"react-addons-pure-render-mixin":125}],54:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -4403,7 +6745,7 @@ var EnhancedSwitch = React.createClass({
 
 module.exports = EnhancedSwitch;
 }).call(this,require('_process'))
-},{"./clearfix":39,"./mixins/style-propable":52,"./mixins/window-listenable":53,"./paper":54,"./ripples/focus-ripple":56,"./ripples/touch-ripple":57,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"./utils/key-code":85,"./utils/unique-id":90,"_process":2,"react":299,"react-dom":107}],43:[function(require,module,exports){
+},{"./clearfix":40,"./mixins/style-propable":65,"./mixins/window-listenable":66,"./paper":68,"./ripples/focus-ripple":70,"./ripples/touch-ripple":71,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./utils/key-code":106,"./utils/unique-id":111,"_process":2,"react":322,"react-dom":130}],55:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -4588,7 +6930,222 @@ var EnhancedTextarea = React.createClass({
 });
 
 module.exports = EnhancedTextarea;
-},{"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"react":299,"react-dom":107}],44:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"react":322,"react-dom":130}],56:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var ContextPure = require('./mixins/context-pure');
+var Transitions = require('./styles/transitions');
+var Children = require('./utils/children');
+var ColorManipulator = require('./utils/color-manipulator');
+var ImmutabilityHelper = require('./utils/immutability-helper');
+var Typography = require('./styles/typography');
+var EnhancedButton = require('./enhanced-button');
+var FlatButtonLabel = require('./buttons/flat-button-label');
+var DefaultRawTheme = require('./styles/raw-themes/light-raw-theme');
+var ThemeManager = require('./styles/theme-manager');
+
+function validateLabel(props, propName, componentName) {
+  if (!props.children && !props.label) {
+    return new Error('Required prop label or children was not ' + 'specified in ' + componentName + '.');
+  }
+}
+
+var FlatButton = React.createClass({
+  displayName: 'FlatButton',
+
+  mixins: [ContextPure],
+
+  statics: {
+    getRelevantContextKeys: function getRelevantContextKeys(muiTheme) {
+      var buttonTheme = muiTheme.button;
+      var flatButtonTheme = muiTheme.flatButton;
+
+      return {
+        buttonColor: flatButtonTheme.color,
+        buttonHeight: buttonTheme.height,
+        buttonMinWidth: buttonTheme.minWidth,
+        disabledTextColor: flatButtonTheme.disabledTextColor,
+        primaryTextColor: flatButtonTheme.primaryTextColor,
+        secondaryTextColor: flatButtonTheme.secondaryTextColor,
+        textColor: flatButtonTheme.textColor,
+        textTransform: flatButtonTheme.textTransform ? flatButtonTheme.textTransform : buttonTheme.textTransform ? buttonTheme.textTransform : 'uppercase'
+      };
+    },
+    getChildrenClasses: function getChildrenClasses() {
+      return [EnhancedButton, FlatButtonLabel];
+    }
+  },
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  propTypes: {
+    disabled: React.PropTypes.bool,
+    hoverColor: React.PropTypes.string,
+    label: validateLabel,
+    labelPosition: React.PropTypes.oneOf(['before', 'after']),
+    labelStyle: React.PropTypes.object,
+    onKeyboardFocus: React.PropTypes.func,
+    onMouseEnter: React.PropTypes.func,
+    onMouseLeave: React.PropTypes.func,
+    onTouchStart: React.PropTypes.func,
+    primary: React.PropTypes.bool,
+    rippleColor: React.PropTypes.string,
+    secondary: React.PropTypes.bool,
+    style: React.PropTypes.object
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      labelStyle: {},
+      labelPosition: 'before', // Should be after but we keep it like for now (prevent breaking changes)
+      onKeyboardFocus: function onKeyboardFocus() {},
+      onMouseEnter: function onMouseEnter() {},
+      onMouseLeave: function onMouseLeave() {},
+      onTouchStart: function onTouchStart() {}
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      hovered: false,
+      isKeyboardFocused: false,
+      touch: false,
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var children = _props.children;
+    var disabled = _props.disabled;
+    var hoverColor = _props.hoverColor;
+    var backgroundColor = _props.backgroundColor;
+    var label = _props.label;
+    var labelStyle = _props.labelStyle;
+    var labelPosition = _props.labelPosition;
+    var onKeyboardFocus = _props.onKeyboardFocus;
+    var onMouseLeave = _props.onMouseLeave;
+    var onMouseEnter = _props.onMouseEnter;
+    var onTouchStart = _props.onTouchStart;
+    var primary = _props.primary;
+    var rippleColor = _props.rippleColor;
+    var secondary = _props.secondary;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['children', 'disabled', 'hoverColor', 'backgroundColor', 'label', 'labelStyle', 'labelPosition', 'onKeyboardFocus', 'onMouseLeave', 'onMouseEnter', 'onTouchStart', 'primary', 'rippleColor', 'secondary', 'style']);
+
+    var _constructor$getRelevantContextKeys = this.constructor.getRelevantContextKeys(this.state.muiTheme);
+
+    var buttonColor = _constructor$getRelevantContextKeys.buttonColor;
+    var buttonHeight = _constructor$getRelevantContextKeys.buttonHeight;
+    var buttonMinWidth = _constructor$getRelevantContextKeys.buttonMinWidth;
+    var disabledTextColor = _constructor$getRelevantContextKeys.disabledTextColor;
+    var primaryTextColor = _constructor$getRelevantContextKeys.primaryTextColor;
+    var secondaryTextColor = _constructor$getRelevantContextKeys.secondaryTextColor;
+    var textColor = _constructor$getRelevantContextKeys.textColor;
+    var textTransform = _constructor$getRelevantContextKeys.textTransform;
+
+    var defaultColor = disabled ? disabledTextColor : primary ? primaryTextColor : secondary ? secondaryTextColor : textColor;
+
+    var defaultHoverColor = ColorManipulator.fade(ColorManipulator.lighten(defaultColor, 0.4), 0.15);
+    var defaultRippleColor = ColorManipulator.fade(defaultColor, 0.8);
+    var buttonHoverColor = hoverColor || defaultHoverColor;
+    var buttonRippleColor = rippleColor || defaultRippleColor;
+    var hovered = (this.state.hovered || this.state.isKeyboardFocused) && !disabled;
+    var buttonBackgroundColor = backgroundColor || buttonColor;
+
+    var mergedRootStyles = ImmutabilityHelper.merge({
+      color: defaultColor,
+      transition: Transitions.easeOut(),
+      fontSize: Typography.fontStyleButtonFontSize,
+      letterSpacing: 0,
+      textTransform: textTransform,
+      fontWeight: Typography.fontWeightMedium,
+      borderRadius: 2,
+      userSelect: 'none',
+      position: 'relative',
+      overflow: 'hidden',
+      backgroundColor: hovered ? buttonHoverColor : buttonBackgroundColor,
+      lineHeight: buttonHeight + 'px',
+      minWidth: buttonMinWidth,
+      padding: 0,
+      margin: 0,
+      //This is need so that ripples do not bleed past border radius.
+      //See: http://stackoverflow.com/questions/17298739
+      transform: 'translate3d(0, 0, 0)'
+    }, style);
+
+    var labelElement = label ? React.createElement(FlatButtonLabel, { label: label, style: labelStyle }) : undefined;
+
+    // Place label before or after children.
+    var childrenFragment = labelPosition === 'before' ? { labelElement: labelElement, children: children } : { children: children, labelElement: labelElement };
+    var enhancedButtonChildren = Children.create(childrenFragment);
+
+    return React.createElement(
+      EnhancedButton,
+      _extends({}, other, {
+        disabled: disabled,
+        focusRippleColor: buttonRippleColor,
+        onKeyboardFocus: this._handleKeyboardFocus,
+        onMouseLeave: this._handleMouseLeave,
+        onMouseEnter: this._handleMouseEnter,
+        onTouchStart: this._handleTouchStart,
+        style: mergedRootStyles,
+        touchRippleColor: buttonRippleColor }),
+      enhancedButtonChildren
+    );
+  },
+
+  _handleKeyboardFocus: function _handleKeyboardFocus(e, isKeyboardFocused) {
+    this.setState({ isKeyboardFocused: isKeyboardFocused });
+    this.props.onKeyboardFocus(e, isKeyboardFocused);
+  },
+
+  _handleMouseEnter: function _handleMouseEnter(e) {
+    //Cancel hover styles for touch devices
+    if (!this.state.touch) this.setState({ hovered: true });
+    this.props.onMouseEnter(e);
+  },
+
+  _handleMouseLeave: function _handleMouseLeave(e) {
+    this.setState({ hovered: false });
+    this.props.onMouseLeave(e);
+  },
+
+  _handleTouchStart: function _handleTouchStart(e) {
+    this.setState({ touch: true });
+    this.props.onTouchStart(e);
+  }
+
+});
+
+module.exports = FlatButton;
+},{"./buttons/flat-button-label":34,"./enhanced-button":53,"./mixins/context-pure":64,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./styles/typography":82,"./utils/children":98,"./utils/color-manipulator":99,"./utils/immutability-helper":105,"react":322}],57:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -4691,7 +7248,7 @@ var FontIcon = React.createClass({
 });
 
 module.exports = FontIcon;
-},{"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"react":299}],45:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"react":322}],58:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -4935,7 +7492,7 @@ var IconButton = React.createClass({
 });
 
 module.exports = IconButton;
-},{"./enhanced-button":41,"./font-icon":44,"./mixins/context-pure":51,"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"./tooltip":75,"./utils/children":78,"./utils/prop-types":87,"react":299}],46:[function(require,module,exports){
+},{"./enhanced-button":53,"./font-icon":57,"./mixins/context-pure":64,"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./tooltip":93,"./utils/children":98,"./utils/prop-types":108,"react":322}],59:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -5067,7 +7624,7 @@ var LinkMenuItem = React.createClass({
 });
 
 module.exports = LinkMenuItem;
-},{"../mixins/style-propable":52,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"react":299}],47:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],60:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -5304,7 +7861,7 @@ var MenuItem = React.createClass({
 });
 
 module.exports = MenuItem;
-},{"../font-icon":44,"../mixins/style-propable":52,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"../toggle":74,"react":299}],48:[function(require,module,exports){
+},{"../font-icon":57,"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../toggle":90,"react":322}],61:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -5951,7 +8508,7 @@ var Menu = React.createClass({
 });
 
 module.exports = Menu;
-},{"../mixins/click-awayable":50,"../mixins/style-propable":52,"../paper":54,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"../styles/transitions":67,"../utils/css-event":80,"../utils/key-code":85,"../utils/key-line":86,"./link-menu-item":46,"./menu-item":47,"./subheader-menu-item":49,"react":299,"react-dom":107}],49:[function(require,module,exports){
+},{"../mixins/click-awayable":63,"../mixins/style-propable":65,"../paper":68,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/transitions":81,"../utils/css-event":100,"../utils/key-code":106,"../utils/key-line":107,"./link-menu-item":59,"./menu-item":60,"./subheader-menu-item":62,"react":322,"react-dom":130}],62:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -6051,7 +8608,7 @@ var SubheaderMenuItem = React.createClass({
 });
 
 module.exports = SubheaderMenuItem;
-},{"../mixins/style-propable":52,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"../styles/typography":68,"react":299}],50:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/typography":82,"react":322}],63:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -6094,7 +8651,7 @@ module.exports = {
   }
 
 };
-},{"../utils/dom":81,"../utils/events":82,"react":299,"react-dom":107}],51:[function(require,module,exports){
+},{"../utils/dom":102,"../utils/events":103,"react":322,"react-dom":130}],64:[function(require,module,exports){
 'use strict';
 
 var shallowEqual = require('../utils/shallow-equal');
@@ -6151,7 +8708,7 @@ module.exports = {
   }
 
 };
-},{"../utils/shallow-equal":88}],52:[function(require,module,exports){
+},{"../utils/shallow-equal":109}],65:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -6192,7 +8749,7 @@ module.exports = {
     return Styles.prepareStyles.apply(Styles, [this.state && this.state.muiTheme || this.context.muiTheme].concat([].slice.apply(arguments)));
   }
 };
-},{"../utils/immutability-helper":84,"../utils/styles":89,"react":299}],53:[function(require,module,exports){
+},{"../utils/immutability-helper":105,"../utils/styles":110,"react":322}],66:[function(require,module,exports){
 'use strict';
 
 var Events = require('../utils/events');
@@ -6218,7 +8775,155 @@ module.exports = {
   }
 
 };
-},{"../utils/events":82}],54:[function(require,module,exports){
+},{"../utils/events":103}],67:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+var StylePropable = require('./mixins/style-propable');
+var Transitions = require('./styles/transitions');
+var Colors = require('./styles/colors');
+var DefaultRawTheme = require('./styles/raw-themes/light-raw-theme');
+var ThemeManager = require('./styles/theme-manager');
+
+var Overlay = React.createClass({
+  displayName: 'Overlay',
+
+  _originalBodyOverflow: '',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  propTypes: {
+    autoLockScrolling: React.PropTypes.bool,
+    show: React.PropTypes.bool,
+    transitionEnabled: React.PropTypes.bool,
+    style: React.PropTypes.object
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      autoLockScrolling: true,
+      transitionEnabled: true
+    };
+  },
+
+  componentDidMount: function componentDidMount() {
+    this._originalBodyOverflow = document.getElementsByTagName('body')[0].style.overflow;
+  },
+
+  componentDidUpdate: function componentDidUpdate() {
+    if (this.props.autoLockScrolling) {
+      if (this.props.show) {
+        this._preventScrolling();
+      } else {
+        this._allowScrolling();
+      }
+    }
+  },
+
+  componentWillUnmount: function componentWillUnmount() {
+    this._allowScrolling();
+  },
+
+  setOpacity: function setOpacity(opacity) {
+    var overlay = ReactDOM.findDOMNode(this);
+    overlay.style.opacity = opacity;
+  },
+
+  getStyles: function getStyles() {
+    var styles = {
+      root: {
+        position: 'fixed',
+        height: '100%',
+        width: '100%',
+        zIndex: 9,
+        top: 0,
+        left: '-100%',
+        opacity: 0,
+        backgroundColor: Colors.lightBlack,
+        WebkitTapHighlightColor: 'rgba(0, 0, 0, 0)',
+
+        // Two ways to promote overlay to its own render layer
+        willChange: 'opacity',
+        transform: 'translateZ(0)',
+
+        transition: this.props.transitionEnabled && Transitions.easeOut('0ms', 'left', '400ms') + ',' + Transitions.easeOut('400ms', 'opacity')
+      },
+      rootWhenShown: {
+        left: '0',
+        opacity: 1,
+        transition: this.props.transitionEnabled && Transitions.easeOut('0ms', 'left') + ',' + Transitions.easeOut('400ms', 'opacity')
+      }
+    };
+    return styles;
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var show = _props.show;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['show', 'style']);
+
+    var styles = this.prepareStyles(this.getStyles().root, this.props.style, this.props.show && this.getStyles().rootWhenShown);
+
+    return React.createElement('div', _extends({}, other, { style: styles }));
+  },
+
+  preventScrolling: function preventScrolling() {
+    if (!this.props.autoLockScrolling) this._preventScrolling();
+  },
+
+  allowScrolling: function allowScrolling() {
+    if (!this.props.autoLockScrolling) this._allowScrolling();
+  },
+
+  _preventScrolling: function _preventScrolling() {
+    var body = document.getElementsByTagName('body')[0];
+    body.style.overflow = 'hidden';
+  },
+
+  _allowScrolling: function _allowScrolling() {
+    var body = document.getElementsByTagName('body')[0];
+    body.style.overflow = this._originalBodyOverflow || '';
+  }
+
+});
+
+module.exports = Overlay;
+},{"./mixins/style-propable":65,"./styles/colors":74,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"react":322,"react-dom":130}],68:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -6320,7 +9025,7 @@ var Paper = React.createClass({
 });
 
 module.exports = Paper;
-},{"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"./utils/prop-types":87,"react":299,"react-addons-pure-render-mixin":104}],55:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./utils/prop-types":108,"react":322,"react-addons-pure-render-mixin":125}],69:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -6421,7 +9126,7 @@ var CircleRipple = React.createClass({
 });
 
 module.exports = CircleRipple;
-},{"../mixins/style-propable":52,"../styles/auto-prefix":59,"../styles/colors":60,"../styles/transitions":67,"react":299,"react-addons-pure-render-mixin":104,"react-dom":107}],56:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles/auto-prefix":73,"../styles/colors":74,"../styles/transitions":81,"react":322,"react-addons-pure-render-mixin":125,"react-dom":130}],70:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -6548,7 +9253,7 @@ var FocusRipple = React.createClass({
 });
 
 module.exports = FocusRipple;
-},{"../mixins/style-propable":52,"../styles/auto-prefix":59,"../styles/colors":60,"../styles/transitions":67,"../transition-groups/scale-in":77,"react":299,"react-addons-pure-render-mixin":104,"react-dom":107}],57:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles/auto-prefix":73,"../styles/colors":74,"../styles/transitions":81,"../transition-groups/scale-in":95,"react":322,"react-addons-pure-render-mixin":125,"react-dom":130}],71:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -6715,7 +9420,7 @@ var TouchRipple = React.createClass({
 });
 
 module.exports = TouchRipple;
-},{"../mixins/style-propable":52,"../utils/dom":81,"../utils/immutability-helper":84,"./circle-ripple":55,"react":299,"react-addons-pure-render-mixin":104,"react-addons-transition-group":105,"react-dom":107}],58:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../utils/dom":102,"../utils/immutability-helper":105,"./circle-ripple":69,"react":322,"react-addons-pure-render-mixin":125,"react-addons-transition-group":126,"react-dom":130}],72:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -6894,7 +9599,7 @@ var SelectField = React.createClass({
 });
 
 module.exports = SelectField;
-},{"./drop-down-menu":40,"./mixins/context-pure":51,"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./text-field":73,"react":299}],59:[function(require,module,exports){
+},{"./drop-down-menu":52,"./mixins/context-pure":64,"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./text-field":89,"react":322}],73:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -6975,7 +9680,7 @@ exports['default'] = {
 
 };
 module.exports = exports['default'];
-},{"inline-style-prefixer":92}],60:[function(require,module,exports){
+},{"inline-style-prefixer":113}],74:[function(require,module,exports){
 // To include this file in your project:
 // let mui = require('mui');
 // let Colors = mui.Styles.Colors;
@@ -7271,7 +9976,7 @@ module.exports = {
   lightWhite: 'rgba(255, 255, 255, 0.54)'
 
 };
-},{}],61:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -7285,7 +9990,7 @@ module.exports = {
   DarkRawTheme: require('./raw-themes/dark-raw-theme'),
   ThemeDecorator: require('./theme-decorator')
 };
-},{"./auto-prefix":59,"./colors":60,"./raw-themes/dark-raw-theme":62,"./raw-themes/light-raw-theme":63,"./spacing":64,"./theme-decorator":65,"./theme-manager":66,"./transitions":67,"./typography":68}],62:[function(require,module,exports){
+},{"./auto-prefix":73,"./colors":74,"./raw-themes/dark-raw-theme":76,"./raw-themes/light-raw-theme":77,"./spacing":78,"./theme-decorator":79,"./theme-manager":80,"./transitions":81,"./typography":82}],76:[function(require,module,exports){
 'use strict';
 
 var Colors = require('../colors');
@@ -7309,7 +10014,7 @@ module.exports = {
     disabledColor: ColorManipulator.fade(Colors.fullWhite, 0.3)
   }
 };
-},{"../../utils/color-manipulator":79,"../colors":60,"../spacing":64}],63:[function(require,module,exports){
+},{"../../utils/color-manipulator":99,"../colors":74,"../spacing":78}],77:[function(require,module,exports){
 'use strict';
 
 var Colors = require('../colors');
@@ -7339,7 +10044,7 @@ module.exports = {
     disabledColor: ColorManipulator.fade(Colors.darkBlack, 0.3)
   }
 };
-},{"../../utils/color-manipulator":79,"../colors":60,"../spacing":64}],64:[function(require,module,exports){
+},{"../../utils/color-manipulator":99,"../colors":74,"../spacing":78}],78:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -7356,7 +10061,7 @@ module.exports = {
   desktopSubheaderHeight: 48,
   desktopToolbarHeight: 56
 };
-},{}],65:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7383,7 +10088,7 @@ module.exports = function (customTheme) {
     });
   };
 };
-},{"react":299}],66:[function(require,module,exports){
+},{"react":322}],80:[function(require,module,exports){
 'use strict';
 
 var Colors = require('./colors');
@@ -7638,7 +10343,7 @@ module.exports = {
   }
 
 };
-},{"../utils/color-manipulator":79,"../utils/extend":83,"./colors":60,"react-addons-update":106}],67:[function(require,module,exports){
+},{"../utils/color-manipulator":99,"../utils/extend":104,"./colors":74,"react-addons-update":129}],81:[function(require,module,exports){
 'use strict';
 
 var AutoPrefix = require('./auto-prefix');
@@ -7674,7 +10379,7 @@ module.exports = {
     return property + ' ' + duration + ' ' + easeFunction + ' ' + delay;
   }
 };
-},{"./auto-prefix":59}],68:[function(require,module,exports){
+},{"./auto-prefix":73}],82:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -7702,7 +10407,7 @@ var Typography = function Typography() {
 };
 
 module.exports = new Typography();
-},{"./colors":60}],69:[function(require,module,exports){
+},{"./colors":74}],83:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -7818,7 +10523,7 @@ var SvgIcon = React.createClass({
 });
 
 module.exports = SvgIcon;
-},{"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"react":299}],70:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"react":322}],84:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7841,7 +10546,7 @@ var HardwareKeyboardArrowDown = React.createClass({
 });
 
 module.exports = HardwareKeyboardArrowDown;
-},{"../../svg-icon":69,"react":299,"react-addons-pure-render-mixin":104}],71:[function(require,module,exports){
+},{"../../svg-icon":83,"react":322,"react-addons-pure-render-mixin":125}],85:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7864,7 +10569,7 @@ var HardwareKeyboardArrowUp = React.createClass({
 });
 
 module.exports = HardwareKeyboardArrowUp;
-},{"../../svg-icon":69,"react":299,"react-addons-pure-render-mixin":104}],72:[function(require,module,exports){
+},{"../../svg-icon":83,"react":322,"react-addons-pure-render-mixin":125}],86:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -7887,7 +10592,53 @@ var NavigationArrowDropDown = React.createClass({
 });
 
 module.exports = NavigationArrowDropDown;
-},{"../../svg-icon":69,"react":299,"react-addons-pure-render-mixin":104}],73:[function(require,module,exports){
+},{"../../svg-icon":83,"react":322,"react-addons-pure-render-mixin":125}],87:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
+var SvgIcon = require('../../svg-icon');
+
+var NavigationChevronLeft = React.createClass({
+  displayName: 'NavigationChevronLeft',
+
+  mixins: [PureRenderMixin],
+
+  render: function render() {
+    return React.createElement(
+      SvgIcon,
+      this.props,
+      React.createElement('path', { d: 'M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z' })
+    );
+  }
+
+});
+
+module.exports = NavigationChevronLeft;
+},{"../../svg-icon":83,"react":322,"react-addons-pure-render-mixin":125}],88:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var PureRenderMixin = require('react-addons-pure-render-mixin');
+var SvgIcon = require('../../svg-icon');
+
+var NavigationChevronRight = React.createClass({
+  displayName: 'NavigationChevronRight',
+
+  mixins: [PureRenderMixin],
+
+  render: function render() {
+    return React.createElement(
+      SvgIcon,
+      this.props,
+      React.createElement('path', { d: 'M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z' })
+    );
+  }
+
+});
+
+module.exports = NavigationChevronRight;
+},{"../../svg-icon":83,"react":322,"react-addons-pure-render-mixin":125}],89:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -8340,7 +11091,7 @@ var TextField = React.createClass({
 
 module.exports = TextField;
 }).call(this,require('_process'))
-},{"./enhanced-textarea":43,"./mixins/context-pure":51,"./mixins/style-propable":52,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"./utils/color-manipulator":79,"./utils/unique-id":90,"_process":2,"react":299,"react-dom":107}],74:[function(require,module,exports){
+},{"./enhanced-textarea":55,"./mixins/context-pure":64,"./mixins/style-propable":65,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"./utils/color-manipulator":99,"./utils/unique-id":111,"_process":2,"react":322,"react-dom":130}],90:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -8535,7 +11286,271 @@ var Toggle = React.createClass({
 });
 
 module.exports = Toggle;
-},{"./enhanced-switch":42,"./mixins/style-propable":52,"./paper":54,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"react":299}],75:[function(require,module,exports){
+},{"./enhanced-switch":54,"./mixins/style-propable":65,"./paper":68,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"react":322}],91:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var Colors = require('../styles/colors');
+var StylePropable = require('../mixins/style-propable');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var ToolbarGroup = React.createClass({
+  displayName: 'ToolbarGroup',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    className: React.PropTypes.string,
+    float: React.PropTypes.string,
+    style: React.PropTypes.object,
+    lastChild: React.PropTypes.bool,
+    firstChild: React.PropTypes.bool
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      float: 'left'
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  getTheme: function getTheme() {
+    return this.state.muiTheme.toolbar;
+  },
+
+  getSpacing: function getSpacing() {
+    return this.state.muiTheme.rawTheme.spacing.desktopGutter;
+  },
+
+  getStyles: function getStyles() {
+    var marginHorizontal = this.getSpacing();
+    var marginVertical = (this.getTheme().height - this.state.muiTheme.button.height) / 2;
+    var styles = {
+      root: {
+        position: 'relative',
+        float: this.props.float
+      },
+      dropDownMenu: {
+        root: {
+          float: 'left',
+          color: Colors.lightBlack, // removes hover color change, we want to keep it
+          display: 'inline-block',
+          marginRight: this.getSpacing()
+        },
+        controlBg: {
+          backgroundColor: this.getTheme().menuHoverColor,
+          borderRadius: 0
+        },
+        underline: {
+          display: 'none'
+        }
+      },
+      button: {
+        float: 'left',
+        margin: marginVertical + 'px ' + marginHorizontal + 'px',
+        position: 'relative'
+      },
+      icon: {
+        root: {
+          float: 'left',
+          cursor: 'pointer',
+          color: this.getTheme().iconColor,
+          lineHeight: this.getTheme().height + 'px',
+          paddingLeft: this.getSpacing()
+        },
+        hover: {
+          color: Colors.darkBlack
+        }
+      },
+      span: {
+        float: 'left',
+        color: this.getTheme().iconColor,
+        lineHeight: this.getTheme().height + 'px'
+      }
+    };
+
+    return styles;
+  },
+
+  render: function render() {
+    var _this = this;
+
+    var styles = this.getStyles();
+
+    if (this.props.firstChild) styles.marginLeft = -24;
+    if (this.props.lastChild) styles.marginRight = -24;
+
+    var newChildren = React.Children.map(this.props.children, function (currentChild) {
+      if (!currentChild) {
+        return null;
+      }
+      if (!currentChild.type) {
+        return currentChild;
+      }
+      switch (currentChild.type.displayName) {
+        case 'DropDownMenu':
+          return React.cloneElement(currentChild, {
+            style: _this.mergeStyles(styles.dropDownMenu.root, currentChild.props.style),
+            styleControlBg: styles.dropDownMenu.controlBg,
+            styleUnderline: styles.dropDownMenu.underline
+          });
+        case 'DropDownIcon':
+          return React.cloneElement(currentChild, {
+            style: _this.mergeStyles({ float: 'left' }, currentChild.props.style),
+            iconStyle: styles.icon.root,
+            onMouseEnter: _this._handleMouseEnterDropDownMenu,
+            onMouseLeave: _this._handleMouseLeaveDropDownMenu
+          });
+        case 'RaisedButton':case 'FlatButton':
+          return React.cloneElement(currentChild, {
+            style: _this.mergeStyles(styles.button, currentChild.props.style)
+          });
+        case 'FontIcon':
+          return React.cloneElement(currentChild, {
+            style: _this.mergeStyles(styles.icon.root, currentChild.props.style),
+            onMouseEnter: _this._handleMouseEnterFontIcon,
+            onMouseLeave: _this._handleMouseLeaveFontIcon
+          });
+        case 'ToolbarSeparator':case 'ToolbarTitle':
+          return React.cloneElement(currentChild, {
+            style: _this.mergeStyles(styles.span, currentChild.props.style)
+          });
+        default:
+          return currentChild;
+      }
+    }, this);
+
+    return React.createElement(
+      'div',
+      { className: this.props.className, style: this.prepareStyles(styles.root, this.props.style) },
+      newChildren
+    );
+  },
+
+  _handleMouseEnterDropDownMenu: function _handleMouseEnterDropDownMenu(e) {
+    e.target.style.zIndex = this.getStyles().icon.hover.zIndex;
+    e.target.style.color = this.getStyles().icon.hover.color;
+  },
+
+  _handleMouseLeaveDropDownMenu: function _handleMouseLeaveDropDownMenu(e) {
+    e.target.style.zIndex = 'auto';
+    e.target.style.color = this.getStyles().icon.root.color;
+  },
+
+  _handleMouseEnterFontIcon: function _handleMouseEnterFontIcon(e) {
+    e.target.style.zIndex = this.getStyles().icon.hover.zIndex;
+    e.target.style.color = this.getStyles().icon.hover.color;
+  },
+
+  _handleMouseLeaveFontIcon: function _handleMouseLeaveFontIcon(e) {
+    e.target.style.zIndex = 'auto';
+    e.target.style.color = this.getStyles().icon.root.color;
+  }
+});
+
+module.exports = ToolbarGroup;
+},{"../mixins/style-propable":65,"../styles/colors":74,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],92:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var StylePropable = require('../mixins/style-propable');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var Toolbar = React.createClass({
+  displayName: 'Toolbar',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  propTypes: {
+    className: React.PropTypes.string,
+    style: React.PropTypes.object,
+    noGutter: React.PropTypes.bool
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  getTheme: function getTheme() {
+    return this.state.muiTheme.toolbar;
+  },
+
+  getStyles: function getStyles() {
+    return this.mergeStyles({
+      boxSizing: 'border-box',
+      WebkitTapHighlightColor: 'rgba(0,0,0,0)',
+      backgroundColor: this.getTheme().backgroundColor,
+      height: this.getTheme().height,
+      width: '100%',
+      padding: this.props.noGutter ? 0 : '0px ' + this.state.muiTheme.rawTheme.spacing.desktopGutter + 'px'
+    }, this.props.style);
+  },
+
+  render: function render() {
+    return React.createElement(
+      'div',
+      { className: this.props.className, style: this.prepareStyles(this.getStyles()) },
+      this.props.children
+    );
+  }
+
+});
+
+module.exports = Toolbar;
+},{"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"react":322}],93:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -8708,7 +11723,7 @@ var Tooltip = React.createClass({
 });
 
 module.exports = Tooltip;
-},{"./mixins/style-propable":52,"./styles/colors":60,"./styles/raw-themes/light-raw-theme":63,"./styles/theme-manager":66,"./styles/transitions":67,"react":299,"react-dom":107}],76:[function(require,module,exports){
+},{"./mixins/style-propable":65,"./styles/colors":74,"./styles/raw-themes/light-raw-theme":77,"./styles/theme-manager":80,"./styles/transitions":81,"react":322,"react-dom":130}],94:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -8848,7 +11863,7 @@ var ScaleInChild = React.createClass({
 });
 
 module.exports = ScaleInChild;
-},{"../mixins/style-propable":52,"../styles/auto-prefix":59,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"../styles/transitions":67,"react":299,"react-addons-pure-render-mixin":104,"react-dom":107}],77:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles/auto-prefix":73,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/transitions":81,"react":322,"react-addons-pure-render-mixin":125,"react-dom":130}],95:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -8952,7 +11967,242 @@ var ScaleIn = React.createClass({
 });
 
 module.exports = ScaleIn;
-},{"../mixins/style-propable":52,"../styles/raw-themes/light-raw-theme":63,"../styles/theme-manager":66,"./scale-in-child":76,"react":299,"react-addons-pure-render-mixin":104,"react-addons-transition-group":105}],78:[function(require,module,exports){
+},{"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"./scale-in-child":94,"react":322,"react-addons-pure-render-mixin":125,"react-addons-transition-group":126}],96:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+var StylePropable = require('../mixins/style-propable');
+var AutoPrefix = require('../styles/auto-prefix');
+var Transitions = require('../styles/transitions');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var SlideInChild = React.createClass({
+  displayName: 'SlideInChild',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  propTypes: {
+    enterDelay: React.PropTypes.number,
+    //This callback is needed bacause
+    //the direction could change when leaving the dom
+    getLeaveDirection: React.PropTypes.func.isRequired,
+    style: React.PropTypes.object
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      enterDelay: 0
+    };
+  },
+
+  componentWillEnter: function componentWillEnter(callback) {
+    var _this = this;
+
+    var style = ReactDOM.findDOMNode(this).style;
+    var x = this.props.direction === 'left' ? '100%' : this.props.direction === 'right' ? '-100%' : '0';
+    var y = this.props.direction === 'up' ? '100%' : this.props.direction === 'down' ? '-100%' : '0';
+
+    style.opacity = '0';
+    AutoPrefix.set(style, 'transform', 'translate3d(' + x + ',' + y + ',0)');
+
+    setTimeout(function () {
+      if (_this.isMounted()) callback();
+    }, this.props.enterDelay);
+  },
+
+  componentDidEnter: function componentDidEnter() {
+    var style = ReactDOM.findDOMNode(this).style;
+    style.opacity = '1';
+    AutoPrefix.set(style, 'transform', 'translate3d(0,0,0)');
+  },
+
+  componentWillLeave: function componentWillLeave(callback) {
+    var _this2 = this;
+
+    var style = ReactDOM.findDOMNode(this).style;
+    var direction = this.props.getLeaveDirection();
+    var x = direction === 'left' ? '-100%' : direction === 'right' ? '100%' : '0';
+    var y = direction === 'up' ? '-100%' : direction === 'down' ? '100%' : '0';
+
+    style.opacity = '0';
+    AutoPrefix.set(style, 'transform', 'translate3d(' + x + ',' + y + ',0)');
+
+    setTimeout(function () {
+      if (_this2.isMounted()) callback();
+    }, 450);
+  },
+
+  render: function render() {
+    var _props = this.props;
+    var children = _props.children;
+    var enterDelay = _props.enterDelay;
+    var getLeaveDirection = _props.getLeaveDirection;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['children', 'enterDelay', 'getLeaveDirection', 'style']);
+
+    var mergedRootStyles = this.prepareStyles({
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      top: 0,
+      left: 0,
+      transition: Transitions.easeOut(null, ['transform', 'opacity'])
+    }, style);
+
+    return React.createElement(
+      'div',
+      _extends({}, other, { style: mergedRootStyles }),
+      children
+    );
+  }
+
+});
+
+module.exports = SlideInChild;
+},{"../mixins/style-propable":65,"../styles/auto-prefix":73,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"../styles/transitions":81,"react":322,"react-dom":130}],97:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+var React = require('react');
+var ReactTransitionGroup = require('react-addons-transition-group');
+var StylePropable = require('../mixins/style-propable');
+var SlideInChild = require('./slide-in-child');
+var DefaultRawTheme = require('../styles/raw-themes/light-raw-theme');
+var ThemeManager = require('../styles/theme-manager');
+
+var SlideIn = React.createClass({
+  displayName: 'SlideIn',
+
+  mixins: [StylePropable],
+
+  contextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  //for passing default theme context to children
+  childContextTypes: {
+    muiTheme: React.PropTypes.object
+  },
+
+  getChildContext: function getChildContext() {
+    return {
+      muiTheme: this.state.muiTheme
+    };
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      muiTheme: this.context.muiTheme ? this.context.muiTheme : ThemeManager.getMuiTheme(DefaultRawTheme)
+    };
+  },
+
+  //to update theme inside state whenever a new theme is passed down
+  //from the parent / owner using context
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps, nextContext) {
+    var newMuiTheme = nextContext.muiTheme ? nextContext.muiTheme : this.state.muiTheme;
+    this.setState({ muiTheme: newMuiTheme });
+  },
+
+  propTypes: {
+    enterDelay: React.PropTypes.number,
+    childStyle: React.PropTypes.object,
+    direction: React.PropTypes.oneOf(['left', 'right', 'up', 'down']),
+    style: React.PropTypes.object
+  },
+
+  getDefaultProps: function getDefaultProps() {
+    return {
+      enterDelay: 0,
+      direction: 'left'
+    };
+  },
+
+  render: function render() {
+    var _this = this;
+
+    var _props = this.props;
+    var enterDelay = _props.enterDelay;
+    var children = _props.children;
+    var childStyle = _props.childStyle;
+    var direction = _props.direction;
+    var style = _props.style;
+
+    var other = _objectWithoutProperties(_props, ['enterDelay', 'children', 'childStyle', 'direction', 'style']);
+
+    var mergedRootStyles = this.prepareStyles({
+      position: 'relative',
+      overflow: 'hidden',
+      height: '100%'
+    }, style);
+
+    var newChildren = React.Children.map(children, function (child) {
+      return React.createElement(
+        SlideInChild,
+        {
+          key: child.key,
+          direction: direction,
+          enterDelay: enterDelay,
+          getLeaveDirection: _this._getLeaveDirection,
+          style: childStyle },
+        child
+      );
+    }, this);
+
+    return React.createElement(
+      ReactTransitionGroup,
+      _extends({}, other, {
+        style: mergedRootStyles,
+        component: 'div' }),
+      newChildren
+    );
+  },
+
+  _getLeaveDirection: function _getLeaveDirection() {
+    return this.props.direction;
+  }
+
+});
+
+module.exports = SlideIn;
+},{"../mixins/style-propable":65,"../styles/raw-themes/light-raw-theme":77,"../styles/theme-manager":80,"./slide-in-child":96,"react":322,"react-addons-transition-group":126}],98:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -8994,7 +12244,7 @@ module.exports = {
   }
 
 };
-},{"react":299,"react-addons-create-fragment":103}],79:[function(require,module,exports){
+},{"react":322,"react-addons-create-fragment":124}],99:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9169,7 +12419,7 @@ module.exports = {
     }
   }
 };
-},{}],80:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 'use strict';
 
 var Events = require('./events');
@@ -9222,7 +12472,160 @@ module.exports = {
     });
   }
 };
-},{"./events":82}],81:[function(require,module,exports){
+},{"./events":103}],101:[function(require,module,exports){
+(function (process){
+'use strict';
+
+var dayList = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var monthList = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var monthLongList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+function DateTimeFormat(locale, options) {
+  if (process.env.NODE_ENV !== 'production' && locale !== 'en-US') {
+    console.warn('Wrong usage of DateTimeFormat. The ' + locale + ' locale is not supported.');
+  }
+
+  this.format = function (date) {
+    var output = undefined;
+
+    if (options.month === 'short' && options.weekday === 'short' && options.day === '2-digit') {
+
+      output = dayList[date.getDay()] + ', ';
+      output += monthList[date.getMonth()] + ' ';
+      output += date.getDate();
+    } else if (options.month === 'long' && options.year === 'numeric') {
+
+      output = monthLongList[date.getMonth()];
+      output += ' ' + date.getFullYear();
+    } else if (process.env.NODE_ENV !== 'production') {
+      console.warn('Wrong usage of DateTimeFormat');
+    }
+
+    return output;
+  };
+}
+
+module.exports = {
+  DateTimeFormat: DateTimeFormat,
+
+  addDays: function addDays(d, days) {
+    var newDate = this.clone(d);
+    newDate.setDate(d.getDate() + days);
+    return newDate;
+  },
+
+  addMonths: function addMonths(d, months) {
+    var newDate = this.clone(d);
+    newDate.setMonth(d.getMonth() + months);
+    return newDate;
+  },
+
+  addYears: function addYears(d, years) {
+    var newDate = this.clone(d);
+    newDate.setFullYear(d.getFullYear() + years);
+    return newDate;
+  },
+
+  clone: function clone(d) {
+    return new Date(d.getTime());
+  },
+
+  cloneAsDate: function cloneAsDate(d) {
+    var clonedDate = this.clone(d);
+    clonedDate.setHours(0, 0, 0, 0);
+    return clonedDate;
+  },
+
+  getDaysInMonth: function getDaysInMonth(d) {
+    var resultDate = this.getFirstDayOfMonth(d);
+
+    resultDate.setMonth(resultDate.getMonth() + 1);
+    resultDate.setDate(resultDate.getDate() - 1);
+
+    return resultDate.getDate();
+  },
+
+  getFirstDayOfMonth: function getFirstDayOfMonth(d) {
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  },
+
+  getWeekArray: function getWeekArray(d) {
+    var dayArray = [];
+    var daysInMonth = this.getDaysInMonth(d);
+    var daysInWeek = undefined;
+    var emptyDays = undefined;
+    var firstDayOfWeek = undefined;
+    var week = undefined;
+    var weekArray = [];
+
+    for (var i = 1; i <= daysInMonth; i++) {
+      dayArray.push(new Date(d.getFullYear(), d.getMonth(), i));
+    }
+
+    while (dayArray.length) {
+      firstDayOfWeek = dayArray[0].getDay();
+      daysInWeek = 7 - firstDayOfWeek;
+      emptyDays = 7 - daysInWeek;
+      week = dayArray.splice(0, daysInWeek);
+
+      for (var i = 0; i < emptyDays; i++) {
+        week.unshift(null);
+      }
+
+      weekArray.push(week);
+    }
+
+    return weekArray;
+  },
+
+  format: function format(date) {
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    var y = date.getFullYear();
+    return m + '/' + d + '/' + y;
+  },
+
+  isEqualDate: function isEqualDate(d1, d2) {
+    return d1 && d2 && d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+  },
+
+  isBeforeDate: function isBeforeDate(d1, d2) {
+    var date1 = this.cloneAsDate(d1);
+    var date2 = this.cloneAsDate(d2);
+
+    return date1.getTime() < date2.getTime();
+  },
+
+  isAfterDate: function isAfterDate(d1, d2) {
+    var date1 = this.cloneAsDate(d1);
+    var date2 = this.cloneAsDate(d2);
+
+    return date1.getTime() > date2.getTime();
+  },
+
+  isBetweenDates: function isBetweenDates(dateToCheck, startDate, endDate) {
+    return !this.isBeforeDate(dateToCheck, startDate) && !this.isAfterDate(dateToCheck, endDate);
+  },
+
+  isDateObject: function isDateObject(d) {
+    return d instanceof Date;
+  },
+
+  monthDiff: function monthDiff(d1, d2) {
+    var m = undefined;
+    m = (d1.getFullYear() - d2.getFullYear()) * 12;
+    m += d1.getMonth();
+    m -= d2.getMonth();
+    return m;
+  },
+
+  yearDiff: function yearDiff(d1, d2) {
+    return ~ ~(this.monthDiff(d1, d2) / 12);
+  }
+
+};
+}).call(this,require('_process'))
+},{"_process":2}],102:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9295,7 +12698,7 @@ module.exports = {
   }
 
 };
-},{}],82:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9336,7 +12739,7 @@ module.exports = {
     return ['keydown', 'keypress', 'keyup'].indexOf(e.type) !== -1;
   }
 };
-},{}],83:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 'use strict';
 
 function isObject(obj) {
@@ -9386,7 +12789,7 @@ var extend = function extend(base, override) {
 };
 
 module.exports = extend;
-},{}],84:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -9428,7 +12831,7 @@ module.exports = {
   }
 
 };
-},{"react":299,"react-addons-update":106}],85:[function(require,module,exports){
+},{"react":322,"react-addons-update":129}],106:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -9441,7 +12844,7 @@ module.exports = {
   TAB: 9,
   UP: 38
 };
-},{}],86:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -9457,7 +12860,7 @@ module.exports = {
     return Math.ceil(dim / this.Desktop.INCREMENT) * this.Desktop.INCREMENT;
   }
 };
-},{}],87:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -9485,7 +12888,7 @@ module.exports = {
   zDepth: React.PropTypes.oneOf([0, 1, 2, 3, 4, 5])
 
 };
-},{"react":299}],88:[function(require,module,exports){
+},{"react":322}],109:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9521,7 +12924,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = exports['default'];
-},{}],89:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -9627,7 +13030,7 @@ module.exports = {
   }
 };
 }).call(this,require('_process'))
-},{"../styles/auto-prefix":59,"../utils/immutability-helper":84,"_process":2}],90:[function(require,module,exports){
+},{"../styles/auto-prefix":73,"../utils/immutability-helper":105,"_process":2}],111:[function(require,module,exports){
 "use strict";
 
 var index = 0;
@@ -9637,7 +13040,7 @@ module.exports = {
     return "mui-id-" + index++;
   }
 };
-},{}],91:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -9674,7 +13077,7 @@ var _pluginsFlexboxOld2 = _interopRequireDefault(_pluginsFlexboxOld);
 
 exports['default'] = [_pluginsCursor2['default'], _pluginsFlex2['default'], _pluginsSizing2['default'], _pluginsGradient2['default'], _pluginsFlexboxIE2['default'], _pluginsFlexboxOld2['default']];
 module.exports = exports['default'];
-},{"./plugins/cursor":96,"./plugins/flex":97,"./plugins/flexboxIE":98,"./plugins/flexboxOld":99,"./plugins/gradient":100,"./plugins/sizing":101}],92:[function(require,module,exports){
+},{"./plugins/cursor":117,"./plugins/flex":118,"./plugins/flexboxIE":119,"./plugins/flexboxOld":120,"./plugins/gradient":121,"./plugins/sizing":122}],113:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -9871,9 +13274,9 @@ var Prefixer = (function () {
 exports['default'] = Prefixer;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./Plugins":91,"./caniuseData":93,"./getBrowserInformation":94,"./getPrefixedKeyframes":95,"_process":2}],93:[function(require,module,exports){
+},{"./Plugins":112,"./caniuseData":114,"./getBrowserInformation":115,"./getPrefixedKeyframes":116,"_process":2}],114:[function(require,module,exports){
 var caniuseData = {"chrome":{"transform":35,"transformOrigin":35,"transformOriginX":35,"transformOriginY":35,"backfaceVisibility":35,"perspective":35,"perspectiveOrigin":35,"transformStyle":35,"transformOriginZ":35,"animation":42,"animationDelay":42,"animationDirection":42,"animationFillMode":42,"animationDuration":42,"animationIterationCount":42,"animationName":42,"animationPlayState":42,"animationTimingFunction":42,"appearance":49,"userSelect":49,"fontKerning":32,"textEmphasisPosition":49,"textEmphasis":49,"textEmphasisStyle":49,"textEmphasisColor":49,"boxDecorationBreak":49,"clipPath":49,"maskImage":49,"maskMode":49,"maskRepeat":49,"maskPosition":49,"maskClip":49,"maskOrigin":49,"maskSize":49,"maskComposite":49,"mask":49,"maskBorderSource":49,"maskBorderMode":49,"maskBorderSlice":49,"maskBorderWidth":49,"maskBorderOutset":49,"maskBorderRepeat":49,"maskBorder":49,"maskType":49,"textDecorationStyle":49,"textDecorationSkip":49,"textDecorationLine":49,"textDecorationColor":49,"filter":49,"fontFeatureSettings":49,"breakAfter":49,"breakBefore":49,"breakInside":49,"columnCount":49,"columnFill":49,"columnGap":49,"columnRule":49,"columnRuleColor":49,"columnRuleStyle":49,"columnRuleWidth":49,"columns":49,"columnSpan":49,"columnWidth":49},"safari":{"flex":8,"flexBasis":8,"flexDirection":8,"flexGrow":8,"flexFlow":8,"flexShrink":8,"flexWrap":8,"alignContent":8,"alignItems":8,"alignSelf":8,"justifyContent":8,"order":8,"transition":6,"transitionDelay":6,"transitionDuration":6,"transitionProperty":6,"transitionTimingFunction":6,"transform":8,"transformOrigin":8,"transformOriginX":8,"transformOriginY":8,"backfaceVisibility":8,"perspective":8,"perspectiveOrigin":8,"transformStyle":8,"transformOriginZ":8,"animation":8,"animationDelay":8,"animationDirection":8,"animationFillMode":8,"animationDuration":8,"animationIterationCount":8,"animationName":8,"animationPlayState":8,"animationTimingFunction":8,"appearance":9,"userSelect":9,"backdropFilter":9,"fontKerning":9,"scrollSnapType":9,"scrollSnapPointsX":9,"scrollSnapPointsY":9,"scrollSnapDestination":9,"scrollSnapCoordinate":9,"textEmphasisPosition":7,"textEmphasis":7,"textEmphasisStyle":7,"textEmphasisColor":7,"boxDecorationBreak":9,"clipPath":9,"maskImage":9,"maskMode":9,"maskRepeat":9,"maskPosition":9,"maskClip":9,"maskOrigin":9,"maskSize":9,"maskComposite":9,"mask":9,"maskBorderSource":9,"maskBorderMode":9,"maskBorderSlice":9,"maskBorderWidth":9,"maskBorderOutset":9,"maskBorderRepeat":9,"maskBorder":9,"maskType":9,"textDecorationStyle":9,"textDecorationSkip":9,"textDecorationLine":9,"textDecorationColor":9,"shapeImageThreshold":9,"shapeImageMargin":9,"shapeImageOutside":9,"filter":9,"hyphens":9,"flowInto":9,"flowFrom":9,"breakBefore":8,"breakAfter":8,"breakInside":8,"regionFragment":9,"columnCount":8,"columnFill":8,"columnGap":8,"columnRule":8,"columnRuleColor":8,"columnRuleStyle":8,"columnRuleWidth":8,"columns":8,"columnSpan":8,"columnWidth":8},"firefox":{"appearance":45,"userSelect":45,"boxSizing":28,"textAlignLast":45,"textDecorationStyle":35,"textDecorationSkip":35,"textDecorationLine":35,"textDecorationColor":35,"tabSize":45,"hyphens":42,"fontFeatureSettings":33,"breakAfter":45,"breakBefore":45,"breakInside":45,"columnCount":45,"columnFill":45,"columnGap":45,"columnRule":45,"columnRuleColor":45,"columnRuleStyle":45,"columnRuleWidth":45,"columns":45,"columnSpan":45,"columnWidth":45},"opera":{"flex":16,"flexBasis":16,"flexDirection":16,"flexGrow":16,"flexFlow":16,"flexShrink":16,"flexWrap":16,"alignContent":16,"alignItems":16,"alignSelf":16,"justifyContent":16,"order":16,"transform":22,"transformOrigin":22,"transformOriginX":22,"transformOriginY":22,"backfaceVisibility":22,"perspective":22,"perspectiveOrigin":22,"transformStyle":22,"transformOriginZ":22,"animation":29,"animationDelay":29,"animationDirection":29,"animationFillMode":29,"animationDuration":29,"animationIterationCount":29,"animationName":29,"animationPlayState":29,"animationTimingFunction":29,"appearance":35,"userSelect":35,"fontKerning":19,"textEmphasisPosition":35,"textEmphasis":35,"textEmphasisStyle":35,"textEmphasisColor":35,"boxDecorationBreak":35,"clipPath":35,"maskImage":35,"maskMode":35,"maskRepeat":35,"maskPosition":35,"maskClip":35,"maskOrigin":35,"maskSize":35,"maskComposite":35,"mask":35,"maskBorderSource":35,"maskBorderMode":35,"maskBorderSlice":35,"maskBorderWidth":35,"maskBorderOutset":35,"maskBorderRepeat":35,"maskBorder":35,"maskType":35,"filter":35,"fontFeatureSettings":35,"breakAfter":35,"breakBefore":35,"breakInside":35,"columnCount":35,"columnFill":35,"columnGap":35,"columnRule":35,"columnRuleColor":35,"columnRuleStyle":35,"columnRuleWidth":35,"columns":35,"columnSpan":35,"columnWidth":35},"ie":{"gridTemplateRows":11,"grid":11,"flowInto":11,"flexDirection":10,"touchAction":10,"gridRow":11,"scrollSnapPointsX":11,"wrapMargin":11,"breakBefore":11,"gridRowEnd":11,"gridRowStart":11,"breakInside":11,"transformOrigin":9,"scrollSnapType":11,"scrollSnapDestination":11,"gridTemplate":11,"flexWrap":10,"transformOriginX":9,"flowFrom":11,"gridColumnStart":11,"userSelect":11,"wrapFlow":11,"scrollSnapCoordinate":11,"gridGap":11,"gridAutoRows":11,"hyphens":11,"regionFragment":11,"flex":10,"columnGap":11,"wrapThrough":11,"transformOriginY":9,"breakAfter":11,"rowGap":11,"gridTemplateColumns":11,"gridArea":11,"transform":9,"gridAutoFlow":11,"flexFlow":10,"gridTemplateAreas":11,"gridColumn":11,"gridAutoColumns":11,"scrollSnapPointsY":11,"textSizeAdjust":11},"ios_saf":{"flex":8.1,"flexBasis":8.1,"flexDirection":8.1,"flexGrow":8.1,"flexFlow":8.1,"flexShrink":8.1,"flexWrap":8.1,"alignContent":8.1,"alignItems":8.1,"alignSelf":8.1,"justifyContent":8.1,"order":8.1,"transition":6,"transitionDelay":6,"transitionDuration":6,"transitionProperty":6,"transitionTimingFunction":6,"transform":8.1,"transformOrigin":8.1,"transformOriginX":8.1,"transformOriginY":8.1,"backfaceVisibility":8.1,"perspective":8.1,"perspectiveOrigin":8.1,"transformStyle":8.1,"transformOriginZ":8.1,"animation":8.1,"animationDelay":8.1,"animationDirection":8.1,"animationFillMode":8.1,"animationDuration":8.1,"animationIterationCount":8.1,"animationName":8.1,"animationPlayState":8.1,"animationTimingFunction":8.1,"appearance":9,"userSelect":9,"backdropFilter":9,"fontKerning":9,"scrollSnapType":9,"scrollSnapPointsX":9,"scrollSnapPointsY":9,"scrollSnapDestination":9,"scrollSnapCoordinate":9,"boxDecorationBreak":9,"clipPath":9,"maskImage":9,"maskMode":9,"maskRepeat":9,"maskPosition":9,"maskClip":9,"maskOrigin":9,"maskSize":9,"maskComposite":9,"mask":9,"maskBorderSource":9,"maskBorderMode":9,"maskBorderSlice":9,"maskBorderWidth":9,"maskBorderOutset":9,"maskBorderRepeat":9,"maskBorder":9,"maskType":9,"textSizeAdjust":9,"textDecorationStyle":9,"textDecorationSkip":9,"textDecorationLine":9,"textDecorationColor":9,"shapeImageThreshold":9,"shapeImageMargin":9,"shapeImageOutside":9,"filter":9,"hyphens":9,"flowInto":9,"flowFrom":9,"breakBefore":8.1,"breakAfter":8.1,"breakInside":8.1,"regionFragment":9,"columnCount":8.1,"columnFill":8.1,"columnGap":8.1,"columnRule":8.1,"columnRuleColor":8.1,"columnRuleStyle":8.1,"columnRuleWidth":8.1,"columns":8.1,"columnSpan":8.1,"columnWidth":8.1},"android":{"borderImage":4.2,"borderImageOutset":4.2,"borderImageRepeat":4.2,"borderImageSlice":4.2,"borderImageSource":4.2,"borderImageWidth":4.2,"flex":4.2,"flexBasis":4.2,"flexDirection":4.2,"flexGrow":4.2,"flexFlow":4.2,"flexShrink":4.2,"flexWrap":4.2,"alignContent":4.2,"alignItems":4.2,"alignSelf":4.2,"justifyContent":4.2,"order":4.2,"transition":4.2,"transitionDelay":4.2,"transitionDuration":4.2,"transitionProperty":4.2,"transitionTimingFunction":4.2,"transform":4.4,"transformOrigin":4.4,"transformOriginX":4.4,"transformOriginY":4.4,"backfaceVisibility":4.4,"perspective":4.4,"perspectiveOrigin":4.4,"transformStyle":4.4,"transformOriginZ":4.4,"animation":4.4,"animationDelay":4.4,"animationDirection":4.4,"animationFillMode":4.4,"animationDuration":4.4,"animationIterationCount":4.4,"animationName":4.4,"animationPlayState":4.4,"animationTimingFunction":4.4,"appearance":44,"userSelect":44,"fontKerning":4.4,"textEmphasisPosition":44,"textEmphasis":44,"textEmphasisStyle":44,"textEmphasisColor":44,"boxDecorationBreak":44,"clipPath":44,"maskImage":44,"maskMode":44,"maskRepeat":44,"maskPosition":44,"maskClip":44,"maskOrigin":44,"maskSize":44,"maskComposite":44,"mask":44,"maskBorderSource":44,"maskBorderMode":44,"maskBorderSlice":44,"maskBorderWidth":44,"maskBorderOutset":44,"maskBorderRepeat":44,"maskBorder":44,"maskType":44,"filter":44,"fontFeatureSettings":44,"breakAfter":44,"breakBefore":44,"breakInside":44,"columnCount":44,"columnFill":44,"columnGap":44,"columnRule":44,"columnRuleColor":44,"columnRuleStyle":44,"columnRuleWidth":44,"columns":44,"columnSpan":44,"columnWidth":44},"and_chr":{"appearance":46,"userSelect":46,"textEmphasisPosition":46,"textEmphasis":46,"textEmphasisStyle":46,"textEmphasisColor":46,"boxDecorationBreak":46,"clipPath":46,"maskImage":46,"maskMode":46,"maskRepeat":46,"maskPosition":46,"maskClip":46,"maskOrigin":46,"maskSize":46,"maskComposite":46,"mask":46,"maskBorderSource":46,"maskBorderMode":46,"maskBorderSlice":46,"maskBorderWidth":46,"maskBorderOutset":46,"maskBorderRepeat":46,"maskBorder":46,"maskType":46,"textDecorationStyle":46,"textDecorationSkip":46,"textDecorationLine":46,"textDecorationColor":46,"filter":46,"fontFeatureSettings":46,"breakAfter":46,"breakBefore":46,"breakInside":46,"columnCount":46,"columnFill":46,"columnGap":46,"columnRule":46,"columnRuleColor":46,"columnRuleStyle":46,"columnRuleWidth":46,"columns":46,"columnSpan":46,"columnWidth":46},"and_uc":{"flex":9.9,"flexBasis":9.9,"flexDirection":9.9,"flexGrow":9.9,"flexFlow":9.9,"flexShrink":9.9,"flexWrap":9.9,"alignContent":9.9,"alignItems":9.9,"alignSelf":9.9,"justifyContent":9.9,"order":9.9,"transition":9.9,"transitionDelay":9.9,"transitionDuration":9.9,"transitionProperty":9.9,"transitionTimingFunction":9.9,"transform":9.9,"transformOrigin":9.9,"transformOriginX":9.9,"transformOriginY":9.9,"backfaceVisibility":9.9,"perspective":9.9,"perspectiveOrigin":9.9,"transformStyle":9.9,"transformOriginZ":9.9,"animation":9.9,"animationDelay":9.9,"animationDirection":9.9,"animationFillMode":9.9,"animationDuration":9.9,"animationIterationCount":9.9,"animationName":9.9,"animationPlayState":9.9,"animationTimingFunction":9.9,"appearance":9.9,"userSelect":9.9,"fontKerning":9.9,"textEmphasisPosition":9.9,"textEmphasis":9.9,"textEmphasisStyle":9.9,"textEmphasisColor":9.9,"maskImage":9.9,"maskMode":9.9,"maskRepeat":9.9,"maskPosition":9.9,"maskClip":9.9,"maskOrigin":9.9,"maskSize":9.9,"maskComposite":9.9,"mask":9.9,"maskBorderSource":9.9,"maskBorderMode":9.9,"maskBorderSlice":9.9,"maskBorderWidth":9.9,"maskBorderOutset":9.9,"maskBorderRepeat":9.9,"maskBorder":9.9,"maskType":9.9,"textSizeAdjust":9.9,"filter":9.9,"hyphens":9.9,"flowInto":9.9,"flowFrom":9.9,"breakBefore":9.9,"breakAfter":9.9,"breakInside":9.9,"regionFragment":9.9,"fontFeatureSettings":9.9,"columnCount":9.9,"columnFill":9.9,"columnGap":9.9,"columnRule":9.9,"columnRuleColor":9.9,"columnRuleStyle":9.9,"columnRuleWidth":9.9,"columns":9.9,"columnSpan":9.9,"columnWidth":9.9},"op_mini":{"borderImage":5,"borderImageOutset":5,"borderImageRepeat":5,"borderImageSlice":5,"borderImageSource":5,"borderImageWidth":5,"tabSize":5,"objectFit":5,"objectPosition":5}}; module.exports = caniuseData
-},{}],94:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10078,7 +13481,7 @@ exports['default'] = function (userAgent) {
 };
 
 module.exports = exports['default'];
-},{"bowser":102}],95:[function(require,module,exports){
+},{"bowser":123}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10098,7 +13501,7 @@ exports['default'] = function (_ref) {
 };
 
 module.exports = exports['default'];
-},{}],96:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10120,7 +13523,7 @@ exports['default'] = function (property, value, _ref2) {
 };
 
 module.exports = exports['default'];
-},{}],97:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10142,7 +13545,7 @@ exports['default'] = function (property, value, _ref2) {
 };
 
 module.exports = exports['default'];
-},{}],98:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10184,7 +13587,7 @@ exports['default'] = function (property, value, _ref2, styles) {
 };
 
 module.exports = exports['default'];
-},{}],99:[function(require,module,exports){
+},{}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10232,7 +13635,7 @@ exports['default'] = function (property, value, _ref2) {
 };
 
 module.exports = exports['default'];
-},{}],100:[function(require,module,exports){
+},{}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10255,7 +13658,7 @@ exports['default'] = function (property, value, _ref2) {
 };
 
 module.exports = exports['default'];
-},{}],101:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -10280,7 +13683,7 @@ exports['default'] = function (property, value, _ref2) {
 };
 
 module.exports = exports['default'];
-},{}],102:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 /*!
   * Bowser - a browser detector
   * https://github.com/ded/bowser
@@ -10573,20 +13976,3218 @@ module.exports = exports['default'];
   return bowser
 });
 
-},{}],103:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 module.exports = require('react/lib/ReactFragment').create;
-},{"react/lib/ReactFragment":197}],104:[function(require,module,exports){
+},{"react/lib/ReactFragment":220}],125:[function(require,module,exports){
 module.exports = require('react/lib/ReactComponentWithPureRenderMixin');
-},{"react/lib/ReactComponentWithPureRenderMixin":170}],105:[function(require,module,exports){
+},{"react/lib/ReactComponentWithPureRenderMixin":193}],126:[function(require,module,exports){
 module.exports = require('react/lib/ReactTransitionGroup');
-},{"react/lib/ReactTransitionGroup":222}],106:[function(require,module,exports){
+},{"react/lib/ReactTransitionGroup":245}],127:[function(require,module,exports){
+module.exports=require(32)
+},{"/Users/cwest/web/MikesMags/node_modules/history/node_modules/warning/browser.js":32,"_process":2}],128:[function(require,module,exports){
+//! moment.js
+//! version : 2.10.6
+//! authors : Tim Wood, Iskren Chernev, Moment.js contributors
+//! license : MIT
+//! momentjs.com
+
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    global.moment = factory()
+}(this, function () { 'use strict';
+
+    var hookCallback;
+
+    function utils_hooks__hooks () {
+        return hookCallback.apply(null, arguments);
+    }
+
+    // This is done to register the method called with moment()
+    // without creating circular dependencies.
+    function setHookCallback (callback) {
+        hookCallback = callback;
+    }
+
+    function isArray(input) {
+        return Object.prototype.toString.call(input) === '[object Array]';
+    }
+
+    function isDate(input) {
+        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+    }
+
+    function map(arr, fn) {
+        var res = [], i;
+        for (i = 0; i < arr.length; ++i) {
+            res.push(fn(arr[i], i));
+        }
+        return res;
+    }
+
+    function hasOwnProp(a, b) {
+        return Object.prototype.hasOwnProperty.call(a, b);
+    }
+
+    function extend(a, b) {
+        for (var i in b) {
+            if (hasOwnProp(b, i)) {
+                a[i] = b[i];
+            }
+        }
+
+        if (hasOwnProp(b, 'toString')) {
+            a.toString = b.toString;
+        }
+
+        if (hasOwnProp(b, 'valueOf')) {
+            a.valueOf = b.valueOf;
+        }
+
+        return a;
+    }
+
+    function create_utc__createUTC (input, format, locale, strict) {
+        return createLocalOrUTC(input, format, locale, strict, true).utc();
+    }
+
+    function defaultParsingFlags() {
+        // We need to deep clone this object.
+        return {
+            empty           : false,
+            unusedTokens    : [],
+            unusedInput     : [],
+            overflow        : -2,
+            charsLeftOver   : 0,
+            nullInput       : false,
+            invalidMonth    : null,
+            invalidFormat   : false,
+            userInvalidated : false,
+            iso             : false
+        };
+    }
+
+    function getParsingFlags(m) {
+        if (m._pf == null) {
+            m._pf = defaultParsingFlags();
+        }
+        return m._pf;
+    }
+
+    function valid__isValid(m) {
+        if (m._isValid == null) {
+            var flags = getParsingFlags(m);
+            m._isValid = !isNaN(m._d.getTime()) &&
+                flags.overflow < 0 &&
+                !flags.empty &&
+                !flags.invalidMonth &&
+                !flags.invalidWeekday &&
+                !flags.nullInput &&
+                !flags.invalidFormat &&
+                !flags.userInvalidated;
+
+            if (m._strict) {
+                m._isValid = m._isValid &&
+                    flags.charsLeftOver === 0 &&
+                    flags.unusedTokens.length === 0 &&
+                    flags.bigHour === undefined;
+            }
+        }
+        return m._isValid;
+    }
+
+    function valid__createInvalid (flags) {
+        var m = create_utc__createUTC(NaN);
+        if (flags != null) {
+            extend(getParsingFlags(m), flags);
+        }
+        else {
+            getParsingFlags(m).userInvalidated = true;
+        }
+
+        return m;
+    }
+
+    var momentProperties = utils_hooks__hooks.momentProperties = [];
+
+    function copyConfig(to, from) {
+        var i, prop, val;
+
+        if (typeof from._isAMomentObject !== 'undefined') {
+            to._isAMomentObject = from._isAMomentObject;
+        }
+        if (typeof from._i !== 'undefined') {
+            to._i = from._i;
+        }
+        if (typeof from._f !== 'undefined') {
+            to._f = from._f;
+        }
+        if (typeof from._l !== 'undefined') {
+            to._l = from._l;
+        }
+        if (typeof from._strict !== 'undefined') {
+            to._strict = from._strict;
+        }
+        if (typeof from._tzm !== 'undefined') {
+            to._tzm = from._tzm;
+        }
+        if (typeof from._isUTC !== 'undefined') {
+            to._isUTC = from._isUTC;
+        }
+        if (typeof from._offset !== 'undefined') {
+            to._offset = from._offset;
+        }
+        if (typeof from._pf !== 'undefined') {
+            to._pf = getParsingFlags(from);
+        }
+        if (typeof from._locale !== 'undefined') {
+            to._locale = from._locale;
+        }
+
+        if (momentProperties.length > 0) {
+            for (i in momentProperties) {
+                prop = momentProperties[i];
+                val = from[prop];
+                if (typeof val !== 'undefined') {
+                    to[prop] = val;
+                }
+            }
+        }
+
+        return to;
+    }
+
+    var updateInProgress = false;
+
+    // Moment prototype object
+    function Moment(config) {
+        copyConfig(this, config);
+        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+        // Prevent infinite loop in case updateOffset creates new moment
+        // objects.
+        if (updateInProgress === false) {
+            updateInProgress = true;
+            utils_hooks__hooks.updateOffset(this);
+            updateInProgress = false;
+        }
+    }
+
+    function isMoment (obj) {
+        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+    }
+
+    function absFloor (number) {
+        if (number < 0) {
+            return Math.ceil(number);
+        } else {
+            return Math.floor(number);
+        }
+    }
+
+    function toInt(argumentForCoercion) {
+        var coercedNumber = +argumentForCoercion,
+            value = 0;
+
+        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+            value = absFloor(coercedNumber);
+        }
+
+        return value;
+    }
+
+    function compareArrays(array1, array2, dontConvert) {
+        var len = Math.min(array1.length, array2.length),
+            lengthDiff = Math.abs(array1.length - array2.length),
+            diffs = 0,
+            i;
+        for (i = 0; i < len; i++) {
+            if ((dontConvert && array1[i] !== array2[i]) ||
+                (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
+                diffs++;
+            }
+        }
+        return diffs + lengthDiff;
+    }
+
+    function Locale() {
+    }
+
+    var locales = {};
+    var globalLocale;
+
+    function normalizeLocale(key) {
+        return key ? key.toLowerCase().replace('_', '-') : key;
+    }
+
+    // pick the locale from the array
+    // try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+    // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
+    function chooseLocale(names) {
+        var i = 0, j, next, locale, split;
+
+        while (i < names.length) {
+            split = normalizeLocale(names[i]).split('-');
+            j = split.length;
+            next = normalizeLocale(names[i + 1]);
+            next = next ? next.split('-') : null;
+            while (j > 0) {
+                locale = loadLocale(split.slice(0, j).join('-'));
+                if (locale) {
+                    return locale;
+                }
+                if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
+                    //the next array item is better than a shallower substring of this one
+                    break;
+                }
+                j--;
+            }
+            i++;
+        }
+        return null;
+    }
+
+    function loadLocale(name) {
+        var oldLocale = null;
+        // TODO: Find a better way to register and load all the locales in Node
+        if (!locales[name] && typeof module !== 'undefined' &&
+                module && module.exports) {
+            try {
+                oldLocale = globalLocale._abbr;
+                require('./locale/' + name);
+                // because defineLocale currently also sets the global locale, we
+                // want to undo that for lazy loaded locales
+                locale_locales__getSetGlobalLocale(oldLocale);
+            } catch (e) { }
+        }
+        return locales[name];
+    }
+
+    // This function will load locale and then set the global locale.  If
+    // no arguments are passed in, it will simply return the current global
+    // locale key.
+    function locale_locales__getSetGlobalLocale (key, values) {
+        var data;
+        if (key) {
+            if (typeof values === 'undefined') {
+                data = locale_locales__getLocale(key);
+            }
+            else {
+                data = defineLocale(key, values);
+            }
+
+            if (data) {
+                // moment.duration._locale = moment._locale = data;
+                globalLocale = data;
+            }
+        }
+
+        return globalLocale._abbr;
+    }
+
+    function defineLocale (name, values) {
+        if (values !== null) {
+            values.abbr = name;
+            locales[name] = locales[name] || new Locale();
+            locales[name].set(values);
+
+            // backwards compat for now: also set the locale
+            locale_locales__getSetGlobalLocale(name);
+
+            return locales[name];
+        } else {
+            // useful for testing
+            delete locales[name];
+            return null;
+        }
+    }
+
+    // returns locale data
+    function locale_locales__getLocale (key) {
+        var locale;
+
+        if (key && key._locale && key._locale._abbr) {
+            key = key._locale._abbr;
+        }
+
+        if (!key) {
+            return globalLocale;
+        }
+
+        if (!isArray(key)) {
+            //short-circuit everything else
+            locale = loadLocale(key);
+            if (locale) {
+                return locale;
+            }
+            key = [key];
+        }
+
+        return chooseLocale(key);
+    }
+
+    var aliases = {};
+
+    function addUnitAlias (unit, shorthand) {
+        var lowerCase = unit.toLowerCase();
+        aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
+    }
+
+    function normalizeUnits(units) {
+        return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+    }
+
+    function normalizeObjectUnits(inputObject) {
+        var normalizedInput = {},
+            normalizedProp,
+            prop;
+
+        for (prop in inputObject) {
+            if (hasOwnProp(inputObject, prop)) {
+                normalizedProp = normalizeUnits(prop);
+                if (normalizedProp) {
+                    normalizedInput[normalizedProp] = inputObject[prop];
+                }
+            }
+        }
+
+        return normalizedInput;
+    }
+
+    function makeGetSet (unit, keepTime) {
+        return function (value) {
+            if (value != null) {
+                get_set__set(this, unit, value);
+                utils_hooks__hooks.updateOffset(this, keepTime);
+                return this;
+            } else {
+                return get_set__get(this, unit);
+            }
+        };
+    }
+
+    function get_set__get (mom, unit) {
+        return mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]();
+    }
+
+    function get_set__set (mom, unit, value) {
+        return mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+    }
+
+    // MOMENTS
+
+    function getSet (units, value) {
+        var unit;
+        if (typeof units === 'object') {
+            for (unit in units) {
+                this.set(unit, units[unit]);
+            }
+        } else {
+            units = normalizeUnits(units);
+            if (typeof this[units] === 'function') {
+                return this[units](value);
+            }
+        }
+        return this;
+    }
+
+    function zeroFill(number, targetLength, forceSign) {
+        var absNumber = '' + Math.abs(number),
+            zerosToFill = targetLength - absNumber.length,
+            sign = number >= 0;
+        return (sign ? (forceSign ? '+' : '') : '-') +
+            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+    }
+
+    var formattingTokens = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Q|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+
+    var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+
+    var formatFunctions = {};
+
+    var formatTokenFunctions = {};
+
+    // token:    'M'
+    // padded:   ['MM', 2]
+    // ordinal:  'Mo'
+    // callback: function () { this.month() + 1 }
+    function addFormatToken (token, padded, ordinal, callback) {
+        var func = callback;
+        if (typeof callback === 'string') {
+            func = function () {
+                return this[callback]();
+            };
+        }
+        if (token) {
+            formatTokenFunctions[token] = func;
+        }
+        if (padded) {
+            formatTokenFunctions[padded[0]] = function () {
+                return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
+            };
+        }
+        if (ordinal) {
+            formatTokenFunctions[ordinal] = function () {
+                return this.localeData().ordinal(func.apply(this, arguments), token);
+            };
+        }
+    }
+
+    function removeFormattingTokens(input) {
+        if (input.match(/\[[\s\S]/)) {
+            return input.replace(/^\[|\]$/g, '');
+        }
+        return input.replace(/\\/g, '');
+    }
+
+    function makeFormatFunction(format) {
+        var array = format.match(formattingTokens), i, length;
+
+        for (i = 0, length = array.length; i < length; i++) {
+            if (formatTokenFunctions[array[i]]) {
+                array[i] = formatTokenFunctions[array[i]];
+            } else {
+                array[i] = removeFormattingTokens(array[i]);
+            }
+        }
+
+        return function (mom) {
+            var output = '';
+            for (i = 0; i < length; i++) {
+                output += array[i] instanceof Function ? array[i].call(mom, format) : array[i];
+            }
+            return output;
+        };
+    }
+
+    // format date using native date object
+    function formatMoment(m, format) {
+        if (!m.isValid()) {
+            return m.localeData().invalidDate();
+        }
+
+        format = expandFormat(format, m.localeData());
+        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+
+        return formatFunctions[format](m);
+    }
+
+    function expandFormat(format, locale) {
+        var i = 5;
+
+        function replaceLongDateFormatTokens(input) {
+            return locale.longDateFormat(input) || input;
+        }
+
+        localFormattingTokens.lastIndex = 0;
+        while (i >= 0 && localFormattingTokens.test(format)) {
+            format = format.replace(localFormattingTokens, replaceLongDateFormatTokens);
+            localFormattingTokens.lastIndex = 0;
+            i -= 1;
+        }
+
+        return format;
+    }
+
+    var match1         = /\d/;            //       0 - 9
+    var match2         = /\d\d/;          //      00 - 99
+    var match3         = /\d{3}/;         //     000 - 999
+    var match4         = /\d{4}/;         //    0000 - 9999
+    var match6         = /[+-]?\d{6}/;    // -999999 - 999999
+    var match1to2      = /\d\d?/;         //       0 - 99
+    var match1to3      = /\d{1,3}/;       //       0 - 999
+    var match1to4      = /\d{1,4}/;       //       0 - 9999
+    var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
+
+    var matchUnsigned  = /\d+/;           //       0 - inf
+    var matchSigned    = /[+-]?\d+/;      //    -inf - inf
+
+    var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
+
+    var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
+
+    // any word (or two) characters or numbers including two/three word month in arabic.
+    var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+
+    var regexes = {};
+
+    function isFunction (sth) {
+        // https://github.com/moment/moment/issues/2325
+        return typeof sth === 'function' &&
+            Object.prototype.toString.call(sth) === '[object Function]';
+    }
+
+
+    function addRegexToken (token, regex, strictRegex) {
+        regexes[token] = isFunction(regex) ? regex : function (isStrict) {
+            return (isStrict && strictRegex) ? strictRegex : regex;
+        };
+    }
+
+    function getParseRegexForToken (token, config) {
+        if (!hasOwnProp(regexes, token)) {
+            return new RegExp(unescapeFormat(token));
+        }
+
+        return regexes[token](config._strict, config._locale);
+    }
+
+    // Code from http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+    function unescapeFormat(s) {
+        return s.replace('\\', '').replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (matched, p1, p2, p3, p4) {
+            return p1 || p2 || p3 || p4;
+        }).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+
+    var tokens = {};
+
+    function addParseToken (token, callback) {
+        var i, func = callback;
+        if (typeof token === 'string') {
+            token = [token];
+        }
+        if (typeof callback === 'number') {
+            func = function (input, array) {
+                array[callback] = toInt(input);
+            };
+        }
+        for (i = 0; i < token.length; i++) {
+            tokens[token[i]] = func;
+        }
+    }
+
+    function addWeekParseToken (token, callback) {
+        addParseToken(token, function (input, array, config, token) {
+            config._w = config._w || {};
+            callback(input, config._w, config, token);
+        });
+    }
+
+    function addTimeToArrayFromToken(token, input, config) {
+        if (input != null && hasOwnProp(tokens, token)) {
+            tokens[token](input, config._a, config, token);
+        }
+    }
+
+    var YEAR = 0;
+    var MONTH = 1;
+    var DATE = 2;
+    var HOUR = 3;
+    var MINUTE = 4;
+    var SECOND = 5;
+    var MILLISECOND = 6;
+
+    function daysInMonth(year, month) {
+        return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    }
+
+    // FORMATTING
+
+    addFormatToken('M', ['MM', 2], 'Mo', function () {
+        return this.month() + 1;
+    });
+
+    addFormatToken('MMM', 0, 0, function (format) {
+        return this.localeData().monthsShort(this, format);
+    });
+
+    addFormatToken('MMMM', 0, 0, function (format) {
+        return this.localeData().months(this, format);
+    });
+
+    // ALIASES
+
+    addUnitAlias('month', 'M');
+
+    // PARSING
+
+    addRegexToken('M',    match1to2);
+    addRegexToken('MM',   match1to2, match2);
+    addRegexToken('MMM',  matchWord);
+    addRegexToken('MMMM', matchWord);
+
+    addParseToken(['M', 'MM'], function (input, array) {
+        array[MONTH] = toInt(input) - 1;
+    });
+
+    addParseToken(['MMM', 'MMMM'], function (input, array, config, token) {
+        var month = config._locale.monthsParse(input, token, config._strict);
+        // if we didn't find a month name, mark the date as invalid.
+        if (month != null) {
+            array[MONTH] = month;
+        } else {
+            getParsingFlags(config).invalidMonth = input;
+        }
+    });
+
+    // LOCALES
+
+    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
+    function localeMonths (m) {
+        return this._months[m.month()];
+    }
+
+    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+    function localeMonthsShort (m) {
+        return this._monthsShort[m.month()];
+    }
+
+    function localeMonthsParse (monthName, format, strict) {
+        var i, mom, regex;
+
+        if (!this._monthsParse) {
+            this._monthsParse = [];
+            this._longMonthsParse = [];
+            this._shortMonthsParse = [];
+        }
+
+        for (i = 0; i < 12; i++) {
+            // make the regex if we don't have it already
+            mom = create_utc__createUTC([2000, i]);
+            if (strict && !this._longMonthsParse[i]) {
+                this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
+                this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
+            }
+            if (!strict && !this._monthsParse[i]) {
+                regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
+                this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
+            }
+            // test the regex
+            if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
+                return i;
+            } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
+                return i;
+            } else if (!strict && this._monthsParse[i].test(monthName)) {
+                return i;
+            }
+        }
+    }
+
+    // MOMENTS
+
+    function setMonth (mom, value) {
+        var dayOfMonth;
+
+        // TODO: Move this out of here!
+        if (typeof value === 'string') {
+            value = mom.localeData().monthsParse(value);
+            // TODO: Another silent failure?
+            if (typeof value !== 'number') {
+                return mom;
+            }
+        }
+
+        dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
+        mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+        return mom;
+    }
+
+    function getSetMonth (value) {
+        if (value != null) {
+            setMonth(this, value);
+            utils_hooks__hooks.updateOffset(this, true);
+            return this;
+        } else {
+            return get_set__get(this, 'Month');
+        }
+    }
+
+    function getDaysInMonth () {
+        return daysInMonth(this.year(), this.month());
+    }
+
+    function checkOverflow (m) {
+        var overflow;
+        var a = m._a;
+
+        if (a && getParsingFlags(m).overflow === -2) {
+            overflow =
+                a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
+                a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
+                a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR :
+                a[MINUTE]      < 0 || a[MINUTE]      > 59  ? MINUTE :
+                a[SECOND]      < 0 || a[SECOND]      > 59  ? SECOND :
+                a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
+                -1;
+
+            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+                overflow = DATE;
+            }
+
+            getParsingFlags(m).overflow = overflow;
+        }
+
+        return m;
+    }
+
+    function warn(msg) {
+        if (utils_hooks__hooks.suppressDeprecationWarnings === false && typeof console !== 'undefined' && console.warn) {
+            console.warn('Deprecation warning: ' + msg);
+        }
+    }
+
+    function deprecate(msg, fn) {
+        var firstTime = true;
+
+        return extend(function () {
+            if (firstTime) {
+                warn(msg + '\n' + (new Error()).stack);
+                firstTime = false;
+            }
+            return fn.apply(this, arguments);
+        }, fn);
+    }
+
+    var deprecations = {};
+
+    function deprecateSimple(name, msg) {
+        if (!deprecations[name]) {
+            warn(msg);
+            deprecations[name] = true;
+        }
+    }
+
+    utils_hooks__hooks.suppressDeprecationWarnings = false;
+
+    var from_string__isoRegex = /^\s*(?:[+-]\d{6}|\d{4})-(?:(\d\d-\d\d)|(W\d\d$)|(W\d\d-\d)|(\d\d\d))((T| )(\d\d(:\d\d(:\d\d(\.\d+)?)?)?)?([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+
+    var isoDates = [
+        ['YYYYYY-MM-DD', /[+-]\d{6}-\d{2}-\d{2}/],
+        ['YYYY-MM-DD', /\d{4}-\d{2}-\d{2}/],
+        ['GGGG-[W]WW-E', /\d{4}-W\d{2}-\d/],
+        ['GGGG-[W]WW', /\d{4}-W\d{2}/],
+        ['YYYY-DDD', /\d{4}-\d{3}/]
+    ];
+
+    // iso time formats and regexes
+    var isoTimes = [
+        ['HH:mm:ss.SSSS', /(T| )\d\d:\d\d:\d\d\.\d+/],
+        ['HH:mm:ss', /(T| )\d\d:\d\d:\d\d/],
+        ['HH:mm', /(T| )\d\d:\d\d/],
+        ['HH', /(T| )\d\d/]
+    ];
+
+    var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+
+    // date from iso format
+    function configFromISO(config) {
+        var i, l,
+            string = config._i,
+            match = from_string__isoRegex.exec(string);
+
+        if (match) {
+            getParsingFlags(config).iso = true;
+            for (i = 0, l = isoDates.length; i < l; i++) {
+                if (isoDates[i][1].exec(string)) {
+                    config._f = isoDates[i][0];
+                    break;
+                }
+            }
+            for (i = 0, l = isoTimes.length; i < l; i++) {
+                if (isoTimes[i][1].exec(string)) {
+                    // match[6] should be 'T' or space
+                    config._f += (match[6] || ' ') + isoTimes[i][0];
+                    break;
+                }
+            }
+            if (string.match(matchOffset)) {
+                config._f += 'Z';
+            }
+            configFromStringAndFormat(config);
+        } else {
+            config._isValid = false;
+        }
+    }
+
+    // date from iso format or fallback
+    function configFromString(config) {
+        var matched = aspNetJsonRegex.exec(config._i);
+
+        if (matched !== null) {
+            config._d = new Date(+matched[1]);
+            return;
+        }
+
+        configFromISO(config);
+        if (config._isValid === false) {
+            delete config._isValid;
+            utils_hooks__hooks.createFromInputFallback(config);
+        }
+    }
+
+    utils_hooks__hooks.createFromInputFallback = deprecate(
+        'moment construction falls back to js Date. This is ' +
+        'discouraged and will be removed in upcoming major ' +
+        'release. Please refer to ' +
+        'https://github.com/moment/moment/issues/1407 for more info.',
+        function (config) {
+            config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+        }
+    );
+
+    function createDate (y, m, d, h, M, s, ms) {
+        //can't just apply() to create a date:
+        //http://stackoverflow.com/questions/181348/instantiating-a-javascript-object-by-calling-prototype-constructor-apply
+        var date = new Date(y, m, d, h, M, s, ms);
+
+        //the date constructor doesn't accept years < 1970
+        if (y < 1970) {
+            date.setFullYear(y);
+        }
+        return date;
+    }
+
+    function createUTCDate (y) {
+        var date = new Date(Date.UTC.apply(null, arguments));
+        if (y < 1970) {
+            date.setUTCFullYear(y);
+        }
+        return date;
+    }
+
+    addFormatToken(0, ['YY', 2], 0, function () {
+        return this.year() % 100;
+    });
+
+    addFormatToken(0, ['YYYY',   4],       0, 'year');
+    addFormatToken(0, ['YYYYY',  5],       0, 'year');
+    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+    // ALIASES
+
+    addUnitAlias('year', 'y');
+
+    // PARSING
+
+    addRegexToken('Y',      matchSigned);
+    addRegexToken('YY',     match1to2, match2);
+    addRegexToken('YYYY',   match1to4, match4);
+    addRegexToken('YYYYY',  match1to6, match6);
+    addRegexToken('YYYYYY', match1to6, match6);
+
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function (input, array) {
+        array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
+    });
+    addParseToken('YY', function (input, array) {
+        array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+
+    // HELPERS
+
+    function daysInYear(year) {
+        return isLeapYear(year) ? 366 : 365;
+    }
+
+    function isLeapYear(year) {
+        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    // HOOKS
+
+    utils_hooks__hooks.parseTwoDigitYear = function (input) {
+        return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+    };
+
+    // MOMENTS
+
+    var getSetYear = makeGetSet('FullYear', false);
+
+    function getIsLeapYear () {
+        return isLeapYear(this.year());
+    }
+
+    addFormatToken('w', ['ww', 2], 'wo', 'week');
+    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
+
+    // ALIASES
+
+    addUnitAlias('week', 'w');
+    addUnitAlias('isoWeek', 'W');
+
+    // PARSING
+
+    addRegexToken('w',  match1to2);
+    addRegexToken('ww', match1to2, match2);
+    addRegexToken('W',  match1to2);
+    addRegexToken('WW', match1to2, match2);
+
+    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
+        week[token.substr(0, 1)] = toInt(input);
+    });
+
+    // HELPERS
+
+    // firstDayOfWeek       0 = sun, 6 = sat
+    //                      the day of the week that starts the week
+    //                      (usually sunday or monday)
+    // firstDayOfWeekOfYear 0 = sun, 6 = sat
+    //                      the first week is the week that contains the first
+    //                      of this day of the week
+    //                      (eg. ISO weeks use thursday (4))
+    function weekOfYear(mom, firstDayOfWeek, firstDayOfWeekOfYear) {
+        var end = firstDayOfWeekOfYear - firstDayOfWeek,
+            daysToDayOfWeek = firstDayOfWeekOfYear - mom.day(),
+            adjustedMoment;
+
+
+        if (daysToDayOfWeek > end) {
+            daysToDayOfWeek -= 7;
+        }
+
+        if (daysToDayOfWeek < end - 7) {
+            daysToDayOfWeek += 7;
+        }
+
+        adjustedMoment = local__createLocal(mom).add(daysToDayOfWeek, 'd');
+        return {
+            week: Math.ceil(adjustedMoment.dayOfYear() / 7),
+            year: adjustedMoment.year()
+        };
+    }
+
+    // LOCALES
+
+    function localeWeek (mom) {
+        return weekOfYear(mom, this._week.dow, this._week.doy).week;
+    }
+
+    var defaultLocaleWeek = {
+        dow : 0, // Sunday is the first day of the week.
+        doy : 6  // The week that contains Jan 1st is the first week of the year.
+    };
+
+    function localeFirstDayOfWeek () {
+        return this._week.dow;
+    }
+
+    function localeFirstDayOfYear () {
+        return this._week.doy;
+    }
+
+    // MOMENTS
+
+    function getSetWeek (input) {
+        var week = this.localeData().week(this);
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    function getSetISOWeek (input) {
+        var week = weekOfYear(this, 1, 4).week;
+        return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+
+    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+
+    // ALIASES
+
+    addUnitAlias('dayOfYear', 'DDD');
+
+    // PARSING
+
+    addRegexToken('DDD',  match1to3);
+    addRegexToken('DDDD', match3);
+    addParseToken(['DDD', 'DDDD'], function (input, array, config) {
+        config._dayOfYear = toInt(input);
+    });
+
+    // HELPERS
+
+    //http://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
+    function dayOfYearFromWeeks(year, week, weekday, firstDayOfWeekOfYear, firstDayOfWeek) {
+        var week1Jan = 6 + firstDayOfWeek - firstDayOfWeekOfYear, janX = createUTCDate(year, 0, 1 + week1Jan), d = janX.getUTCDay(), dayOfYear;
+        if (d < firstDayOfWeek) {
+            d += 7;
+        }
+
+        weekday = weekday != null ? 1 * weekday : firstDayOfWeek;
+
+        dayOfYear = 1 + week1Jan + 7 * (week - 1) - d + weekday;
+
+        return {
+            year: dayOfYear > 0 ? year : year - 1,
+            dayOfYear: dayOfYear > 0 ?  dayOfYear : daysInYear(year - 1) + dayOfYear
+        };
+    }
+
+    // MOMENTS
+
+    function getSetDayOfYear (input) {
+        var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+        return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+    }
+
+    // Pick the first defined of two or three arguments.
+    function defaults(a, b, c) {
+        if (a != null) {
+            return a;
+        }
+        if (b != null) {
+            return b;
+        }
+        return c;
+    }
+
+    function currentDateArray(config) {
+        var now = new Date();
+        if (config._useUTC) {
+            return [now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()];
+        }
+        return [now.getFullYear(), now.getMonth(), now.getDate()];
+    }
+
+    // convert an array to a date.
+    // the array should mirror the parameters below
+    // note: all values past the year are optional and will default to the lowest possible value.
+    // [year, month, day , hour, minute, second, millisecond]
+    function configFromArray (config) {
+        var i, date, input = [], currentDate, yearToUse;
+
+        if (config._d) {
+            return;
+        }
+
+        currentDate = currentDateArray(config);
+
+        //compute day of the year from weeks and weekdays
+        if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+            dayOfYearFromWeekInfo(config);
+        }
+
+        //if the day of the year is set, figure out what it is
+        if (config._dayOfYear) {
+            yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+
+            if (config._dayOfYear > daysInYear(yearToUse)) {
+                getParsingFlags(config)._overflowDayOfYear = true;
+            }
+
+            date = createUTCDate(yearToUse, 0, config._dayOfYear);
+            config._a[MONTH] = date.getUTCMonth();
+            config._a[DATE] = date.getUTCDate();
+        }
+
+        // Default to current date.
+        // * if no year, month, day of month are given, default to today
+        // * if day of month is given, default month and year
+        // * if month is given, default only year
+        // * if year is given, don't default anything
+        for (i = 0; i < 3 && config._a[i] == null; ++i) {
+            config._a[i] = input[i] = currentDate[i];
+        }
+
+        // Zero out whatever was not defaulted, including time
+        for (; i < 7; i++) {
+            config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+        }
+
+        // Check for 24:00:00.000
+        if (config._a[HOUR] === 24 &&
+                config._a[MINUTE] === 0 &&
+                config._a[SECOND] === 0 &&
+                config._a[MILLISECOND] === 0) {
+            config._nextDay = true;
+            config._a[HOUR] = 0;
+        }
+
+        config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+        // Apply timezone offset from input. The actual utcOffset can be changed
+        // with parseZone.
+        if (config._tzm != null) {
+            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+        }
+
+        if (config._nextDay) {
+            config._a[HOUR] = 24;
+        }
+    }
+
+    function dayOfYearFromWeekInfo(config) {
+        var w, weekYear, week, weekday, dow, doy, temp;
+
+        w = config._w;
+        if (w.GG != null || w.W != null || w.E != null) {
+            dow = 1;
+            doy = 4;
+
+            // TODO: We need to take the current isoWeekYear, but that depends on
+            // how we interpret now (local, utc, fixed offset). So create
+            // a now version of current config (take local/utc/offset flags, and
+            // create now).
+            weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(local__createLocal(), 1, 4).year);
+            week = defaults(w.W, 1);
+            weekday = defaults(w.E, 1);
+        } else {
+            dow = config._locale._week.dow;
+            doy = config._locale._week.doy;
+
+            weekYear = defaults(w.gg, config._a[YEAR], weekOfYear(local__createLocal(), dow, doy).year);
+            week = defaults(w.w, 1);
+
+            if (w.d != null) {
+                // weekday -- low day numbers are considered next week
+                weekday = w.d;
+                if (weekday < dow) {
+                    ++week;
+                }
+            } else if (w.e != null) {
+                // local weekday -- counting starts from begining of week
+                weekday = w.e + dow;
+            } else {
+                // default to begining of week
+                weekday = dow;
+            }
+        }
+        temp = dayOfYearFromWeeks(weekYear, week, weekday, doy, dow);
+
+        config._a[YEAR] = temp.year;
+        config._dayOfYear = temp.dayOfYear;
+    }
+
+    utils_hooks__hooks.ISO_8601 = function () {};
+
+    // date from string and format string
+    function configFromStringAndFormat(config) {
+        // TODO: Move this to another part of the creation flow to prevent circular deps
+        if (config._f === utils_hooks__hooks.ISO_8601) {
+            configFromISO(config);
+            return;
+        }
+
+        config._a = [];
+        getParsingFlags(config).empty = true;
+
+        // This array is used to make a Date, either with `new Date` or `Date.UTC`
+        var string = '' + config._i,
+            i, parsedInput, tokens, token, skipped,
+            stringLength = string.length,
+            totalParsedInputLength = 0;
+
+        tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+
+        for (i = 0; i < tokens.length; i++) {
+            token = tokens[i];
+            parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
+            if (parsedInput) {
+                skipped = string.substr(0, string.indexOf(parsedInput));
+                if (skipped.length > 0) {
+                    getParsingFlags(config).unusedInput.push(skipped);
+                }
+                string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
+                totalParsedInputLength += parsedInput.length;
+            }
+            // don't parse if it's not a known token
+            if (formatTokenFunctions[token]) {
+                if (parsedInput) {
+                    getParsingFlags(config).empty = false;
+                }
+                else {
+                    getParsingFlags(config).unusedTokens.push(token);
+                }
+                addTimeToArrayFromToken(token, parsedInput, config);
+            }
+            else if (config._strict && !parsedInput) {
+                getParsingFlags(config).unusedTokens.push(token);
+            }
+        }
+
+        // add remaining unparsed input length to the string
+        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+        if (string.length > 0) {
+            getParsingFlags(config).unusedInput.push(string);
+        }
+
+        // clear _12h flag if hour is <= 12
+        if (getParsingFlags(config).bigHour === true &&
+                config._a[HOUR] <= 12 &&
+                config._a[HOUR] > 0) {
+            getParsingFlags(config).bigHour = undefined;
+        }
+        // handle meridiem
+        config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
+
+        configFromArray(config);
+        checkOverflow(config);
+    }
+
+
+    function meridiemFixWrap (locale, hour, meridiem) {
+        var isPm;
+
+        if (meridiem == null) {
+            // nothing to do
+            return hour;
+        }
+        if (locale.meridiemHour != null) {
+            return locale.meridiemHour(hour, meridiem);
+        } else if (locale.isPM != null) {
+            // Fallback
+            isPm = locale.isPM(meridiem);
+            if (isPm && hour < 12) {
+                hour += 12;
+            }
+            if (!isPm && hour === 12) {
+                hour = 0;
+            }
+            return hour;
+        } else {
+            // this is not supposed to happen
+            return hour;
+        }
+    }
+
+    function configFromStringAndArray(config) {
+        var tempConfig,
+            bestMoment,
+
+            scoreToBeat,
+            i,
+            currentScore;
+
+        if (config._f.length === 0) {
+            getParsingFlags(config).invalidFormat = true;
+            config._d = new Date(NaN);
+            return;
+        }
+
+        for (i = 0; i < config._f.length; i++) {
+            currentScore = 0;
+            tempConfig = copyConfig({}, config);
+            if (config._useUTC != null) {
+                tempConfig._useUTC = config._useUTC;
+            }
+            tempConfig._f = config._f[i];
+            configFromStringAndFormat(tempConfig);
+
+            if (!valid__isValid(tempConfig)) {
+                continue;
+            }
+
+            // if there is any input that was not parsed add a penalty for that format
+            currentScore += getParsingFlags(tempConfig).charsLeftOver;
+
+            //or tokens
+            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+
+            getParsingFlags(tempConfig).score = currentScore;
+
+            if (scoreToBeat == null || currentScore < scoreToBeat) {
+                scoreToBeat = currentScore;
+                bestMoment = tempConfig;
+            }
+        }
+
+        extend(config, bestMoment || tempConfig);
+    }
+
+    function configFromObject(config) {
+        if (config._d) {
+            return;
+        }
+
+        var i = normalizeObjectUnits(config._i);
+        config._a = [i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond];
+
+        configFromArray(config);
+    }
+
+    function createFromConfig (config) {
+        var res = new Moment(checkOverflow(prepareConfig(config)));
+        if (res._nextDay) {
+            // Adding is smart enough around DST
+            res.add(1, 'd');
+            res._nextDay = undefined;
+        }
+
+        return res;
+    }
+
+    function prepareConfig (config) {
+        var input = config._i,
+            format = config._f;
+
+        config._locale = config._locale || locale_locales__getLocale(config._l);
+
+        if (input === null || (format === undefined && input === '')) {
+            return valid__createInvalid({nullInput: true});
+        }
+
+        if (typeof input === 'string') {
+            config._i = input = config._locale.preparse(input);
+        }
+
+        if (isMoment(input)) {
+            return new Moment(checkOverflow(input));
+        } else if (isArray(format)) {
+            configFromStringAndArray(config);
+        } else if (format) {
+            configFromStringAndFormat(config);
+        } else if (isDate(input)) {
+            config._d = input;
+        } else {
+            configFromInput(config);
+        }
+
+        return config;
+    }
+
+    function configFromInput(config) {
+        var input = config._i;
+        if (input === undefined) {
+            config._d = new Date();
+        } else if (isDate(input)) {
+            config._d = new Date(+input);
+        } else if (typeof input === 'string') {
+            configFromString(config);
+        } else if (isArray(input)) {
+            config._a = map(input.slice(0), function (obj) {
+                return parseInt(obj, 10);
+            });
+            configFromArray(config);
+        } else if (typeof(input) === 'object') {
+            configFromObject(config);
+        } else if (typeof(input) === 'number') {
+            // from milliseconds
+            config._d = new Date(input);
+        } else {
+            utils_hooks__hooks.createFromInputFallback(config);
+        }
+    }
+
+    function createLocalOrUTC (input, format, locale, strict, isUTC) {
+        var c = {};
+
+        if (typeof(locale) === 'boolean') {
+            strict = locale;
+            locale = undefined;
+        }
+        // object construction must be done this way.
+        // https://github.com/moment/moment/issues/1423
+        c._isAMomentObject = true;
+        c._useUTC = c._isUTC = isUTC;
+        c._l = locale;
+        c._i = input;
+        c._f = format;
+        c._strict = strict;
+
+        return createFromConfig(c);
+    }
+
+    function local__createLocal (input, format, locale, strict) {
+        return createLocalOrUTC(input, format, locale, strict, false);
+    }
+
+    var prototypeMin = deprecate(
+         'moment().min is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548',
+         function () {
+             var other = local__createLocal.apply(null, arguments);
+             return other < this ? this : other;
+         }
+     );
+
+    var prototypeMax = deprecate(
+        'moment().max is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548',
+        function () {
+            var other = local__createLocal.apply(null, arguments);
+            return other > this ? this : other;
+        }
+    );
+
+    // Pick a moment m from moments so that m[fn](other) is true for all
+    // other. This relies on the function fn to be transitive.
+    //
+    // moments should either be an array of moment objects or an array, whose
+    // first element is an array of moment objects.
+    function pickBy(fn, moments) {
+        var res, i;
+        if (moments.length === 1 && isArray(moments[0])) {
+            moments = moments[0];
+        }
+        if (!moments.length) {
+            return local__createLocal();
+        }
+        res = moments[0];
+        for (i = 1; i < moments.length; ++i) {
+            if (!moments[i].isValid() || moments[i][fn](res)) {
+                res = moments[i];
+            }
+        }
+        return res;
+    }
+
+    // TODO: Use [].sort instead?
+    function min () {
+        var args = [].slice.call(arguments, 0);
+
+        return pickBy('isBefore', args);
+    }
+
+    function max () {
+        var args = [].slice.call(arguments, 0);
+
+        return pickBy('isAfter', args);
+    }
+
+    function Duration (duration) {
+        var normalizedInput = normalizeObjectUnits(duration),
+            years = normalizedInput.year || 0,
+            quarters = normalizedInput.quarter || 0,
+            months = normalizedInput.month || 0,
+            weeks = normalizedInput.week || 0,
+            days = normalizedInput.day || 0,
+            hours = normalizedInput.hour || 0,
+            minutes = normalizedInput.minute || 0,
+            seconds = normalizedInput.second || 0,
+            milliseconds = normalizedInput.millisecond || 0;
+
+        // representation for dateAddRemove
+        this._milliseconds = +milliseconds +
+            seconds * 1e3 + // 1000
+            minutes * 6e4 + // 1000 * 60
+            hours * 36e5; // 1000 * 60 * 60
+        // Because of dateAddRemove treats 24 hours as different from a
+        // day when working around DST, we need to store them separately
+        this._days = +days +
+            weeks * 7;
+        // It is impossible translate months into days without knowing
+        // which months you are are talking about, so we have to store
+        // it separately.
+        this._months = +months +
+            quarters * 3 +
+            years * 12;
+
+        this._data = {};
+
+        this._locale = locale_locales__getLocale();
+
+        this._bubble();
+    }
+
+    function isDuration (obj) {
+        return obj instanceof Duration;
+    }
+
+    function offset (token, separator) {
+        addFormatToken(token, 0, 0, function () {
+            var offset = this.utcOffset();
+            var sign = '+';
+            if (offset < 0) {
+                offset = -offset;
+                sign = '-';
+            }
+            return sign + zeroFill(~~(offset / 60), 2) + separator + zeroFill(~~(offset) % 60, 2);
+        });
+    }
+
+    offset('Z', ':');
+    offset('ZZ', '');
+
+    // PARSING
+
+    addRegexToken('Z',  matchOffset);
+    addRegexToken('ZZ', matchOffset);
+    addParseToken(['Z', 'ZZ'], function (input, array, config) {
+        config._useUTC = true;
+        config._tzm = offsetFromString(input);
+    });
+
+    // HELPERS
+
+    // timezone chunker
+    // '+10:00' > ['10',  '00']
+    // '-1530'  > ['-15', '30']
+    var chunkOffset = /([\+\-]|\d\d)/gi;
+
+    function offsetFromString(string) {
+        var matches = ((string || '').match(matchOffset) || []);
+        var chunk   = matches[matches.length - 1] || [];
+        var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
+        var minutes = +(parts[1] * 60) + toInt(parts[2]);
+
+        return parts[0] === '+' ? minutes : -minutes;
+    }
+
+    // Return a moment from input, that is local/utc/zone equivalent to model.
+    function cloneWithOffset(input, model) {
+        var res, diff;
+        if (model._isUTC) {
+            res = model.clone();
+            diff = (isMoment(input) || isDate(input) ? +input : +local__createLocal(input)) - (+res);
+            // Use low-level api, because this fn is low-level api.
+            res._d.setTime(+res._d + diff);
+            utils_hooks__hooks.updateOffset(res, false);
+            return res;
+        } else {
+            return local__createLocal(input).local();
+        }
+    }
+
+    function getDateOffset (m) {
+        // On Firefox.24 Date#getTimezoneOffset returns a floating point.
+        // https://github.com/moment/moment/pull/1871
+        return -Math.round(m._d.getTimezoneOffset() / 15) * 15;
+    }
+
+    // HOOKS
+
+    // This function will be called whenever a moment is mutated.
+    // It is intended to keep the offset in sync with the timezone.
+    utils_hooks__hooks.updateOffset = function () {};
+
+    // MOMENTS
+
+    // keepLocalTime = true means only change the timezone, without
+    // affecting the local hour. So 5:31:26 +0300 --[utcOffset(2, true)]-->
+    // 5:31:26 +0200 It is possible that 5:31:26 doesn't exist with offset
+    // +0200, so we adjust the time as needed, to be valid.
+    //
+    // Keeping the time actually adds/subtracts (one hour)
+    // from the actual represented time. That is why we call updateOffset
+    // a second time. In case it wants us to change the offset again
+    // _changeInProgress == true case, then we have to adjust, because
+    // there is no such time in the given timezone.
+    function getSetOffset (input, keepLocalTime) {
+        var offset = this._offset || 0,
+            localAdjust;
+        if (input != null) {
+            if (typeof input === 'string') {
+                input = offsetFromString(input);
+            }
+            if (Math.abs(input) < 16) {
+                input = input * 60;
+            }
+            if (!this._isUTC && keepLocalTime) {
+                localAdjust = getDateOffset(this);
+            }
+            this._offset = input;
+            this._isUTC = true;
+            if (localAdjust != null) {
+                this.add(localAdjust, 'm');
+            }
+            if (offset !== input) {
+                if (!keepLocalTime || this._changeInProgress) {
+                    add_subtract__addSubtract(this, create__createDuration(input - offset, 'm'), 1, false);
+                } else if (!this._changeInProgress) {
+                    this._changeInProgress = true;
+                    utils_hooks__hooks.updateOffset(this, true);
+                    this._changeInProgress = null;
+                }
+            }
+            return this;
+        } else {
+            return this._isUTC ? offset : getDateOffset(this);
+        }
+    }
+
+    function getSetZone (input, keepLocalTime) {
+        if (input != null) {
+            if (typeof input !== 'string') {
+                input = -input;
+            }
+
+            this.utcOffset(input, keepLocalTime);
+
+            return this;
+        } else {
+            return -this.utcOffset();
+        }
+    }
+
+    function setOffsetToUTC (keepLocalTime) {
+        return this.utcOffset(0, keepLocalTime);
+    }
+
+    function setOffsetToLocal (keepLocalTime) {
+        if (this._isUTC) {
+            this.utcOffset(0, keepLocalTime);
+            this._isUTC = false;
+
+            if (keepLocalTime) {
+                this.subtract(getDateOffset(this), 'm');
+            }
+        }
+        return this;
+    }
+
+    function setOffsetToParsedOffset () {
+        if (this._tzm) {
+            this.utcOffset(this._tzm);
+        } else if (typeof this._i === 'string') {
+            this.utcOffset(offsetFromString(this._i));
+        }
+        return this;
+    }
+
+    function hasAlignedHourOffset (input) {
+        input = input ? local__createLocal(input).utcOffset() : 0;
+
+        return (this.utcOffset() - input) % 60 === 0;
+    }
+
+    function isDaylightSavingTime () {
+        return (
+            this.utcOffset() > this.clone().month(0).utcOffset() ||
+            this.utcOffset() > this.clone().month(5).utcOffset()
+        );
+    }
+
+    function isDaylightSavingTimeShifted () {
+        if (typeof this._isDSTShifted !== 'undefined') {
+            return this._isDSTShifted;
+        }
+
+        var c = {};
+
+        copyConfig(c, this);
+        c = prepareConfig(c);
+
+        if (c._a) {
+            var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
+            this._isDSTShifted = this.isValid() &&
+                compareArrays(c._a, other.toArray()) > 0;
+        } else {
+            this._isDSTShifted = false;
+        }
+
+        return this._isDSTShifted;
+    }
+
+    function isLocal () {
+        return !this._isUTC;
+    }
+
+    function isUtcOffset () {
+        return this._isUTC;
+    }
+
+    function isUtc () {
+        return this._isUTC && this._offset === 0;
+    }
+
+    var aspNetRegex = /(\-)?(?:(\d*)\.)?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?)?/;
+
+    // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
+    // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
+    var create__isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
+
+    function create__createDuration (input, key) {
+        var duration = input,
+            // matching against regexp is expensive, do it on demand
+            match = null,
+            sign,
+            ret,
+            diffRes;
+
+        if (isDuration(input)) {
+            duration = {
+                ms : input._milliseconds,
+                d  : input._days,
+                M  : input._months
+            };
+        } else if (typeof input === 'number') {
+            duration = {};
+            if (key) {
+                duration[key] = input;
+            } else {
+                duration.milliseconds = input;
+            }
+        } else if (!!(match = aspNetRegex.exec(input))) {
+            sign = (match[1] === '-') ? -1 : 1;
+            duration = {
+                y  : 0,
+                d  : toInt(match[DATE])        * sign,
+                h  : toInt(match[HOUR])        * sign,
+                m  : toInt(match[MINUTE])      * sign,
+                s  : toInt(match[SECOND])      * sign,
+                ms : toInt(match[MILLISECOND]) * sign
+            };
+        } else if (!!(match = create__isoRegex.exec(input))) {
+            sign = (match[1] === '-') ? -1 : 1;
+            duration = {
+                y : parseIso(match[2], sign),
+                M : parseIso(match[3], sign),
+                d : parseIso(match[4], sign),
+                h : parseIso(match[5], sign),
+                m : parseIso(match[6], sign),
+                s : parseIso(match[7], sign),
+                w : parseIso(match[8], sign)
+            };
+        } else if (duration == null) {// checks for null or undefined
+            duration = {};
+        } else if (typeof duration === 'object' && ('from' in duration || 'to' in duration)) {
+            diffRes = momentsDifference(local__createLocal(duration.from), local__createLocal(duration.to));
+
+            duration = {};
+            duration.ms = diffRes.milliseconds;
+            duration.M = diffRes.months;
+        }
+
+        ret = new Duration(duration);
+
+        if (isDuration(input) && hasOwnProp(input, '_locale')) {
+            ret._locale = input._locale;
+        }
+
+        return ret;
+    }
+
+    create__createDuration.fn = Duration.prototype;
+
+    function parseIso (inp, sign) {
+        // We'd normally use ~~inp for this, but unfortunately it also
+        // converts floats to ints.
+        // inp may be undefined, so careful calling replace on it.
+        var res = inp && parseFloat(inp.replace(',', '.'));
+        // apply sign while we're at it
+        return (isNaN(res) ? 0 : res) * sign;
+    }
+
+    function positiveMomentsDifference(base, other) {
+        var res = {milliseconds: 0, months: 0};
+
+        res.months = other.month() - base.month() +
+            (other.year() - base.year()) * 12;
+        if (base.clone().add(res.months, 'M').isAfter(other)) {
+            --res.months;
+        }
+
+        res.milliseconds = +other - +(base.clone().add(res.months, 'M'));
+
+        return res;
+    }
+
+    function momentsDifference(base, other) {
+        var res;
+        other = cloneWithOffset(other, base);
+        if (base.isBefore(other)) {
+            res = positiveMomentsDifference(base, other);
+        } else {
+            res = positiveMomentsDifference(other, base);
+            res.milliseconds = -res.milliseconds;
+            res.months = -res.months;
+        }
+
+        return res;
+    }
+
+    function createAdder(direction, name) {
+        return function (val, period) {
+            var dur, tmp;
+            //invert the arguments, but complain about it
+            if (period !== null && !isNaN(+period)) {
+                deprecateSimple(name, 'moment().' + name  + '(period, number) is deprecated. Please use moment().' + name + '(number, period).');
+                tmp = val; val = period; period = tmp;
+            }
+
+            val = typeof val === 'string' ? +val : val;
+            dur = create__createDuration(val, period);
+            add_subtract__addSubtract(this, dur, direction);
+            return this;
+        };
+    }
+
+    function add_subtract__addSubtract (mom, duration, isAdding, updateOffset) {
+        var milliseconds = duration._milliseconds,
+            days = duration._days,
+            months = duration._months;
+        updateOffset = updateOffset == null ? true : updateOffset;
+
+        if (milliseconds) {
+            mom._d.setTime(+mom._d + milliseconds * isAdding);
+        }
+        if (days) {
+            get_set__set(mom, 'Date', get_set__get(mom, 'Date') + days * isAdding);
+        }
+        if (months) {
+            setMonth(mom, get_set__get(mom, 'Month') + months * isAdding);
+        }
+        if (updateOffset) {
+            utils_hooks__hooks.updateOffset(mom, days || months);
+        }
+    }
+
+    var add_subtract__add      = createAdder(1, 'add');
+    var add_subtract__subtract = createAdder(-1, 'subtract');
+
+    function moment_calendar__calendar (time, formats) {
+        // We want to compare the start of today, vs this.
+        // Getting start-of-today depends on whether we're local/utc/offset or not.
+        var now = time || local__createLocal(),
+            sod = cloneWithOffset(now, this).startOf('day'),
+            diff = this.diff(sod, 'days', true),
+            format = diff < -6 ? 'sameElse' :
+                diff < -1 ? 'lastWeek' :
+                diff < 0 ? 'lastDay' :
+                diff < 1 ? 'sameDay' :
+                diff < 2 ? 'nextDay' :
+                diff < 7 ? 'nextWeek' : 'sameElse';
+        return this.format(formats && formats[format] || this.localeData().calendar(format, this, local__createLocal(now)));
+    }
+
+    function clone () {
+        return new Moment(this);
+    }
+
+    function isAfter (input, units) {
+        var inputMs;
+        units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
+        if (units === 'millisecond') {
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this > +input;
+        } else {
+            inputMs = isMoment(input) ? +input : +local__createLocal(input);
+            return inputMs < +this.clone().startOf(units);
+        }
+    }
+
+    function isBefore (input, units) {
+        var inputMs;
+        units = normalizeUnits(typeof units !== 'undefined' ? units : 'millisecond');
+        if (units === 'millisecond') {
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this < +input;
+        } else {
+            inputMs = isMoment(input) ? +input : +local__createLocal(input);
+            return +this.clone().endOf(units) < inputMs;
+        }
+    }
+
+    function isBetween (from, to, units) {
+        return this.isAfter(from, units) && this.isBefore(to, units);
+    }
+
+    function isSame (input, units) {
+        var inputMs;
+        units = normalizeUnits(units || 'millisecond');
+        if (units === 'millisecond') {
+            input = isMoment(input) ? input : local__createLocal(input);
+            return +this === +input;
+        } else {
+            inputMs = +local__createLocal(input);
+            return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
+        }
+    }
+
+    function diff (input, units, asFloat) {
+        var that = cloneWithOffset(input, this),
+            zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4,
+            delta, output;
+
+        units = normalizeUnits(units);
+
+        if (units === 'year' || units === 'month' || units === 'quarter') {
+            output = monthDiff(this, that);
+            if (units === 'quarter') {
+                output = output / 3;
+            } else if (units === 'year') {
+                output = output / 12;
+            }
+        } else {
+            delta = this - that;
+            output = units === 'second' ? delta / 1e3 : // 1000
+                units === 'minute' ? delta / 6e4 : // 1000 * 60
+                units === 'hour' ? delta / 36e5 : // 1000 * 60 * 60
+                units === 'day' ? (delta - zoneDelta) / 864e5 : // 1000 * 60 * 60 * 24, negate dst
+                units === 'week' ? (delta - zoneDelta) / 6048e5 : // 1000 * 60 * 60 * 24 * 7, negate dst
+                delta;
+        }
+        return asFloat ? output : absFloor(output);
+    }
+
+    function monthDiff (a, b) {
+        // difference in months
+        var wholeMonthDiff = ((b.year() - a.year()) * 12) + (b.month() - a.month()),
+            // b is in (anchor - 1 month, anchor + 1 month)
+            anchor = a.clone().add(wholeMonthDiff, 'months'),
+            anchor2, adjust;
+
+        if (b - anchor < 0) {
+            anchor2 = a.clone().add(wholeMonthDiff - 1, 'months');
+            // linear across the month
+            adjust = (b - anchor) / (anchor - anchor2);
+        } else {
+            anchor2 = a.clone().add(wholeMonthDiff + 1, 'months');
+            // linear across the month
+            adjust = (b - anchor) / (anchor2 - anchor);
+        }
+
+        return -(wholeMonthDiff + adjust);
+    }
+
+    utils_hooks__hooks.defaultFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+
+    function toString () {
+        return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+    }
+
+    function moment_format__toISOString () {
+        var m = this.clone().utc();
+        if (0 < m.year() && m.year() <= 9999) {
+            if ('function' === typeof Date.prototype.toISOString) {
+                // native implementation is ~50x faster, use it when we can
+                return this.toDate().toISOString();
+            } else {
+                return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+            }
+        } else {
+            return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+        }
+    }
+
+    function format (inputString) {
+        var output = formatMoment(this, inputString || utils_hooks__hooks.defaultFormat);
+        return this.localeData().postformat(output);
+    }
+
+    function from (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
+        return create__createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
+    }
+
+    function fromNow (withoutSuffix) {
+        return this.from(local__createLocal(), withoutSuffix);
+    }
+
+    function to (time, withoutSuffix) {
+        if (!this.isValid()) {
+            return this.localeData().invalidDate();
+        }
+        return create__createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+    }
+
+    function toNow (withoutSuffix) {
+        return this.to(local__createLocal(), withoutSuffix);
+    }
+
+    function locale (key) {
+        var newLocaleData;
+
+        if (key === undefined) {
+            return this._locale._abbr;
+        } else {
+            newLocaleData = locale_locales__getLocale(key);
+            if (newLocaleData != null) {
+                this._locale = newLocaleData;
+            }
+            return this;
+        }
+    }
+
+    var lang = deprecate(
+        'moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',
+        function (key) {
+            if (key === undefined) {
+                return this.localeData();
+            } else {
+                return this.locale(key);
+            }
+        }
+    );
+
+    function localeData () {
+        return this._locale;
+    }
+
+    function startOf (units) {
+        units = normalizeUnits(units);
+        // the following switch intentionally omits break keywords
+        // to utilize falling through the cases.
+        switch (units) {
+        case 'year':
+            this.month(0);
+            /* falls through */
+        case 'quarter':
+        case 'month':
+            this.date(1);
+            /* falls through */
+        case 'week':
+        case 'isoWeek':
+        case 'day':
+            this.hours(0);
+            /* falls through */
+        case 'hour':
+            this.minutes(0);
+            /* falls through */
+        case 'minute':
+            this.seconds(0);
+            /* falls through */
+        case 'second':
+            this.milliseconds(0);
+        }
+
+        // weeks are a special case
+        if (units === 'week') {
+            this.weekday(0);
+        }
+        if (units === 'isoWeek') {
+            this.isoWeekday(1);
+        }
+
+        // quarters are also special
+        if (units === 'quarter') {
+            this.month(Math.floor(this.month() / 3) * 3);
+        }
+
+        return this;
+    }
+
+    function endOf (units) {
+        units = normalizeUnits(units);
+        if (units === undefined || units === 'millisecond') {
+            return this;
+        }
+        return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+    }
+
+    function to_type__valueOf () {
+        return +this._d - ((this._offset || 0) * 60000);
+    }
+
+    function unix () {
+        return Math.floor(+this / 1000);
+    }
+
+    function toDate () {
+        return this._offset ? new Date(+this) : this._d;
+    }
+
+    function toArray () {
+        var m = this;
+        return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
+    }
+
+    function toObject () {
+        var m = this;
+        return {
+            years: m.year(),
+            months: m.month(),
+            date: m.date(),
+            hours: m.hours(),
+            minutes: m.minutes(),
+            seconds: m.seconds(),
+            milliseconds: m.milliseconds()
+        };
+    }
+
+    function moment_valid__isValid () {
+        return valid__isValid(this);
+    }
+
+    function parsingFlags () {
+        return extend({}, getParsingFlags(this));
+    }
+
+    function invalidAt () {
+        return getParsingFlags(this).overflow;
+    }
+
+    addFormatToken(0, ['gg', 2], 0, function () {
+        return this.weekYear() % 100;
+    });
+
+    addFormatToken(0, ['GG', 2], 0, function () {
+        return this.isoWeekYear() % 100;
+    });
+
+    function addWeekYearFormatToken (token, getter) {
+        addFormatToken(0, [token, token.length], 0, getter);
+    }
+
+    addWeekYearFormatToken('gggg',     'weekYear');
+    addWeekYearFormatToken('ggggg',    'weekYear');
+    addWeekYearFormatToken('GGGG',  'isoWeekYear');
+    addWeekYearFormatToken('GGGGG', 'isoWeekYear');
+
+    // ALIASES
+
+    addUnitAlias('weekYear', 'gg');
+    addUnitAlias('isoWeekYear', 'GG');
+
+    // PARSING
+
+    addRegexToken('G',      matchSigned);
+    addRegexToken('g',      matchSigned);
+    addRegexToken('GG',     match1to2, match2);
+    addRegexToken('gg',     match1to2, match2);
+    addRegexToken('GGGG',   match1to4, match4);
+    addRegexToken('gggg',   match1to4, match4);
+    addRegexToken('GGGGG',  match1to6, match6);
+    addRegexToken('ggggg',  match1to6, match6);
+
+    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (input, week, config, token) {
+        week[token.substr(0, 2)] = toInt(input);
+    });
+
+    addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
+        week[token] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+
+    // HELPERS
+
+    function weeksInYear(year, dow, doy) {
+        return weekOfYear(local__createLocal([year, 11, 31 + dow - doy]), dow, doy).week;
+    }
+
+    // MOMENTS
+
+    function getSetWeekYear (input) {
+        var year = weekOfYear(this, this.localeData()._week.dow, this.localeData()._week.doy).year;
+        return input == null ? year : this.add((input - year), 'y');
+    }
+
+    function getSetISOWeekYear (input) {
+        var year = weekOfYear(this, 1, 4).year;
+        return input == null ? year : this.add((input - year), 'y');
+    }
+
+    function getISOWeeksInYear () {
+        return weeksInYear(this.year(), 1, 4);
+    }
+
+    function getWeeksInYear () {
+        var weekInfo = this.localeData()._week;
+        return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
+    }
+
+    addFormatToken('Q', 0, 0, 'quarter');
+
+    // ALIASES
+
+    addUnitAlias('quarter', 'Q');
+
+    // PARSING
+
+    addRegexToken('Q', match1);
+    addParseToken('Q', function (input, array) {
+        array[MONTH] = (toInt(input) - 1) * 3;
+    });
+
+    // MOMENTS
+
+    function getSetQuarter (input) {
+        return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+    }
+
+    addFormatToken('D', ['DD', 2], 'Do', 'date');
+
+    // ALIASES
+
+    addUnitAlias('date', 'D');
+
+    // PARSING
+
+    addRegexToken('D',  match1to2);
+    addRegexToken('DD', match1to2, match2);
+    addRegexToken('Do', function (isStrict, locale) {
+        return isStrict ? locale._ordinalParse : locale._ordinalParseLenient;
+    });
+
+    addParseToken(['D', 'DD'], DATE);
+    addParseToken('Do', function (input, array) {
+        array[DATE] = toInt(input.match(match1to2)[0], 10);
+    });
+
+    // MOMENTS
+
+    var getSetDayOfMonth = makeGetSet('Date', true);
+
+    addFormatToken('d', 0, 'do', 'day');
+
+    addFormatToken('dd', 0, 0, function (format) {
+        return this.localeData().weekdaysMin(this, format);
+    });
+
+    addFormatToken('ddd', 0, 0, function (format) {
+        return this.localeData().weekdaysShort(this, format);
+    });
+
+    addFormatToken('dddd', 0, 0, function (format) {
+        return this.localeData().weekdays(this, format);
+    });
+
+    addFormatToken('e', 0, 0, 'weekday');
+    addFormatToken('E', 0, 0, 'isoWeekday');
+
+    // ALIASES
+
+    addUnitAlias('day', 'd');
+    addUnitAlias('weekday', 'e');
+    addUnitAlias('isoWeekday', 'E');
+
+    // PARSING
+
+    addRegexToken('d',    match1to2);
+    addRegexToken('e',    match1to2);
+    addRegexToken('E',    match1to2);
+    addRegexToken('dd',   matchWord);
+    addRegexToken('ddd',  matchWord);
+    addRegexToken('dddd', matchWord);
+
+    addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config) {
+        var weekday = config._locale.weekdaysParse(input);
+        // if we didn't get a weekday name, mark the date as invalid
+        if (weekday != null) {
+            week.d = weekday;
+        } else {
+            getParsingFlags(config).invalidWeekday = input;
+        }
+    });
+
+    addWeekParseToken(['d', 'e', 'E'], function (input, week, config, token) {
+        week[token] = toInt(input);
+    });
+
+    // HELPERS
+
+    function parseWeekday(input, locale) {
+        if (typeof input !== 'string') {
+            return input;
+        }
+
+        if (!isNaN(input)) {
+            return parseInt(input, 10);
+        }
+
+        input = locale.weekdaysParse(input);
+        if (typeof input === 'number') {
+            return input;
+        }
+
+        return null;
+    }
+
+    // LOCALES
+
+    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
+    function localeWeekdays (m) {
+        return this._weekdays[m.day()];
+    }
+
+    var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+    function localeWeekdaysShort (m) {
+        return this._weekdaysShort[m.day()];
+    }
+
+    var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
+    function localeWeekdaysMin (m) {
+        return this._weekdaysMin[m.day()];
+    }
+
+    function localeWeekdaysParse (weekdayName) {
+        var i, mom, regex;
+
+        this._weekdaysParse = this._weekdaysParse || [];
+
+        for (i = 0; i < 7; i++) {
+            // make the regex if we don't have it already
+            if (!this._weekdaysParse[i]) {
+                mom = local__createLocal([2000, 1]).day(i);
+                regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
+                this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
+            }
+            // test the regex
+            if (this._weekdaysParse[i].test(weekdayName)) {
+                return i;
+            }
+        }
+    }
+
+    // MOMENTS
+
+    function getSetDayOfWeek (input) {
+        var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+        if (input != null) {
+            input = parseWeekday(input, this.localeData());
+            return this.add(input - day, 'd');
+        } else {
+            return day;
+        }
+    }
+
+    function getSetLocaleDayOfWeek (input) {
+        var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
+        return input == null ? weekday : this.add(input - weekday, 'd');
+    }
+
+    function getSetISODayOfWeek (input) {
+        // behaves the same as moment#day except
+        // as a getter, returns 7 instead of 0 (1-7 range instead of 0-6)
+        // as a setter, sunday should belong to the previous week.
+        return input == null ? this.day() || 7 : this.day(this.day() % 7 ? input : input - 7);
+    }
+
+    addFormatToken('H', ['HH', 2], 0, 'hour');
+    addFormatToken('h', ['hh', 2], 0, function () {
+        return this.hours() % 12 || 12;
+    });
+
+    function meridiem (token, lowercase) {
+        addFormatToken(token, 0, 0, function () {
+            return this.localeData().meridiem(this.hours(), this.minutes(), lowercase);
+        });
+    }
+
+    meridiem('a', true);
+    meridiem('A', false);
+
+    // ALIASES
+
+    addUnitAlias('hour', 'h');
+
+    // PARSING
+
+    function matchMeridiem (isStrict, locale) {
+        return locale._meridiemParse;
+    }
+
+    addRegexToken('a',  matchMeridiem);
+    addRegexToken('A',  matchMeridiem);
+    addRegexToken('H',  match1to2);
+    addRegexToken('h',  match1to2);
+    addRegexToken('HH', match1to2, match2);
+    addRegexToken('hh', match1to2, match2);
+
+    addParseToken(['H', 'HH'], HOUR);
+    addParseToken(['a', 'A'], function (input, array, config) {
+        config._isPm = config._locale.isPM(input);
+        config._meridiem = input;
+    });
+    addParseToken(['h', 'hh'], function (input, array, config) {
+        array[HOUR] = toInt(input);
+        getParsingFlags(config).bigHour = true;
+    });
+
+    // LOCALES
+
+    function localeIsPM (input) {
+        // IE8 Quirks Mode & IE7 Standards Mode do not allow accessing strings like arrays
+        // Using charAt should be more compatible.
+        return ((input + '').toLowerCase().charAt(0) === 'p');
+    }
+
+    var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+    function localeMeridiem (hours, minutes, isLower) {
+        if (hours > 11) {
+            return isLower ? 'pm' : 'PM';
+        } else {
+            return isLower ? 'am' : 'AM';
+        }
+    }
+
+
+    // MOMENTS
+
+    // Setting the hour should keep the time, because the user explicitly
+    // specified which hour he wants. So trying to maintain the same hour (in
+    // a new timezone) makes sense. Adding/subtracting hours does not follow
+    // this rule.
+    var getSetHour = makeGetSet('Hours', true);
+
+    addFormatToken('m', ['mm', 2], 0, 'minute');
+
+    // ALIASES
+
+    addUnitAlias('minute', 'm');
+
+    // PARSING
+
+    addRegexToken('m',  match1to2);
+    addRegexToken('mm', match1to2, match2);
+    addParseToken(['m', 'mm'], MINUTE);
+
+    // MOMENTS
+
+    var getSetMinute = makeGetSet('Minutes', false);
+
+    addFormatToken('s', ['ss', 2], 0, 'second');
+
+    // ALIASES
+
+    addUnitAlias('second', 's');
+
+    // PARSING
+
+    addRegexToken('s',  match1to2);
+    addRegexToken('ss', match1to2, match2);
+    addParseToken(['s', 'ss'], SECOND);
+
+    // MOMENTS
+
+    var getSetSecond = makeGetSet('Seconds', false);
+
+    addFormatToken('S', 0, 0, function () {
+        return ~~(this.millisecond() / 100);
+    });
+
+    addFormatToken(0, ['SS', 2], 0, function () {
+        return ~~(this.millisecond() / 10);
+    });
+
+    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+    addFormatToken(0, ['SSSS', 4], 0, function () {
+        return this.millisecond() * 10;
+    });
+    addFormatToken(0, ['SSSSS', 5], 0, function () {
+        return this.millisecond() * 100;
+    });
+    addFormatToken(0, ['SSSSSS', 6], 0, function () {
+        return this.millisecond() * 1000;
+    });
+    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+        return this.millisecond() * 10000;
+    });
+    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+        return this.millisecond() * 100000;
+    });
+    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+        return this.millisecond() * 1000000;
+    });
+
+
+    // ALIASES
+
+    addUnitAlias('millisecond', 'ms');
+
+    // PARSING
+
+    addRegexToken('S',    match1to3, match1);
+    addRegexToken('SS',   match1to3, match2);
+    addRegexToken('SSS',  match1to3, match3);
+
+    var token;
+    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+        addRegexToken(token, matchUnsigned);
+    }
+
+    function parseMs(input, array) {
+        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    }
+
+    for (token = 'S'; token.length <= 9; token += 'S') {
+        addParseToken(token, parseMs);
+    }
+    // MOMENTS
+
+    var getSetMillisecond = makeGetSet('Milliseconds', false);
+
+    addFormatToken('z',  0, 0, 'zoneAbbr');
+    addFormatToken('zz', 0, 0, 'zoneName');
+
+    // MOMENTS
+
+    function getZoneAbbr () {
+        return this._isUTC ? 'UTC' : '';
+    }
+
+    function getZoneName () {
+        return this._isUTC ? 'Coordinated Universal Time' : '';
+    }
+
+    var momentPrototype__proto = Moment.prototype;
+
+    momentPrototype__proto.add          = add_subtract__add;
+    momentPrototype__proto.calendar     = moment_calendar__calendar;
+    momentPrototype__proto.clone        = clone;
+    momentPrototype__proto.diff         = diff;
+    momentPrototype__proto.endOf        = endOf;
+    momentPrototype__proto.format       = format;
+    momentPrototype__proto.from         = from;
+    momentPrototype__proto.fromNow      = fromNow;
+    momentPrototype__proto.to           = to;
+    momentPrototype__proto.toNow        = toNow;
+    momentPrototype__proto.get          = getSet;
+    momentPrototype__proto.invalidAt    = invalidAt;
+    momentPrototype__proto.isAfter      = isAfter;
+    momentPrototype__proto.isBefore     = isBefore;
+    momentPrototype__proto.isBetween    = isBetween;
+    momentPrototype__proto.isSame       = isSame;
+    momentPrototype__proto.isValid      = moment_valid__isValid;
+    momentPrototype__proto.lang         = lang;
+    momentPrototype__proto.locale       = locale;
+    momentPrototype__proto.localeData   = localeData;
+    momentPrototype__proto.max          = prototypeMax;
+    momentPrototype__proto.min          = prototypeMin;
+    momentPrototype__proto.parsingFlags = parsingFlags;
+    momentPrototype__proto.set          = getSet;
+    momentPrototype__proto.startOf      = startOf;
+    momentPrototype__proto.subtract     = add_subtract__subtract;
+    momentPrototype__proto.toArray      = toArray;
+    momentPrototype__proto.toObject     = toObject;
+    momentPrototype__proto.toDate       = toDate;
+    momentPrototype__proto.toISOString  = moment_format__toISOString;
+    momentPrototype__proto.toJSON       = moment_format__toISOString;
+    momentPrototype__proto.toString     = toString;
+    momentPrototype__proto.unix         = unix;
+    momentPrototype__proto.valueOf      = to_type__valueOf;
+
+    // Year
+    momentPrototype__proto.year       = getSetYear;
+    momentPrototype__proto.isLeapYear = getIsLeapYear;
+
+    // Week Year
+    momentPrototype__proto.weekYear    = getSetWeekYear;
+    momentPrototype__proto.isoWeekYear = getSetISOWeekYear;
+
+    // Quarter
+    momentPrototype__proto.quarter = momentPrototype__proto.quarters = getSetQuarter;
+
+    // Month
+    momentPrototype__proto.month       = getSetMonth;
+    momentPrototype__proto.daysInMonth = getDaysInMonth;
+
+    // Week
+    momentPrototype__proto.week           = momentPrototype__proto.weeks        = getSetWeek;
+    momentPrototype__proto.isoWeek        = momentPrototype__proto.isoWeeks     = getSetISOWeek;
+    momentPrototype__proto.weeksInYear    = getWeeksInYear;
+    momentPrototype__proto.isoWeeksInYear = getISOWeeksInYear;
+
+    // Day
+    momentPrototype__proto.date       = getSetDayOfMonth;
+    momentPrototype__proto.day        = momentPrototype__proto.days             = getSetDayOfWeek;
+    momentPrototype__proto.weekday    = getSetLocaleDayOfWeek;
+    momentPrototype__proto.isoWeekday = getSetISODayOfWeek;
+    momentPrototype__proto.dayOfYear  = getSetDayOfYear;
+
+    // Hour
+    momentPrototype__proto.hour = momentPrototype__proto.hours = getSetHour;
+
+    // Minute
+    momentPrototype__proto.minute = momentPrototype__proto.minutes = getSetMinute;
+
+    // Second
+    momentPrototype__proto.second = momentPrototype__proto.seconds = getSetSecond;
+
+    // Millisecond
+    momentPrototype__proto.millisecond = momentPrototype__proto.milliseconds = getSetMillisecond;
+
+    // Offset
+    momentPrototype__proto.utcOffset            = getSetOffset;
+    momentPrototype__proto.utc                  = setOffsetToUTC;
+    momentPrototype__proto.local                = setOffsetToLocal;
+    momentPrototype__proto.parseZone            = setOffsetToParsedOffset;
+    momentPrototype__proto.hasAlignedHourOffset = hasAlignedHourOffset;
+    momentPrototype__proto.isDST                = isDaylightSavingTime;
+    momentPrototype__proto.isDSTShifted         = isDaylightSavingTimeShifted;
+    momentPrototype__proto.isLocal              = isLocal;
+    momentPrototype__proto.isUtcOffset          = isUtcOffset;
+    momentPrototype__proto.isUtc                = isUtc;
+    momentPrototype__proto.isUTC                = isUtc;
+
+    // Timezone
+    momentPrototype__proto.zoneAbbr = getZoneAbbr;
+    momentPrototype__proto.zoneName = getZoneName;
+
+    // Deprecations
+    momentPrototype__proto.dates  = deprecate('dates accessor is deprecated. Use date instead.', getSetDayOfMonth);
+    momentPrototype__proto.months = deprecate('months accessor is deprecated. Use month instead', getSetMonth);
+    momentPrototype__proto.years  = deprecate('years accessor is deprecated. Use year instead', getSetYear);
+    momentPrototype__proto.zone   = deprecate('moment().zone is deprecated, use moment().utcOffset instead. https://github.com/moment/moment/issues/1779', getSetZone);
+
+    var momentPrototype = momentPrototype__proto;
+
+    function moment__createUnix (input) {
+        return local__createLocal(input * 1000);
+    }
+
+    function moment__createInZone () {
+        return local__createLocal.apply(null, arguments).parseZone();
+    }
+
+    var defaultCalendar = {
+        sameDay : '[Today at] LT',
+        nextDay : '[Tomorrow at] LT',
+        nextWeek : 'dddd [at] LT',
+        lastDay : '[Yesterday at] LT',
+        lastWeek : '[Last] dddd [at] LT',
+        sameElse : 'L'
+    };
+
+    function locale_calendar__calendar (key, mom, now) {
+        var output = this._calendar[key];
+        return typeof output === 'function' ? output.call(mom, now) : output;
+    }
+
+    var defaultLongDateFormat = {
+        LTS  : 'h:mm:ss A',
+        LT   : 'h:mm A',
+        L    : 'MM/DD/YYYY',
+        LL   : 'MMMM D, YYYY',
+        LLL  : 'MMMM D, YYYY h:mm A',
+        LLLL : 'dddd, MMMM D, YYYY h:mm A'
+    };
+
+    function longDateFormat (key) {
+        var format = this._longDateFormat[key],
+            formatUpper = this._longDateFormat[key.toUpperCase()];
+
+        if (format || !formatUpper) {
+            return format;
+        }
+
+        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+            return val.slice(1);
+        });
+
+        return this._longDateFormat[key];
+    }
+
+    var defaultInvalidDate = 'Invalid date';
+
+    function invalidDate () {
+        return this._invalidDate;
+    }
+
+    var defaultOrdinal = '%d';
+    var defaultOrdinalParse = /\d{1,2}/;
+
+    function ordinal (number) {
+        return this._ordinal.replace('%d', number);
+    }
+
+    function preParsePostFormat (string) {
+        return string;
+    }
+
+    var defaultRelativeTime = {
+        future : 'in %s',
+        past   : '%s ago',
+        s  : 'a few seconds',
+        m  : 'a minute',
+        mm : '%d minutes',
+        h  : 'an hour',
+        hh : '%d hours',
+        d  : 'a day',
+        dd : '%d days',
+        M  : 'a month',
+        MM : '%d months',
+        y  : 'a year',
+        yy : '%d years'
+    };
+
+    function relative__relativeTime (number, withoutSuffix, string, isFuture) {
+        var output = this._relativeTime[string];
+        return (typeof output === 'function') ?
+            output(number, withoutSuffix, string, isFuture) :
+            output.replace(/%d/i, number);
+    }
+
+    function pastFuture (diff, output) {
+        var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
+        return typeof format === 'function' ? format(output) : format.replace(/%s/i, output);
+    }
+
+    function locale_set__set (config) {
+        var prop, i;
+        for (i in config) {
+            prop = config[i];
+            if (typeof prop === 'function') {
+                this[i] = prop;
+            } else {
+                this['_' + i] = prop;
+            }
+        }
+        // Lenient ordinal parsing accepts just a number in addition to
+        // number + (possibly) stuff coming from _ordinalParseLenient.
+        this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+    }
+
+    var prototype__proto = Locale.prototype;
+
+    prototype__proto._calendar       = defaultCalendar;
+    prototype__proto.calendar        = locale_calendar__calendar;
+    prototype__proto._longDateFormat = defaultLongDateFormat;
+    prototype__proto.longDateFormat  = longDateFormat;
+    prototype__proto._invalidDate    = defaultInvalidDate;
+    prototype__proto.invalidDate     = invalidDate;
+    prototype__proto._ordinal        = defaultOrdinal;
+    prototype__proto.ordinal         = ordinal;
+    prototype__proto._ordinalParse   = defaultOrdinalParse;
+    prototype__proto.preparse        = preParsePostFormat;
+    prototype__proto.postformat      = preParsePostFormat;
+    prototype__proto._relativeTime   = defaultRelativeTime;
+    prototype__proto.relativeTime    = relative__relativeTime;
+    prototype__proto.pastFuture      = pastFuture;
+    prototype__proto.set             = locale_set__set;
+
+    // Month
+    prototype__proto.months       =        localeMonths;
+    prototype__proto._months      = defaultLocaleMonths;
+    prototype__proto.monthsShort  =        localeMonthsShort;
+    prototype__proto._monthsShort = defaultLocaleMonthsShort;
+    prototype__proto.monthsParse  =        localeMonthsParse;
+
+    // Week
+    prototype__proto.week = localeWeek;
+    prototype__proto._week = defaultLocaleWeek;
+    prototype__proto.firstDayOfYear = localeFirstDayOfYear;
+    prototype__proto.firstDayOfWeek = localeFirstDayOfWeek;
+
+    // Day of Week
+    prototype__proto.weekdays       =        localeWeekdays;
+    prototype__proto._weekdays      = defaultLocaleWeekdays;
+    prototype__proto.weekdaysMin    =        localeWeekdaysMin;
+    prototype__proto._weekdaysMin   = defaultLocaleWeekdaysMin;
+    prototype__proto.weekdaysShort  =        localeWeekdaysShort;
+    prototype__proto._weekdaysShort = defaultLocaleWeekdaysShort;
+    prototype__proto.weekdaysParse  =        localeWeekdaysParse;
+
+    // Hours
+    prototype__proto.isPM = localeIsPM;
+    prototype__proto._meridiemParse = defaultLocaleMeridiemParse;
+    prototype__proto.meridiem = localeMeridiem;
+
+    function lists__get (format, index, field, setter) {
+        var locale = locale_locales__getLocale();
+        var utc = create_utc__createUTC().set(setter, index);
+        return locale[field](utc, format);
+    }
+
+    function list (format, index, field, count, setter) {
+        if (typeof format === 'number') {
+            index = format;
+            format = undefined;
+        }
+
+        format = format || '';
+
+        if (index != null) {
+            return lists__get(format, index, field, setter);
+        }
+
+        var i;
+        var out = [];
+        for (i = 0; i < count; i++) {
+            out[i] = lists__get(format, i, field, setter);
+        }
+        return out;
+    }
+
+    function lists__listMonths (format, index) {
+        return list(format, index, 'months', 12, 'month');
+    }
+
+    function lists__listMonthsShort (format, index) {
+        return list(format, index, 'monthsShort', 12, 'month');
+    }
+
+    function lists__listWeekdays (format, index) {
+        return list(format, index, 'weekdays', 7, 'day');
+    }
+
+    function lists__listWeekdaysShort (format, index) {
+        return list(format, index, 'weekdaysShort', 7, 'day');
+    }
+
+    function lists__listWeekdaysMin (format, index) {
+        return list(format, index, 'weekdaysMin', 7, 'day');
+    }
+
+    locale_locales__getSetGlobalLocale('en', {
+        ordinalParse: /\d{1,2}(th|st|nd|rd)/,
+        ordinal : function (number) {
+            var b = number % 10,
+                output = (toInt(number % 100 / 10) === 1) ? 'th' :
+                (b === 1) ? 'st' :
+                (b === 2) ? 'nd' :
+                (b === 3) ? 'rd' : 'th';
+            return number + output;
+        }
+    });
+
+    // Side effect imports
+    utils_hooks__hooks.lang = deprecate('moment.lang is deprecated. Use moment.locale instead.', locale_locales__getSetGlobalLocale);
+    utils_hooks__hooks.langData = deprecate('moment.langData is deprecated. Use moment.localeData instead.', locale_locales__getLocale);
+
+    var mathAbs = Math.abs;
+
+    function duration_abs__abs () {
+        var data           = this._data;
+
+        this._milliseconds = mathAbs(this._milliseconds);
+        this._days         = mathAbs(this._days);
+        this._months       = mathAbs(this._months);
+
+        data.milliseconds  = mathAbs(data.milliseconds);
+        data.seconds       = mathAbs(data.seconds);
+        data.minutes       = mathAbs(data.minutes);
+        data.hours         = mathAbs(data.hours);
+        data.months        = mathAbs(data.months);
+        data.years         = mathAbs(data.years);
+
+        return this;
+    }
+
+    function duration_add_subtract__addSubtract (duration, input, value, direction) {
+        var other = create__createDuration(input, value);
+
+        duration._milliseconds += direction * other._milliseconds;
+        duration._days         += direction * other._days;
+        duration._months       += direction * other._months;
+
+        return duration._bubble();
+    }
+
+    // supports only 2.0-style add(1, 's') or add(duration)
+    function duration_add_subtract__add (input, value) {
+        return duration_add_subtract__addSubtract(this, input, value, 1);
+    }
+
+    // supports only 2.0-style subtract(1, 's') or subtract(duration)
+    function duration_add_subtract__subtract (input, value) {
+        return duration_add_subtract__addSubtract(this, input, value, -1);
+    }
+
+    function absCeil (number) {
+        if (number < 0) {
+            return Math.floor(number);
+        } else {
+            return Math.ceil(number);
+        }
+    }
+
+    function bubble () {
+        var milliseconds = this._milliseconds;
+        var days         = this._days;
+        var months       = this._months;
+        var data         = this._data;
+        var seconds, minutes, hours, years, monthsFromDays;
+
+        // if we have a mix of positive and negative values, bubble down first
+        // check: https://github.com/moment/moment/issues/2166
+        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+                (milliseconds <= 0 && days <= 0 && months <= 0))) {
+            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+            days = 0;
+            months = 0;
+        }
+
+        // The following code bubbles up values, see the tests for
+        // examples of what that means.
+        data.milliseconds = milliseconds % 1000;
+
+        seconds           = absFloor(milliseconds / 1000);
+        data.seconds      = seconds % 60;
+
+        minutes           = absFloor(seconds / 60);
+        data.minutes      = minutes % 60;
+
+        hours             = absFloor(minutes / 60);
+        data.hours        = hours % 24;
+
+        days += absFloor(hours / 24);
+
+        // convert days to months
+        monthsFromDays = absFloor(daysToMonths(days));
+        months += monthsFromDays;
+        days -= absCeil(monthsToDays(monthsFromDays));
+
+        // 12 months -> 1 year
+        years = absFloor(months / 12);
+        months %= 12;
+
+        data.days   = days;
+        data.months = months;
+        data.years  = years;
+
+        return this;
+    }
+
+    function daysToMonths (days) {
+        // 400 years have 146097 days (taking into account leap year rules)
+        // 400 years have 12 months === 4800
+        return days * 4800 / 146097;
+    }
+
+    function monthsToDays (months) {
+        // the reverse of daysToMonths
+        return months * 146097 / 4800;
+    }
+
+    function as (units) {
+        var days;
+        var months;
+        var milliseconds = this._milliseconds;
+
+        units = normalizeUnits(units);
+
+        if (units === 'month' || units === 'year') {
+            days   = this._days   + milliseconds / 864e5;
+            months = this._months + daysToMonths(days);
+            return units === 'month' ? months : months / 12;
+        } else {
+            // handle milliseconds separately because of floating point math errors (issue #1867)
+            days = this._days + Math.round(monthsToDays(this._months));
+            switch (units) {
+                case 'week'   : return days / 7     + milliseconds / 6048e5;
+                case 'day'    : return days         + milliseconds / 864e5;
+                case 'hour'   : return days * 24    + milliseconds / 36e5;
+                case 'minute' : return days * 1440  + milliseconds / 6e4;
+                case 'second' : return days * 86400 + milliseconds / 1000;
+                // Math.floor prevents floating point math errors here
+                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
+                default: throw new Error('Unknown unit ' + units);
+            }
+        }
+    }
+
+    // TODO: Use this.as('ms')?
+    function duration_as__valueOf () {
+        return (
+            this._milliseconds +
+            this._days * 864e5 +
+            (this._months % 12) * 2592e6 +
+            toInt(this._months / 12) * 31536e6
+        );
+    }
+
+    function makeAs (alias) {
+        return function () {
+            return this.as(alias);
+        };
+    }
+
+    var asMilliseconds = makeAs('ms');
+    var asSeconds      = makeAs('s');
+    var asMinutes      = makeAs('m');
+    var asHours        = makeAs('h');
+    var asDays         = makeAs('d');
+    var asWeeks        = makeAs('w');
+    var asMonths       = makeAs('M');
+    var asYears        = makeAs('y');
+
+    function duration_get__get (units) {
+        units = normalizeUnits(units);
+        return this[units + 's']();
+    }
+
+    function makeGetter(name) {
+        return function () {
+            return this._data[name];
+        };
+    }
+
+    var milliseconds = makeGetter('milliseconds');
+    var seconds      = makeGetter('seconds');
+    var minutes      = makeGetter('minutes');
+    var hours        = makeGetter('hours');
+    var days         = makeGetter('days');
+    var months       = makeGetter('months');
+    var years        = makeGetter('years');
+
+    function weeks () {
+        return absFloor(this.days() / 7);
+    }
+
+    var round = Math.round;
+    var thresholds = {
+        s: 45,  // seconds to minute
+        m: 45,  // minutes to hour
+        h: 22,  // hours to day
+        d: 26,  // days to month
+        M: 11   // months to year
+    };
+
+    // helper function for moment.fn.from, moment.fn.fromNow, and moment.duration.fn.humanize
+    function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale) {
+        return locale.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
+    }
+
+    function duration_humanize__relativeTime (posNegDuration, withoutSuffix, locale) {
+        var duration = create__createDuration(posNegDuration).abs();
+        var seconds  = round(duration.as('s'));
+        var minutes  = round(duration.as('m'));
+        var hours    = round(duration.as('h'));
+        var days     = round(duration.as('d'));
+        var months   = round(duration.as('M'));
+        var years    = round(duration.as('y'));
+
+        var a = seconds < thresholds.s && ['s', seconds]  ||
+                minutes === 1          && ['m']           ||
+                minutes < thresholds.m && ['mm', minutes] ||
+                hours   === 1          && ['h']           ||
+                hours   < thresholds.h && ['hh', hours]   ||
+                days    === 1          && ['d']           ||
+                days    < thresholds.d && ['dd', days]    ||
+                months  === 1          && ['M']           ||
+                months  < thresholds.M && ['MM', months]  ||
+                years   === 1          && ['y']           || ['yy', years];
+
+        a[2] = withoutSuffix;
+        a[3] = +posNegDuration > 0;
+        a[4] = locale;
+        return substituteTimeAgo.apply(null, a);
+    }
+
+    // This function allows you to set a threshold for relative time strings
+    function duration_humanize__getSetRelativeTimeThreshold (threshold, limit) {
+        if (thresholds[threshold] === undefined) {
+            return false;
+        }
+        if (limit === undefined) {
+            return thresholds[threshold];
+        }
+        thresholds[threshold] = limit;
+        return true;
+    }
+
+    function humanize (withSuffix) {
+        var locale = this.localeData();
+        var output = duration_humanize__relativeTime(this, !withSuffix, locale);
+
+        if (withSuffix) {
+            output = locale.pastFuture(+this, output);
+        }
+
+        return locale.postformat(output);
+    }
+
+    var iso_string__abs = Math.abs;
+
+    function iso_string__toISOString() {
+        // for ISO strings we do not use the normal bubbling rules:
+        //  * milliseconds bubble up until they become hours
+        //  * days do not bubble at all
+        //  * months bubble up until they become years
+        // This is because there is no context-free conversion between hours and days
+        // (think of clock changes)
+        // and also not between days and months (28-31 days per month)
+        var seconds = iso_string__abs(this._milliseconds) / 1000;
+        var days         = iso_string__abs(this._days);
+        var months       = iso_string__abs(this._months);
+        var minutes, hours, years;
+
+        // 3600 seconds -> 60 minutes -> 1 hour
+        minutes           = absFloor(seconds / 60);
+        hours             = absFloor(minutes / 60);
+        seconds %= 60;
+        minutes %= 60;
+
+        // 12 months -> 1 year
+        years  = absFloor(months / 12);
+        months %= 12;
+
+
+        // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
+        var Y = years;
+        var M = months;
+        var D = days;
+        var h = hours;
+        var m = minutes;
+        var s = seconds;
+        var total = this.asSeconds();
+
+        if (!total) {
+            // this is the same as C#'s (Noda) and python (isodate)...
+            // but not other JS (goog.date)
+            return 'P0D';
+        }
+
+        return (total < 0 ? '-' : '') +
+            'P' +
+            (Y ? Y + 'Y' : '') +
+            (M ? M + 'M' : '') +
+            (D ? D + 'D' : '') +
+            ((h || m || s) ? 'T' : '') +
+            (h ? h + 'H' : '') +
+            (m ? m + 'M' : '') +
+            (s ? s + 'S' : '');
+    }
+
+    var duration_prototype__proto = Duration.prototype;
+
+    duration_prototype__proto.abs            = duration_abs__abs;
+    duration_prototype__proto.add            = duration_add_subtract__add;
+    duration_prototype__proto.subtract       = duration_add_subtract__subtract;
+    duration_prototype__proto.as             = as;
+    duration_prototype__proto.asMilliseconds = asMilliseconds;
+    duration_prototype__proto.asSeconds      = asSeconds;
+    duration_prototype__proto.asMinutes      = asMinutes;
+    duration_prototype__proto.asHours        = asHours;
+    duration_prototype__proto.asDays         = asDays;
+    duration_prototype__proto.asWeeks        = asWeeks;
+    duration_prototype__proto.asMonths       = asMonths;
+    duration_prototype__proto.asYears        = asYears;
+    duration_prototype__proto.valueOf        = duration_as__valueOf;
+    duration_prototype__proto._bubble        = bubble;
+    duration_prototype__proto.get            = duration_get__get;
+    duration_prototype__proto.milliseconds   = milliseconds;
+    duration_prototype__proto.seconds        = seconds;
+    duration_prototype__proto.minutes        = minutes;
+    duration_prototype__proto.hours          = hours;
+    duration_prototype__proto.days           = days;
+    duration_prototype__proto.weeks          = weeks;
+    duration_prototype__proto.months         = months;
+    duration_prototype__proto.years          = years;
+    duration_prototype__proto.humanize       = humanize;
+    duration_prototype__proto.toISOString    = iso_string__toISOString;
+    duration_prototype__proto.toString       = iso_string__toISOString;
+    duration_prototype__proto.toJSON         = iso_string__toISOString;
+    duration_prototype__proto.locale         = locale;
+    duration_prototype__proto.localeData     = localeData;
+
+    // Deprecations
+    duration_prototype__proto.toIsoString = deprecate('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)', iso_string__toISOString);
+    duration_prototype__proto.lang = lang;
+
+    // Side effect imports
+
+    addFormatToken('X', 0, 0, 'unix');
+    addFormatToken('x', 0, 0, 'valueOf');
+
+    // PARSING
+
+    addRegexToken('x', matchSigned);
+    addRegexToken('X', matchTimestamp);
+    addParseToken('X', function (input, array, config) {
+        config._d = new Date(parseFloat(input, 10) * 1000);
+    });
+    addParseToken('x', function (input, array, config) {
+        config._d = new Date(toInt(input));
+    });
+
+    // Side effect imports
+
+
+    utils_hooks__hooks.version = '2.10.6';
+
+    setHookCallback(local__createLocal);
+
+    utils_hooks__hooks.fn                    = momentPrototype;
+    utils_hooks__hooks.min                   = min;
+    utils_hooks__hooks.max                   = max;
+    utils_hooks__hooks.utc                   = create_utc__createUTC;
+    utils_hooks__hooks.unix                  = moment__createUnix;
+    utils_hooks__hooks.months                = lists__listMonths;
+    utils_hooks__hooks.isDate                = isDate;
+    utils_hooks__hooks.locale                = locale_locales__getSetGlobalLocale;
+    utils_hooks__hooks.invalid               = valid__createInvalid;
+    utils_hooks__hooks.duration              = create__createDuration;
+    utils_hooks__hooks.isMoment              = isMoment;
+    utils_hooks__hooks.weekdays              = lists__listWeekdays;
+    utils_hooks__hooks.parseZone             = moment__createInZone;
+    utils_hooks__hooks.localeData            = locale_locales__getLocale;
+    utils_hooks__hooks.isDuration            = isDuration;
+    utils_hooks__hooks.monthsShort           = lists__listMonthsShort;
+    utils_hooks__hooks.weekdaysMin           = lists__listWeekdaysMin;
+    utils_hooks__hooks.defineLocale          = defineLocale;
+    utils_hooks__hooks.weekdaysShort         = lists__listWeekdaysShort;
+    utils_hooks__hooks.normalizeUnits        = normalizeUnits;
+    utils_hooks__hooks.relativeTimeThreshold = duration_humanize__getSetRelativeTimeThreshold;
+
+    var _moment = utils_hooks__hooks;
+
+    return _moment;
+
+}));
+},{}],129:[function(require,module,exports){
 module.exports = require('react/lib/update');
-},{"react/lib/update":270}],107:[function(require,module,exports){
+},{"react/lib/update":293}],130:[function(require,module,exports){
 'use strict';
 
 module.exports = require('react/lib/ReactDOM');
 
-},{"react/lib/ReactDOM":173}],108:[function(require,module,exports){
+},{"react/lib/ReactDOM":196}],131:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -10645,7 +17246,7 @@ function mapAsync(array, work, callback) {
     });
   });
 }
-},{}],109:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -10669,7 +17270,7 @@ var History = {
 
 exports['default'] = History;
 module.exports = exports['default'];
-},{"./PropTypes":116}],110:[function(require,module,exports){
+},{"./PropTypes":139}],133:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -10712,7 +17313,7 @@ var IndexLink = (function (_Component) {
 
 exports['default'] = IndexLink;
 module.exports = exports['default'];
-},{"./Link":114,"react":299}],111:[function(require,module,exports){
+},{"./Link":137,"react":322}],134:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -10788,7 +17389,7 @@ IndexRedirect.createRouteFromReactElement = function (element, parentRoute) {
 exports['default'] = IndexRedirect;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./PropTypes":116,"./Redirect":117,"_process":2,"invariant":132,"react":299,"warning":133}],112:[function(require,module,exports){
+},{"./PropTypes":139,"./Redirect":140,"_process":2,"invariant":155,"react":322,"warning":156}],135:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -10861,7 +17462,7 @@ IndexRoute.createRouteFromReactElement = function (element, parentRoute) {
 exports['default'] = IndexRoute;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./PropTypes":116,"./RouteUtils":120,"_process":2,"invariant":132,"react":299,"warning":133}],113:[function(require,module,exports){
+},{"./PropTypes":139,"./RouteUtils":143,"_process":2,"invariant":155,"react":322,"warning":156}],136:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -10928,7 +17529,7 @@ var Lifecycle = {
 exports['default'] = Lifecycle;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"_process":2,"invariant":132,"react":299}],114:[function(require,module,exports){
+},{"_process":2,"invariant":155,"react":322}],137:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11092,7 +17693,7 @@ Link.defaultProps = {
 
 exports['default'] = Link;
 module.exports = exports['default'];
-},{"react":299}],115:[function(require,module,exports){
+},{"react":322}],138:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -11322,7 +17923,7 @@ function formatPattern(pattern, params) {
   return pathname.replace(/\/+/g, '/');
 }
 }).call(this,require('_process'))
-},{"_process":2,"invariant":132}],116:[function(require,module,exports){
+},{"_process":2,"invariant":155}],139:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11376,7 +17977,7 @@ exports['default'] = {
   components: components,
   route: route
 };
-},{"react":299}],117:[function(require,module,exports){
+},{"react":322}],140:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -11486,7 +18087,7 @@ Redirect.propTypes = {
 exports['default'] = Redirect;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./PatternUtils":115,"./PropTypes":116,"./RouteUtils":120,"_process":2,"invariant":132,"react":299}],118:[function(require,module,exports){
+},{"./PatternUtils":138,"./PropTypes":139,"./RouteUtils":143,"_process":2,"invariant":155,"react":322}],141:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -11556,7 +18157,7 @@ Route.propTypes = {
 exports['default'] = Route;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./PropTypes":116,"./RouteUtils":120,"_process":2,"invariant":132,"react":299}],119:[function(require,module,exports){
+},{"./PropTypes":139,"./RouteUtils":143,"_process":2,"invariant":155,"react":322}],142:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -11595,7 +18196,7 @@ var RouteContext = {
 
 exports['default'] = RouteContext;
 module.exports = exports['default'];
-},{"react":299}],120:[function(require,module,exports){
+},{"react":322}],143:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -11712,7 +18313,7 @@ function createRoutes(routes) {
   return routes;
 }
 }).call(this,require('_process'))
-},{"_process":2,"react":299,"warning":133}],121:[function(require,module,exports){
+},{"_process":2,"react":322,"warning":156}],144:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -11880,7 +18481,7 @@ Router.defaultProps = {
 exports['default'] = Router;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./PropTypes":116,"./RouteUtils":120,"./RoutingContext":122,"./useRoutes":131,"_process":2,"history/lib/createHashHistory":10,"react":299,"warning":133}],122:[function(require,module,exports){
+},{"./PropTypes":139,"./RouteUtils":143,"./RoutingContext":145,"./useRoutes":154,"_process":2,"history/lib/createHashHistory":10,"react":322,"warning":156}],145:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -12023,7 +18624,7 @@ RoutingContext.childContextTypes = {
 exports['default'] = RoutingContext;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./RouteUtils":120,"./getRouteParams":126,"_process":2,"invariant":132,"react":299}],123:[function(require,module,exports){
+},{"./RouteUtils":143,"./getRouteParams":149,"_process":2,"invariant":155,"react":322}],146:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12096,7 +18697,7 @@ function runLeaveHooks(routes) {
     if (routes[i].onLeave) routes[i].onLeave.call(routes[i]);
   }
 }
-},{"./AsyncUtils":108}],124:[function(require,module,exports){
+},{"./AsyncUtils":131}],147:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12153,7 +18754,7 @@ function computeChangedRoutes(prevState, nextState) {
 
 exports['default'] = computeChangedRoutes;
 module.exports = exports['default'];
-},{"./PatternUtils":115}],125:[function(require,module,exports){
+},{"./PatternUtils":138}],148:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12187,7 +18788,7 @@ function getComponents(nextState, callback) {
 
 exports['default'] = getComponents;
 module.exports = exports['default'];
-},{"./AsyncUtils":108}],126:[function(require,module,exports){
+},{"./AsyncUtils":131}],149:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12212,7 +18813,7 @@ function getRouteParams(route, params) {
 
 exports['default'] = getRouteParams;
 module.exports = exports['default'];
-},{"./PatternUtils":115}],127:[function(require,module,exports){
+},{"./PatternUtils":138}],150:[function(require,module,exports){
 /* components */
 'use strict';
 
@@ -12317,7 +18918,7 @@ exports.match = _match3['default'];
 var _Router4 = _interopRequireDefault(_Router2);
 
 exports['default'] = _Router4['default'];
-},{"./History":109,"./IndexLink":110,"./IndexRedirect":111,"./IndexRoute":112,"./Lifecycle":113,"./Link":114,"./PropTypes":116,"./Redirect":117,"./Route":118,"./RouteContext":119,"./RouteUtils":120,"./Router":121,"./RoutingContext":122,"./match":129,"./useRoutes":131}],128:[function(require,module,exports){
+},{"./History":132,"./IndexLink":133,"./IndexRedirect":134,"./IndexRoute":135,"./Lifecycle":136,"./Link":137,"./PropTypes":139,"./Redirect":140,"./Route":141,"./RouteContext":142,"./RouteUtils":143,"./Router":144,"./RoutingContext":145,"./match":152,"./useRoutes":154}],151:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -12441,7 +19042,7 @@ function isActive(pathname, query, indexOnly, location, routes, params) {
 
 exports['default'] = isActive;
 module.exports = exports['default'];
-},{"./PatternUtils":115}],129:[function(require,module,exports){
+},{"./PatternUtils":138}],152:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -12507,7 +19108,7 @@ function match(_ref, callback) {
 exports['default'] = match;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./RouteUtils":120,"./useRoutes":131,"_process":2,"history/lib/createMemoryHistory":13,"history/lib/useBasename":21,"invariant":132}],130:[function(require,module,exports){
+},{"./RouteUtils":143,"./useRoutes":154,"_process":2,"history/lib/createMemoryHistory":13,"history/lib/useBasename":21,"invariant":155}],153:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -12698,7 +19299,7 @@ function matchRoutes(routes, location, callback) {
 exports['default'] = matchRoutes;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./AsyncUtils":108,"./PatternUtils":115,"./RouteUtils":120,"_process":2,"warning":133}],131:[function(require,module,exports){
+},{"./AsyncUtils":131,"./PatternUtils":138,"./RouteUtils":143,"_process":2,"warning":156}],154:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -12992,11 +19593,11 @@ function useRoutes(createHistory) {
 exports['default'] = useRoutes;
 module.exports = exports['default'];
 }).call(this,require('_process'))
-},{"./TransitionUtils":123,"./computeChangedRoutes":124,"./getComponents":125,"./isActive":128,"./matchRoutes":130,"_process":2,"history/lib/Actions":3,"history/lib/useQueries":23,"warning":133}],132:[function(require,module,exports){
+},{"./TransitionUtils":146,"./computeChangedRoutes":147,"./getComponents":148,"./isActive":151,"./matchRoutes":153,"_process":2,"history/lib/Actions":3,"history/lib/useQueries":23,"warning":156}],155:[function(require,module,exports){
 module.exports=require(27)
-},{"/Users/cwest/web/MikesMags/node_modules/history/node_modules/invariant/browser.js":27,"_process":2}],133:[function(require,module,exports){
+},{"/Users/cwest/web/MikesMags/node_modules/history/node_modules/invariant/browser.js":27,"_process":2}],156:[function(require,module,exports){
 module.exports=require(32)
-},{"/Users/cwest/web/MikesMags/node_modules/history/node_modules/warning/browser.js":32,"_process":2}],134:[function(require,module,exports){
+},{"/Users/cwest/web/MikesMags/node_modules/history/node_modules/warning/browser.js":32,"_process":2}],157:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -13032,7 +19633,7 @@ var keyOf = function (oneKeyObj) {
 };
 
 module.exports = keyOf;
-},{}],135:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -13203,7 +19804,7 @@ var TapEventPlugin = {
 
 module.exports = TapEventPlugin;
 
-},{"./TouchEventUtils":136,"fbjs/lib/keyOf":134,"react/lib/EventConstants":151,"react/lib/EventPluginUtils":154,"react/lib/EventPropagators":155,"react/lib/SyntheticUIEvent":239,"react/lib/ViewportMetrics":242}],136:[function(require,module,exports){
+},{"./TouchEventUtils":159,"fbjs/lib/keyOf":157,"react/lib/EventConstants":174,"react/lib/EventPluginUtils":177,"react/lib/EventPropagators":178,"react/lib/SyntheticUIEvent":262,"react/lib/ViewportMetrics":265}],159:[function(require,module,exports){
 /**
  * Copyright 2013-2014 Facebook, Inc.
  *
@@ -13247,14 +19848,14 @@ var TouchEventUtils = {
 
 module.exports = TouchEventUtils;
 
-},{}],137:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 module.exports = function injectTapEventPlugin () {
   require('react/lib/EventPluginHub').injection.injectEventPluginsByName({
     "TapEventPlugin":       require('./TapEventPlugin.js')
   });
 };
 
-},{"./TapEventPlugin.js":135,"react/lib/EventPluginHub":152}],138:[function(require,module,exports){
+},{"./TapEventPlugin.js":158,"react/lib/EventPluginHub":175}],161:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -13291,7 +19892,7 @@ var AutoFocusUtils = {
 };
 
 module.exports = AutoFocusUtils;
-},{"./ReactMount":204,"./findDOMNode":249,"fbjs/lib/focusNode":281}],139:[function(require,module,exports){
+},{"./ReactMount":227,"./findDOMNode":272,"fbjs/lib/focusNode":304}],162:[function(require,module,exports){
 /**
  * Copyright 2013-2015 Facebook, Inc.
  * All rights reserved.
@@ -13697,7 +20298,7 @@ var BeforeInputEventPlugin = {
 };
 
 module.exports = BeforeInputEventPlugin;
-},{"./EventConstants":151,"./EventPropagators":155,"./FallbackCompositionState":156,"./SyntheticCompositionEvent":231,"./SyntheticInputEvent":235,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/keyOf":291}],140:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPropagators":178,"./FallbackCompositionState":179,"./SyntheticCompositionEvent":254,"./SyntheticInputEvent":258,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/keyOf":314}],163:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -13837,7 +20438,7 @@ var CSSProperty = {
 };
 
 module.exports = CSSProperty;
-},{}],141:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -14015,7 +20616,7 @@ ReactPerf.measureMethods(CSSPropertyOperations, 'CSSPropertyOperations', {
 
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
-},{"./CSSProperty":140,"./ReactPerf":210,"./dangerousStyleValue":246,"_process":2,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/camelizeStyleName":275,"fbjs/lib/hyphenateStyleName":286,"fbjs/lib/memoizeStringOnly":293,"fbjs/lib/warning":298}],142:[function(require,module,exports){
+},{"./CSSProperty":163,"./ReactPerf":233,"./dangerousStyleValue":269,"_process":2,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/camelizeStyleName":298,"fbjs/lib/hyphenateStyleName":309,"fbjs/lib/memoizeStringOnly":316,"fbjs/lib/warning":321}],165:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -14111,7 +20712,7 @@ PooledClass.addPoolingTo(CallbackQueue);
 
 module.exports = CallbackQueue;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./PooledClass":160,"_process":2,"fbjs/lib/invariant":287}],143:[function(require,module,exports){
+},{"./Object.assign":182,"./PooledClass":183,"_process":2,"fbjs/lib/invariant":310}],166:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -14433,7 +21034,7 @@ var ChangeEventPlugin = {
 };
 
 module.exports = ChangeEventPlugin;
-},{"./EventConstants":151,"./EventPluginHub":152,"./EventPropagators":155,"./ReactUpdates":224,"./SyntheticEvent":233,"./getEventTarget":255,"./isEventSupported":260,"./isTextInputElement":261,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/keyOf":291}],144:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPluginHub":175,"./EventPropagators":178,"./ReactUpdates":247,"./SyntheticEvent":256,"./getEventTarget":278,"./isEventSupported":283,"./isTextInputElement":284,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/keyOf":314}],167:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -14457,7 +21058,7 @@ var ClientReactRootIndex = {
 };
 
 module.exports = ClientReactRootIndex;
-},{}],145:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -14589,7 +21190,7 @@ ReactPerf.measureMethods(DOMChildrenOperations, 'DOMChildrenOperations', {
 
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
-},{"./Danger":148,"./ReactMultiChildUpdateTypes":206,"./ReactPerf":210,"./setInnerHTML":265,"./setTextContent":266,"_process":2,"fbjs/lib/invariant":287}],146:[function(require,module,exports){
+},{"./Danger":171,"./ReactMultiChildUpdateTypes":229,"./ReactPerf":233,"./setInnerHTML":288,"./setTextContent":289,"_process":2,"fbjs/lib/invariant":310}],169:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -14826,7 +21427,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],147:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],170:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -15054,7 +21655,7 @@ ReactPerf.measureMethods(DOMPropertyOperations, 'DOMPropertyOperations', {
 
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
-},{"./DOMProperty":146,"./ReactPerf":210,"./quoteAttributeValueForBrowser":263,"_process":2,"fbjs/lib/warning":298}],148:[function(require,module,exports){
+},{"./DOMProperty":169,"./ReactPerf":233,"./quoteAttributeValueForBrowser":286,"_process":2,"fbjs/lib/warning":321}],171:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -15202,7 +21803,7 @@ var Danger = {
 
 module.exports = Danger;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/createNodesFromMarkup":278,"fbjs/lib/emptyFunction":279,"fbjs/lib/getMarkupWrap":283,"fbjs/lib/invariant":287}],149:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/createNodesFromMarkup":301,"fbjs/lib/emptyFunction":302,"fbjs/lib/getMarkupWrap":306,"fbjs/lib/invariant":310}],172:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -15230,7 +21831,7 @@ var keyOf = require('fbjs/lib/keyOf');
 var DefaultEventPluginOrder = [keyOf({ ResponderEventPlugin: null }), keyOf({ SimpleEventPlugin: null }), keyOf({ TapEventPlugin: null }), keyOf({ EnterLeaveEventPlugin: null }), keyOf({ ChangeEventPlugin: null }), keyOf({ SelectEventPlugin: null }), keyOf({ BeforeInputEventPlugin: null })];
 
 module.exports = DefaultEventPluginOrder;
-},{"fbjs/lib/keyOf":291}],150:[function(require,module,exports){
+},{"fbjs/lib/keyOf":314}],173:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -15355,7 +21956,7 @@ var EnterLeaveEventPlugin = {
 };
 
 module.exports = EnterLeaveEventPlugin;
-},{"./EventConstants":151,"./EventPropagators":155,"./ReactMount":204,"./SyntheticMouseEvent":237,"fbjs/lib/keyOf":291}],151:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPropagators":178,"./ReactMount":227,"./SyntheticMouseEvent":260,"fbjs/lib/keyOf":314}],174:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -15448,7 +22049,7 @@ var EventConstants = {
 };
 
 module.exports = EventConstants;
-},{"fbjs/lib/keyMirror":290}],152:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":313}],175:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -15730,7 +22331,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":153,"./EventPluginUtils":154,"./ReactErrorUtils":194,"./accumulateInto":243,"./forEachAccumulated":251,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],153:[function(require,module,exports){
+},{"./EventPluginRegistry":176,"./EventPluginUtils":177,"./ReactErrorUtils":217,"./accumulateInto":266,"./forEachAccumulated":274,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],176:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -15953,7 +22554,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],154:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],177:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -16158,7 +22759,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
-},{"./EventConstants":151,"./ReactErrorUtils":194,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],155:[function(require,module,exports){
+},{"./EventConstants":174,"./ReactErrorUtils":217,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],178:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -16296,7 +22897,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 }).call(this,require('_process'))
-},{"./EventConstants":151,"./EventPluginHub":152,"./accumulateInto":243,"./forEachAccumulated":251,"_process":2,"fbjs/lib/warning":298}],156:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPluginHub":175,"./accumulateInto":266,"./forEachAccumulated":274,"_process":2,"fbjs/lib/warning":321}],179:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -16392,7 +22993,7 @@ assign(FallbackCompositionState.prototype, {
 PooledClass.addPoolingTo(FallbackCompositionState);
 
 module.exports = FallbackCompositionState;
-},{"./Object.assign":159,"./PooledClass":160,"./getTextContentAccessor":258}],157:[function(require,module,exports){
+},{"./Object.assign":182,"./PooledClass":183,"./getTextContentAccessor":281}],180:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -16625,7 +23226,7 @@ var HTMLDOMPropertyConfig = {
 };
 
 module.exports = HTMLDOMPropertyConfig;
-},{"./DOMProperty":146,"fbjs/lib/ExecutionEnvironment":273}],158:[function(require,module,exports){
+},{"./DOMProperty":169,"fbjs/lib/ExecutionEnvironment":296}],181:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -16762,7 +23363,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
-},{"./ReactPropTypeLocations":212,"./ReactPropTypes":213,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],159:[function(require,module,exports){
+},{"./ReactPropTypeLocations":235,"./ReactPropTypes":236,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],182:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -16810,7 +23411,7 @@ function assign(target, sources) {
 }
 
 module.exports = assign;
-},{}],160:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -16932,7 +23533,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],161:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],184:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -16973,7 +23574,7 @@ React.__SECRET_DOM_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOM;
 React.__SECRET_DOM_SERVER_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOMServer;
 
 module.exports = React;
-},{"./Object.assign":159,"./ReactDOM":173,"./ReactDOMServer":183,"./ReactIsomorphic":202,"./deprecated":247}],162:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactDOM":196,"./ReactDOMServer":206,"./ReactIsomorphic":225,"./deprecated":270}],185:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -17012,7 +23613,7 @@ var ReactBrowserComponentMixin = {
 
 module.exports = ReactBrowserComponentMixin;
 }).call(this,require('_process'))
-},{"./ReactInstanceMap":201,"./findDOMNode":249,"_process":2,"fbjs/lib/warning":298}],163:[function(require,module,exports){
+},{"./ReactInstanceMap":224,"./findDOMNode":272,"_process":2,"fbjs/lib/warning":321}],186:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -17337,7 +23938,7 @@ ReactPerf.measureMethods(ReactBrowserEventEmitter, 'ReactBrowserEventEmitter', {
 });
 
 module.exports = ReactBrowserEventEmitter;
-},{"./EventConstants":151,"./EventPluginHub":152,"./EventPluginRegistry":153,"./Object.assign":159,"./ReactEventEmitterMixin":195,"./ReactPerf":210,"./ViewportMetrics":242,"./isEventSupported":260}],164:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPluginHub":175,"./EventPluginRegistry":176,"./Object.assign":182,"./ReactEventEmitterMixin":218,"./ReactPerf":233,"./ViewportMetrics":265,"./isEventSupported":283}],187:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -17462,7 +24063,7 @@ var ReactChildReconciler = {
 
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
-},{"./ReactReconciler":215,"./instantiateReactComponent":259,"./shouldUpdateReactComponent":268,"./traverseAllChildren":269,"_process":2,"fbjs/lib/warning":298}],165:[function(require,module,exports){
+},{"./ReactReconciler":238,"./instantiateReactComponent":282,"./shouldUpdateReactComponent":291,"./traverseAllChildren":292,"_process":2,"fbjs/lib/warning":321}],188:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -17645,7 +24246,7 @@ var ReactChildren = {
 };
 
 module.exports = ReactChildren;
-},{"./PooledClass":160,"./ReactElement":190,"./traverseAllChildren":269,"fbjs/lib/emptyFunction":279}],166:[function(require,module,exports){
+},{"./PooledClass":183,"./ReactElement":213,"./traverseAllChildren":292,"fbjs/lib/emptyFunction":302}],189:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -18419,7 +25020,7 @@ var ReactClass = {
 
 module.exports = ReactClass;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactComponent":167,"./ReactElement":190,"./ReactNoopUpdateQueue":208,"./ReactPropTypeLocationNames":211,"./ReactPropTypeLocations":212,"_process":2,"fbjs/lib/emptyObject":280,"fbjs/lib/invariant":287,"fbjs/lib/keyMirror":290,"fbjs/lib/keyOf":291,"fbjs/lib/warning":298}],167:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactComponent":190,"./ReactElement":213,"./ReactNoopUpdateQueue":231,"./ReactPropTypeLocationNames":234,"./ReactPropTypeLocations":235,"_process":2,"fbjs/lib/emptyObject":303,"fbjs/lib/invariant":310,"fbjs/lib/keyMirror":313,"fbjs/lib/keyOf":314,"fbjs/lib/warning":321}],190:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -18544,7 +25145,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactComponent;
 }).call(this,require('_process'))
-},{"./ReactNoopUpdateQueue":208,"./canDefineProperty":245,"_process":2,"fbjs/lib/emptyObject":280,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],168:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":231,"./canDefineProperty":268,"_process":2,"fbjs/lib/emptyObject":303,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],191:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -18586,7 +25187,7 @@ var ReactComponentBrowserEnvironment = {
 };
 
 module.exports = ReactComponentBrowserEnvironment;
-},{"./ReactDOMIDOperations":178,"./ReactMount":204}],169:[function(require,module,exports){
+},{"./ReactDOMIDOperations":201,"./ReactMount":227}],192:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -18640,7 +25241,7 @@ var ReactComponentEnvironment = {
 
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],170:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],193:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -18687,7 +25288,7 @@ var ReactComponentWithPureRenderMixin = {
 };
 
 module.exports = ReactComponentWithPureRenderMixin;
-},{"./shallowCompare":267}],171:[function(require,module,exports){
+},{"./shallowCompare":290}],194:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -19384,7 +25985,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactComponentEnvironment":169,"./ReactCurrentOwner":172,"./ReactElement":190,"./ReactInstanceMap":201,"./ReactPerf":210,"./ReactPropTypeLocationNames":211,"./ReactPropTypeLocations":212,"./ReactReconciler":215,"./ReactUpdateQueue":223,"./shouldUpdateReactComponent":268,"_process":2,"fbjs/lib/emptyObject":280,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],172:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactComponentEnvironment":192,"./ReactCurrentOwner":195,"./ReactElement":213,"./ReactInstanceMap":224,"./ReactPerf":233,"./ReactPropTypeLocationNames":234,"./ReactPropTypeLocations":235,"./ReactReconciler":238,"./ReactUpdateQueue":246,"./shouldUpdateReactComponent":291,"_process":2,"fbjs/lib/emptyObject":303,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],195:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -19415,7 +26016,7 @@ var ReactCurrentOwner = {
 };
 
 module.exports = ReactCurrentOwner;
-},{}],173:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -19510,7 +26111,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":172,"./ReactDOMTextComponent":184,"./ReactDefaultInjection":187,"./ReactInstanceHandles":200,"./ReactMount":204,"./ReactPerf":210,"./ReactReconciler":215,"./ReactUpdates":224,"./ReactVersion":225,"./findDOMNode":249,"./renderSubtreeIntoContainer":264,"_process":2,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/warning":298}],174:[function(require,module,exports){
+},{"./ReactCurrentOwner":195,"./ReactDOMTextComponent":207,"./ReactDefaultInjection":210,"./ReactInstanceHandles":223,"./ReactMount":227,"./ReactPerf":233,"./ReactReconciler":238,"./ReactUpdates":247,"./ReactVersion":248,"./findDOMNode":272,"./renderSubtreeIntoContainer":287,"_process":2,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/warning":321}],197:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -19561,7 +26162,7 @@ var ReactDOMButton = {
 };
 
 module.exports = ReactDOMButton;
-},{}],175:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -20526,7 +27127,7 @@ assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mix
 
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
-},{"./AutoFocusUtils":138,"./CSSPropertyOperations":141,"./DOMProperty":146,"./DOMPropertyOperations":147,"./EventConstants":151,"./Object.assign":159,"./ReactBrowserEventEmitter":163,"./ReactComponentBrowserEnvironment":168,"./ReactDOMButton":174,"./ReactDOMInput":179,"./ReactDOMOption":180,"./ReactDOMSelect":181,"./ReactDOMTextarea":185,"./ReactMount":204,"./ReactMultiChild":205,"./ReactPerf":210,"./ReactUpdateQueue":223,"./canDefineProperty":245,"./escapeTextContentForBrowser":248,"./isEventSupported":260,"./setInnerHTML":265,"./setTextContent":266,"./validateDOMNesting":271,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/keyOf":291,"fbjs/lib/shallowEqual":296,"fbjs/lib/warning":298}],176:[function(require,module,exports){
+},{"./AutoFocusUtils":161,"./CSSPropertyOperations":164,"./DOMProperty":169,"./DOMPropertyOperations":170,"./EventConstants":174,"./Object.assign":182,"./ReactBrowserEventEmitter":186,"./ReactComponentBrowserEnvironment":191,"./ReactDOMButton":197,"./ReactDOMInput":202,"./ReactDOMOption":203,"./ReactDOMSelect":204,"./ReactDOMTextarea":208,"./ReactMount":227,"./ReactMultiChild":228,"./ReactPerf":233,"./ReactUpdateQueue":246,"./canDefineProperty":268,"./escapeTextContentForBrowser":271,"./isEventSupported":283,"./setInnerHTML":288,"./setTextContent":289,"./validateDOMNesting":294,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/keyOf":314,"fbjs/lib/shallowEqual":319,"fbjs/lib/warning":321}],199:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -20706,7 +27307,7 @@ var ReactDOMFactories = mapObject({
 
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
-},{"./ReactElement":190,"./ReactElementValidator":191,"_process":2,"fbjs/lib/mapObject":292}],177:[function(require,module,exports){
+},{"./ReactElement":213,"./ReactElementValidator":214,"_process":2,"fbjs/lib/mapObject":315}],200:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -20725,7 +27326,7 @@ var ReactDOMFeatureFlags = {
 };
 
 module.exports = ReactDOMFeatureFlags;
-},{}],178:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -20822,7 +27423,7 @@ ReactPerf.measureMethods(ReactDOMIDOperations, 'ReactDOMIDOperations', {
 
 module.exports = ReactDOMIDOperations;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":145,"./DOMPropertyOperations":147,"./ReactMount":204,"./ReactPerf":210,"_process":2,"fbjs/lib/invariant":287}],179:[function(require,module,exports){
+},{"./DOMChildrenOperations":168,"./DOMPropertyOperations":170,"./ReactMount":227,"./ReactPerf":233,"_process":2,"fbjs/lib/invariant":310}],202:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -20978,7 +27579,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":158,"./Object.assign":159,"./ReactDOMIDOperations":178,"./ReactMount":204,"./ReactUpdates":224,"_process":2,"fbjs/lib/invariant":287}],180:[function(require,module,exports){
+},{"./LinkedValueUtils":181,"./Object.assign":182,"./ReactDOMIDOperations":201,"./ReactMount":227,"./ReactUpdates":247,"_process":2,"fbjs/lib/invariant":310}],203:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -21067,7 +27668,7 @@ var ReactDOMOption = {
 
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactChildren":165,"./ReactDOMSelect":181,"_process":2,"fbjs/lib/warning":298}],181:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactChildren":188,"./ReactDOMSelect":204,"_process":2,"fbjs/lib/warning":321}],204:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -21258,7 +27859,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":158,"./Object.assign":159,"./ReactMount":204,"./ReactUpdates":224,"_process":2,"fbjs/lib/warning":298}],182:[function(require,module,exports){
+},{"./LinkedValueUtils":181,"./Object.assign":182,"./ReactMount":227,"./ReactUpdates":247,"_process":2,"fbjs/lib/warning":321}],205:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -21471,7 +28072,7 @@ var ReactDOMSelection = {
 };
 
 module.exports = ReactDOMSelection;
-},{"./getNodeForCharacterOffset":257,"./getTextContentAccessor":258,"fbjs/lib/ExecutionEnvironment":273}],183:[function(require,module,exports){
+},{"./getNodeForCharacterOffset":280,"./getTextContentAccessor":281,"fbjs/lib/ExecutionEnvironment":296}],206:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -21498,7 +28099,7 @@ var ReactDOMServer = {
 };
 
 module.exports = ReactDOMServer;
-},{"./ReactDefaultInjection":187,"./ReactServerRendering":219,"./ReactVersion":225}],184:[function(require,module,exports){
+},{"./ReactDefaultInjection":210,"./ReactServerRendering":242,"./ReactVersion":248}],207:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -21628,7 +28229,7 @@ assign(ReactDOMTextComponent.prototype, {
 
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":145,"./DOMPropertyOperations":147,"./Object.assign":159,"./ReactComponentBrowserEnvironment":168,"./ReactMount":204,"./escapeTextContentForBrowser":248,"./setTextContent":266,"./validateDOMNesting":271,"_process":2}],185:[function(require,module,exports){
+},{"./DOMChildrenOperations":168,"./DOMPropertyOperations":170,"./Object.assign":182,"./ReactComponentBrowserEnvironment":191,"./ReactMount":227,"./escapeTextContentForBrowser":271,"./setTextContent":289,"./validateDOMNesting":294,"_process":2}],208:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -21744,7 +28345,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":158,"./Object.assign":159,"./ReactDOMIDOperations":178,"./ReactUpdates":224,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],186:[function(require,module,exports){
+},{"./LinkedValueUtils":181,"./Object.assign":182,"./ReactDOMIDOperations":201,"./ReactUpdates":247,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],209:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -21812,7 +28413,7 @@ var ReactDefaultBatchingStrategy = {
 };
 
 module.exports = ReactDefaultBatchingStrategy;
-},{"./Object.assign":159,"./ReactUpdates":224,"./Transaction":241,"fbjs/lib/emptyFunction":279}],187:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactUpdates":247,"./Transaction":264,"fbjs/lib/emptyFunction":302}],210:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -21912,7 +28513,7 @@ module.exports = {
   inject: inject
 };
 }).call(this,require('_process'))
-},{"./BeforeInputEventPlugin":139,"./ChangeEventPlugin":143,"./ClientReactRootIndex":144,"./DefaultEventPluginOrder":149,"./EnterLeaveEventPlugin":150,"./HTMLDOMPropertyConfig":157,"./ReactBrowserComponentMixin":162,"./ReactComponentBrowserEnvironment":168,"./ReactDOMComponent":175,"./ReactDOMTextComponent":184,"./ReactDefaultBatchingStrategy":186,"./ReactDefaultPerf":188,"./ReactEventListener":196,"./ReactInjection":198,"./ReactInstanceHandles":200,"./ReactMount":204,"./ReactReconcileTransaction":214,"./SVGDOMPropertyConfig":226,"./SelectEventPlugin":227,"./ServerReactRootIndex":228,"./SimpleEventPlugin":229,"_process":2,"fbjs/lib/ExecutionEnvironment":273}],188:[function(require,module,exports){
+},{"./BeforeInputEventPlugin":162,"./ChangeEventPlugin":166,"./ClientReactRootIndex":167,"./DefaultEventPluginOrder":172,"./EnterLeaveEventPlugin":173,"./HTMLDOMPropertyConfig":180,"./ReactBrowserComponentMixin":185,"./ReactComponentBrowserEnvironment":191,"./ReactDOMComponent":198,"./ReactDOMTextComponent":207,"./ReactDefaultBatchingStrategy":209,"./ReactDefaultPerf":211,"./ReactEventListener":219,"./ReactInjection":221,"./ReactInstanceHandles":223,"./ReactMount":227,"./ReactReconcileTransaction":237,"./SVGDOMPropertyConfig":249,"./SelectEventPlugin":250,"./ServerReactRootIndex":251,"./SimpleEventPlugin":252,"_process":2,"fbjs/lib/ExecutionEnvironment":296}],211:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -22150,7 +28751,7 @@ var ReactDefaultPerf = {
 };
 
 module.exports = ReactDefaultPerf;
-},{"./DOMProperty":146,"./ReactDefaultPerfAnalysis":189,"./ReactMount":204,"./ReactPerf":210,"fbjs/lib/performanceNow":295}],189:[function(require,module,exports){
+},{"./DOMProperty":169,"./ReactDefaultPerfAnalysis":212,"./ReactMount":227,"./ReactPerf":233,"fbjs/lib/performanceNow":318}],212:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -22350,7 +28951,7 @@ var ReactDefaultPerfAnalysis = {
 };
 
 module.exports = ReactDefaultPerfAnalysis;
-},{"./Object.assign":159}],190:[function(require,module,exports){
+},{"./Object.assign":182}],213:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -22600,7 +29201,7 @@ ReactElement.isValidElement = function (object) {
 
 module.exports = ReactElement;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactCurrentOwner":172,"./canDefineProperty":245,"_process":2}],191:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactCurrentOwner":195,"./canDefineProperty":268,"_process":2}],214:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -22884,7 +29485,7 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":172,"./ReactElement":190,"./ReactPropTypeLocationNames":211,"./ReactPropTypeLocations":212,"./canDefineProperty":245,"./getIteratorFn":256,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],192:[function(require,module,exports){
+},{"./ReactCurrentOwner":195,"./ReactElement":213,"./ReactPropTypeLocationNames":234,"./ReactPropTypeLocations":235,"./canDefineProperty":268,"./getIteratorFn":279,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],215:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -22936,7 +29537,7 @@ assign(ReactEmptyComponent.prototype, {
 ReactEmptyComponent.injection = ReactEmptyComponentInjection;
 
 module.exports = ReactEmptyComponent;
-},{"./Object.assign":159,"./ReactElement":190,"./ReactEmptyComponentRegistry":193,"./ReactReconciler":215}],193:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactElement":213,"./ReactEmptyComponentRegistry":216,"./ReactReconciler":238}],216:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -22985,7 +29586,7 @@ var ReactEmptyComponentRegistry = {
 };
 
 module.exports = ReactEmptyComponentRegistry;
-},{}],194:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -23065,7 +29666,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
-},{"_process":2}],195:[function(require,module,exports){
+},{"_process":2}],218:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23104,7 +29705,7 @@ var ReactEventEmitterMixin = {
 };
 
 module.exports = ReactEventEmitterMixin;
-},{"./EventPluginHub":152}],196:[function(require,module,exports){
+},{"./EventPluginHub":175}],219:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23316,7 +29917,7 @@ var ReactEventListener = {
 };
 
 module.exports = ReactEventListener;
-},{"./Object.assign":159,"./PooledClass":160,"./ReactInstanceHandles":200,"./ReactMount":204,"./ReactUpdates":224,"./getEventTarget":255,"fbjs/lib/EventListener":272,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/getUnboundedScrollPosition":284}],197:[function(require,module,exports){
+},{"./Object.assign":182,"./PooledClass":183,"./ReactInstanceHandles":223,"./ReactMount":227,"./ReactUpdates":247,"./getEventTarget":278,"fbjs/lib/EventListener":295,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/getUnboundedScrollPosition":307}],220:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -23383,7 +29984,7 @@ var ReactFragment = {
 
 module.exports = ReactFragment;
 }).call(this,require('_process'))
-},{"./ReactChildren":165,"./ReactElement":190,"_process":2,"fbjs/lib/emptyFunction":279,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],198:[function(require,module,exports){
+},{"./ReactChildren":188,"./ReactElement":213,"_process":2,"fbjs/lib/emptyFunction":302,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],221:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23422,7 +30023,7 @@ var ReactInjection = {
 };
 
 module.exports = ReactInjection;
-},{"./DOMProperty":146,"./EventPluginHub":152,"./ReactBrowserEventEmitter":163,"./ReactClass":166,"./ReactComponentEnvironment":169,"./ReactEmptyComponent":192,"./ReactNativeComponent":207,"./ReactPerf":210,"./ReactRootIndex":217,"./ReactUpdates":224}],199:[function(require,module,exports){
+},{"./DOMProperty":169,"./EventPluginHub":175,"./ReactBrowserEventEmitter":186,"./ReactClass":189,"./ReactComponentEnvironment":192,"./ReactEmptyComponent":215,"./ReactNativeComponent":230,"./ReactPerf":233,"./ReactRootIndex":240,"./ReactUpdates":247}],222:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23547,7 +30148,7 @@ var ReactInputSelection = {
 };
 
 module.exports = ReactInputSelection;
-},{"./ReactDOMSelection":182,"fbjs/lib/containsNode":276,"fbjs/lib/focusNode":281,"fbjs/lib/getActiveElement":282}],200:[function(require,module,exports){
+},{"./ReactDOMSelection":205,"fbjs/lib/containsNode":299,"fbjs/lib/focusNode":304,"fbjs/lib/getActiveElement":305}],223:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -23852,7 +30453,7 @@ var ReactInstanceHandles = {
 
 module.exports = ReactInstanceHandles;
 }).call(this,require('_process'))
-},{"./ReactRootIndex":217,"_process":2,"fbjs/lib/invariant":287}],201:[function(require,module,exports){
+},{"./ReactRootIndex":240,"_process":2,"fbjs/lib/invariant":310}],224:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -23900,7 +30501,7 @@ var ReactInstanceMap = {
 };
 
 module.exports = ReactInstanceMap;
-},{}],202:[function(require,module,exports){
+},{}],225:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -23977,7 +30578,7 @@ var React = {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactChildren":165,"./ReactClass":166,"./ReactComponent":167,"./ReactDOMFactories":176,"./ReactElement":190,"./ReactElementValidator":191,"./ReactPropTypes":213,"./ReactVersion":225,"./onlyChild":262,"_process":2}],203:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactChildren":188,"./ReactClass":189,"./ReactComponent":190,"./ReactDOMFactories":199,"./ReactElement":213,"./ReactElementValidator":214,"./ReactPropTypes":236,"./ReactVersion":248,"./onlyChild":285,"_process":2}],226:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -24023,7 +30624,7 @@ var ReactMarkupChecksum = {
 };
 
 module.exports = ReactMarkupChecksum;
-},{"./adler32":244}],204:[function(require,module,exports){
+},{"./adler32":267}],227:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -24876,7 +31477,7 @@ ReactPerf.measureMethods(ReactMount, 'ReactMount', {
 
 module.exports = ReactMount;
 }).call(this,require('_process'))
-},{"./DOMProperty":146,"./Object.assign":159,"./ReactBrowserEventEmitter":163,"./ReactCurrentOwner":172,"./ReactDOMFeatureFlags":177,"./ReactElement":190,"./ReactEmptyComponentRegistry":193,"./ReactInstanceHandles":200,"./ReactInstanceMap":201,"./ReactMarkupChecksum":203,"./ReactPerf":210,"./ReactReconciler":215,"./ReactUpdateQueue":223,"./ReactUpdates":224,"./instantiateReactComponent":259,"./setInnerHTML":265,"./shouldUpdateReactComponent":268,"./validateDOMNesting":271,"_process":2,"fbjs/lib/containsNode":276,"fbjs/lib/emptyObject":280,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],205:[function(require,module,exports){
+},{"./DOMProperty":169,"./Object.assign":182,"./ReactBrowserEventEmitter":186,"./ReactCurrentOwner":195,"./ReactDOMFeatureFlags":200,"./ReactElement":213,"./ReactEmptyComponentRegistry":216,"./ReactInstanceHandles":223,"./ReactInstanceMap":224,"./ReactMarkupChecksum":226,"./ReactPerf":233,"./ReactReconciler":238,"./ReactUpdateQueue":246,"./ReactUpdates":247,"./instantiateReactComponent":282,"./setInnerHTML":288,"./shouldUpdateReactComponent":291,"./validateDOMNesting":294,"_process":2,"fbjs/lib/containsNode":299,"fbjs/lib/emptyObject":303,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],228:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25375,7 +31976,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
-},{"./ReactChildReconciler":164,"./ReactComponentEnvironment":169,"./ReactCurrentOwner":172,"./ReactMultiChildUpdateTypes":206,"./ReactReconciler":215,"./flattenChildren":250,"_process":2}],206:[function(require,module,exports){
+},{"./ReactChildReconciler":187,"./ReactComponentEnvironment":192,"./ReactCurrentOwner":195,"./ReactMultiChildUpdateTypes":229,"./ReactReconciler":238,"./flattenChildren":273,"_process":2}],229:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -25408,7 +32009,7 @@ var ReactMultiChildUpdateTypes = keyMirror({
 });
 
 module.exports = ReactMultiChildUpdateTypes;
-},{"fbjs/lib/keyMirror":290}],207:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":313}],230:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -25505,7 +32106,7 @@ var ReactNativeComponent = {
 
 module.exports = ReactNativeComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"_process":2,"fbjs/lib/invariant":287}],208:[function(require,module,exports){
+},{"./Object.assign":182,"_process":2,"fbjs/lib/invariant":310}],231:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -25626,7 +32227,7 @@ var ReactNoopUpdateQueue = {
 
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/warning":298}],209:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/warning":321}],232:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25720,7 +32321,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],210:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],233:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25819,7 +32420,7 @@ function _noMeasure(objName, fnName, func) {
 
 module.exports = ReactPerf;
 }).call(this,require('_process'))
-},{"_process":2}],211:[function(require,module,exports){
+},{"_process":2}],234:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -25846,7 +32447,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
-},{"_process":2}],212:[function(require,module,exports){
+},{"_process":2}],235:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -25869,7 +32470,7 @@ var ReactPropTypeLocations = keyMirror({
 });
 
 module.exports = ReactPropTypeLocations;
-},{"fbjs/lib/keyMirror":290}],213:[function(require,module,exports){
+},{"fbjs/lib/keyMirror":313}],236:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26226,7 +32827,7 @@ function getClassName(propValue) {
 }
 
 module.exports = ReactPropTypes;
-},{"./ReactElement":190,"./ReactPropTypeLocationNames":211,"./getIteratorFn":256,"fbjs/lib/emptyFunction":279}],214:[function(require,module,exports){
+},{"./ReactElement":213,"./ReactPropTypeLocationNames":234,"./getIteratorFn":279,"fbjs/lib/emptyFunction":302}],237:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26378,7 +32979,7 @@ assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
-},{"./CallbackQueue":142,"./Object.assign":159,"./PooledClass":160,"./ReactBrowserEventEmitter":163,"./ReactDOMFeatureFlags":177,"./ReactInputSelection":199,"./Transaction":241}],215:[function(require,module,exports){
+},{"./CallbackQueue":165,"./Object.assign":182,"./PooledClass":183,"./ReactBrowserEventEmitter":186,"./ReactDOMFeatureFlags":200,"./ReactInputSelection":222,"./Transaction":264}],238:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26486,7 +33087,7 @@ var ReactReconciler = {
 };
 
 module.exports = ReactReconciler;
-},{"./ReactRef":216}],216:[function(require,module,exports){
+},{"./ReactRef":239}],239:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26565,7 +33166,7 @@ ReactRef.detachRefs = function (instance, element) {
 };
 
 module.exports = ReactRef;
-},{"./ReactOwner":209}],217:[function(require,module,exports){
+},{"./ReactOwner":232}],240:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26595,7 +33196,7 @@ var ReactRootIndex = {
 };
 
 module.exports = ReactRootIndex;
-},{}],218:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -26619,7 +33220,7 @@ var ReactServerBatchingStrategy = {
 };
 
 module.exports = ReactServerBatchingStrategy;
-},{}],219:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -26705,7 +33306,7 @@ module.exports = {
   renderToStaticMarkup: renderToStaticMarkup
 };
 }).call(this,require('_process'))
-},{"./ReactDefaultBatchingStrategy":186,"./ReactElement":190,"./ReactInstanceHandles":200,"./ReactMarkupChecksum":203,"./ReactServerBatchingStrategy":218,"./ReactServerRenderingTransaction":220,"./ReactUpdates":224,"./instantiateReactComponent":259,"_process":2,"fbjs/lib/emptyObject":280,"fbjs/lib/invariant":287}],220:[function(require,module,exports){
+},{"./ReactDefaultBatchingStrategy":209,"./ReactElement":213,"./ReactInstanceHandles":223,"./ReactMarkupChecksum":226,"./ReactServerBatchingStrategy":241,"./ReactServerRenderingTransaction":243,"./ReactUpdates":247,"./instantiateReactComponent":282,"_process":2,"fbjs/lib/emptyObject":303,"fbjs/lib/invariant":310}],243:[function(require,module,exports){
 /**
  * Copyright 2014-2015, Facebook, Inc.
  * All rights reserved.
@@ -26793,7 +33394,7 @@ assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
 PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
-},{"./CallbackQueue":142,"./Object.assign":159,"./PooledClass":160,"./Transaction":241,"fbjs/lib/emptyFunction":279}],221:[function(require,module,exports){
+},{"./CallbackQueue":165,"./Object.assign":182,"./PooledClass":183,"./Transaction":264,"fbjs/lib/emptyFunction":302}],244:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -26892,7 +33493,7 @@ var ReactTransitionChildMapping = {
 };
 
 module.exports = ReactTransitionChildMapping;
-},{"./flattenChildren":250}],222:[function(require,module,exports){
+},{"./flattenChildren":273}],245:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27098,7 +33699,7 @@ var ReactTransitionGroup = React.createClass({
 });
 
 module.exports = ReactTransitionGroup;
-},{"./Object.assign":159,"./React":161,"./ReactTransitionChildMapping":221,"fbjs/lib/emptyFunction":279}],223:[function(require,module,exports){
+},{"./Object.assign":182,"./React":184,"./ReactTransitionChildMapping":244,"fbjs/lib/emptyFunction":302}],246:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -27358,7 +33959,7 @@ var ReactUpdateQueue = {
 
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactCurrentOwner":172,"./ReactElement":190,"./ReactInstanceMap":201,"./ReactUpdates":224,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],224:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactCurrentOwner":195,"./ReactElement":213,"./ReactInstanceMap":224,"./ReactUpdates":247,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],247:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -27584,7 +34185,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
-},{"./CallbackQueue":142,"./Object.assign":159,"./PooledClass":160,"./ReactPerf":210,"./ReactReconciler":215,"./Transaction":241,"_process":2,"fbjs/lib/invariant":287}],225:[function(require,module,exports){
+},{"./CallbackQueue":165,"./Object.assign":182,"./PooledClass":183,"./ReactPerf":233,"./ReactReconciler":238,"./Transaction":264,"_process":2,"fbjs/lib/invariant":310}],248:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27599,7 +34200,7 @@ module.exports = ReactUpdates;
 'use strict';
 
 module.exports = '0.14.3';
-},{}],226:[function(require,module,exports){
+},{}],249:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27727,7 +34328,7 @@ var SVGDOMPropertyConfig = {
 };
 
 module.exports = SVGDOMPropertyConfig;
-},{"./DOMProperty":146}],227:[function(require,module,exports){
+},{"./DOMProperty":169}],250:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27929,7 +34530,7 @@ var SelectEventPlugin = {
 };
 
 module.exports = SelectEventPlugin;
-},{"./EventConstants":151,"./EventPropagators":155,"./ReactInputSelection":199,"./SyntheticEvent":233,"./isTextInputElement":261,"fbjs/lib/ExecutionEnvironment":273,"fbjs/lib/getActiveElement":282,"fbjs/lib/keyOf":291,"fbjs/lib/shallowEqual":296}],228:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPropagators":178,"./ReactInputSelection":222,"./SyntheticEvent":256,"./isTextInputElement":284,"fbjs/lib/ExecutionEnvironment":296,"fbjs/lib/getActiveElement":305,"fbjs/lib/keyOf":314,"fbjs/lib/shallowEqual":319}],251:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -27959,7 +34560,7 @@ var ServerReactRootIndex = {
 };
 
 module.exports = ServerReactRootIndex;
-},{}],229:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -28549,7 +35150,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
-},{"./EventConstants":151,"./EventPropagators":155,"./ReactMount":204,"./SyntheticClipboardEvent":230,"./SyntheticDragEvent":232,"./SyntheticEvent":233,"./SyntheticFocusEvent":234,"./SyntheticKeyboardEvent":236,"./SyntheticMouseEvent":237,"./SyntheticTouchEvent":238,"./SyntheticUIEvent":239,"./SyntheticWheelEvent":240,"./getEventCharCode":252,"_process":2,"fbjs/lib/EventListener":272,"fbjs/lib/emptyFunction":279,"fbjs/lib/invariant":287,"fbjs/lib/keyOf":291}],230:[function(require,module,exports){
+},{"./EventConstants":174,"./EventPropagators":178,"./ReactMount":227,"./SyntheticClipboardEvent":253,"./SyntheticDragEvent":255,"./SyntheticEvent":256,"./SyntheticFocusEvent":257,"./SyntheticKeyboardEvent":259,"./SyntheticMouseEvent":260,"./SyntheticTouchEvent":261,"./SyntheticUIEvent":262,"./SyntheticWheelEvent":263,"./getEventCharCode":275,"_process":2,"fbjs/lib/EventListener":295,"fbjs/lib/emptyFunction":302,"fbjs/lib/invariant":310,"fbjs/lib/keyOf":314}],253:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -28589,7 +35190,7 @@ function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent, na
 SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
 
 module.exports = SyntheticClipboardEvent;
-},{"./SyntheticEvent":233}],231:[function(require,module,exports){
+},{"./SyntheticEvent":256}],254:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -28627,7 +35228,7 @@ function SyntheticCompositionEvent(dispatchConfig, dispatchMarker, nativeEvent, 
 SyntheticEvent.augmentClass(SyntheticCompositionEvent, CompositionEventInterface);
 
 module.exports = SyntheticCompositionEvent;
-},{"./SyntheticEvent":233}],232:[function(require,module,exports){
+},{"./SyntheticEvent":256}],255:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -28665,7 +35266,7 @@ function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeE
 SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
 
 module.exports = SyntheticDragEvent;
-},{"./SyntheticMouseEvent":237}],233:[function(require,module,exports){
+},{"./SyntheticMouseEvent":260}],256:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -28845,7 +35446,7 @@ PooledClass.addPoolingTo(SyntheticEvent, PooledClass.fourArgumentPooler);
 
 module.exports = SyntheticEvent;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./PooledClass":160,"_process":2,"fbjs/lib/emptyFunction":279,"fbjs/lib/warning":298}],234:[function(require,module,exports){
+},{"./Object.assign":182,"./PooledClass":183,"_process":2,"fbjs/lib/emptyFunction":302,"fbjs/lib/warning":321}],257:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -28883,7 +35484,7 @@ function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
 
 module.exports = SyntheticFocusEvent;
-},{"./SyntheticUIEvent":239}],235:[function(require,module,exports){
+},{"./SyntheticUIEvent":262}],258:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -28922,7 +35523,7 @@ function SyntheticInputEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticEvent.augmentClass(SyntheticInputEvent, InputEventInterface);
 
 module.exports = SyntheticInputEvent;
-},{"./SyntheticEvent":233}],236:[function(require,module,exports){
+},{"./SyntheticEvent":256}],259:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29008,7 +35609,7 @@ function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent, nat
 SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
 
 module.exports = SyntheticKeyboardEvent;
-},{"./SyntheticUIEvent":239,"./getEventCharCode":252,"./getEventKey":253,"./getEventModifierState":254}],237:[function(require,module,exports){
+},{"./SyntheticUIEvent":262,"./getEventCharCode":275,"./getEventKey":276,"./getEventModifierState":277}],260:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29082,7 +35683,7 @@ function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
 
 module.exports = SyntheticMouseEvent;
-},{"./SyntheticUIEvent":239,"./ViewportMetrics":242,"./getEventModifierState":254}],238:[function(require,module,exports){
+},{"./SyntheticUIEvent":262,"./ViewportMetrics":265,"./getEventModifierState":277}],261:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29129,7 +35730,7 @@ function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
 
 module.exports = SyntheticTouchEvent;
-},{"./SyntheticUIEvent":239,"./getEventModifierState":254}],239:[function(require,module,exports){
+},{"./SyntheticUIEvent":262,"./getEventModifierState":277}],262:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29190,7 +35791,7 @@ function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent, nativeEve
 SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
 
 module.exports = SyntheticUIEvent;
-},{"./SyntheticEvent":233,"./getEventTarget":255}],240:[function(require,module,exports){
+},{"./SyntheticEvent":256,"./getEventTarget":278}],263:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29246,7 +35847,7 @@ function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent, native
 SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
 
 module.exports = SyntheticWheelEvent;
-},{"./SyntheticMouseEvent":237}],241:[function(require,module,exports){
+},{"./SyntheticMouseEvent":260}],264:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29480,7 +36081,7 @@ var Transaction = {
 
 module.exports = Transaction;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],242:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],265:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29508,7 +36109,7 @@ var ViewportMetrics = {
 };
 
 module.exports = ViewportMetrics;
-},{}],243:[function(require,module,exports){
+},{}],266:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -29570,7 +36171,7 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 }).call(this,require('_process'))
-},{"_process":2,"fbjs/lib/invariant":287}],244:[function(require,module,exports){
+},{"_process":2,"fbjs/lib/invariant":310}],267:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29613,7 +36214,7 @@ function adler32(data) {
 }
 
 module.exports = adler32;
-},{}],245:[function(require,module,exports){
+},{}],268:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29640,7 +36241,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
-},{"_process":2}],246:[function(require,module,exports){
+},{"_process":2}],269:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29696,7 +36297,7 @@ function dangerousStyleValue(name, value) {
 }
 
 module.exports = dangerousStyleValue;
-},{"./CSSProperty":140}],247:[function(require,module,exports){
+},{"./CSSProperty":163}],270:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29747,7 +36348,7 @@ function deprecated(fnName, newModule, newPackage, ctx, fn) {
 
 module.exports = deprecated;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"_process":2,"fbjs/lib/warning":298}],248:[function(require,module,exports){
+},{"./Object.assign":182,"_process":2,"fbjs/lib/warning":321}],271:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29786,7 +36387,7 @@ function escapeTextContentForBrowser(text) {
 }
 
 module.exports = escapeTextContentForBrowser;
-},{}],249:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29838,7 +36439,7 @@ function findDOMNode(componentOrElement) {
 
 module.exports = findDOMNode;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":172,"./ReactInstanceMap":201,"./ReactMount":204,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],250:[function(require,module,exports){
+},{"./ReactCurrentOwner":195,"./ReactInstanceMap":224,"./ReactMount":227,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],273:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -29889,7 +36490,7 @@ function flattenChildren(children) {
 
 module.exports = flattenChildren;
 }).call(this,require('_process'))
-},{"./traverseAllChildren":269,"_process":2,"fbjs/lib/warning":298}],251:[function(require,module,exports){
+},{"./traverseAllChildren":292,"_process":2,"fbjs/lib/warning":321}],274:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29919,7 +36520,7 @@ var forEachAccumulated = function (arr, cb, scope) {
 };
 
 module.exports = forEachAccumulated;
-},{}],252:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -29970,7 +36571,7 @@ function getEventCharCode(nativeEvent) {
 }
 
 module.exports = getEventCharCode;
-},{}],253:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30074,7 +36675,7 @@ function getEventKey(nativeEvent) {
 }
 
 module.exports = getEventKey;
-},{"./getEventCharCode":252}],254:[function(require,module,exports){
+},{"./getEventCharCode":275}],277:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30119,7 +36720,7 @@ function getEventModifierState(nativeEvent) {
 }
 
 module.exports = getEventModifierState;
-},{}],255:[function(require,module,exports){
+},{}],278:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30149,7 +36750,7 @@ function getEventTarget(nativeEvent) {
 }
 
 module.exports = getEventTarget;
-},{}],256:[function(require,module,exports){
+},{}],279:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30190,7 +36791,7 @@ function getIteratorFn(maybeIterable) {
 }
 
 module.exports = getIteratorFn;
-},{}],257:[function(require,module,exports){
+},{}],280:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30264,7 +36865,7 @@ function getNodeForCharacterOffset(root, offset) {
 }
 
 module.exports = getNodeForCharacterOffset;
-},{}],258:[function(require,module,exports){
+},{}],281:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30298,7 +36899,7 @@ function getTextContentAccessor() {
 }
 
 module.exports = getTextContentAccessor;
-},{"fbjs/lib/ExecutionEnvironment":273}],259:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":296}],282:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30413,7 +37014,7 @@ function instantiateReactComponent(node) {
 
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"./ReactCompositeComponent":171,"./ReactEmptyComponent":192,"./ReactNativeComponent":207,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],260:[function(require,module,exports){
+},{"./Object.assign":182,"./ReactCompositeComponent":194,"./ReactEmptyComponent":215,"./ReactNativeComponent":230,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],283:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30474,7 +37075,7 @@ function isEventSupported(eventNameSuffix, capture) {
 }
 
 module.exports = isEventSupported;
-},{"fbjs/lib/ExecutionEnvironment":273}],261:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":296}],284:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30515,7 +37116,7 @@ function isTextInputElement(elem) {
 }
 
 module.exports = isTextInputElement;
-},{}],262:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30551,7 +37152,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 }).call(this,require('_process'))
-},{"./ReactElement":190,"_process":2,"fbjs/lib/invariant":287}],263:[function(require,module,exports){
+},{"./ReactElement":213,"_process":2,"fbjs/lib/invariant":310}],286:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30578,7 +37179,7 @@ function quoteAttributeValueForBrowser(value) {
 }
 
 module.exports = quoteAttributeValueForBrowser;
-},{"./escapeTextContentForBrowser":248}],264:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":271}],287:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30595,7 +37196,7 @@ module.exports = quoteAttributeValueForBrowser;
 var ReactMount = require('./ReactMount');
 
 module.exports = ReactMount.renderSubtreeIntoContainer;
-},{"./ReactMount":204}],265:[function(require,module,exports){
+},{"./ReactMount":227}],288:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30686,7 +37287,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setInnerHTML;
-},{"fbjs/lib/ExecutionEnvironment":273}],266:[function(require,module,exports){
+},{"fbjs/lib/ExecutionEnvironment":296}],289:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30727,7 +37328,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = setTextContent;
-},{"./escapeTextContentForBrowser":248,"./setInnerHTML":265,"fbjs/lib/ExecutionEnvironment":273}],267:[function(require,module,exports){
+},{"./escapeTextContentForBrowser":271,"./setInnerHTML":288,"fbjs/lib/ExecutionEnvironment":296}],290:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30752,7 +37353,7 @@ function shallowCompare(instance, nextProps, nextState) {
 }
 
 module.exports = shallowCompare;
-},{"fbjs/lib/shallowEqual":296}],268:[function(require,module,exports){
+},{"fbjs/lib/shallowEqual":319}],291:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -30796,7 +37397,7 @@ function shouldUpdateReactComponent(prevElement, nextElement) {
 }
 
 module.exports = shouldUpdateReactComponent;
-},{}],269:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -30988,7 +37589,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":172,"./ReactElement":190,"./ReactInstanceHandles":200,"./getIteratorFn":256,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/warning":298}],270:[function(require,module,exports){
+},{"./ReactCurrentOwner":195,"./ReactElement":213,"./ReactInstanceHandles":223,"./getIteratorFn":279,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/warning":321}],293:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31098,7 +37699,7 @@ function update(value, spec) {
 
 module.exports = update;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"_process":2,"fbjs/lib/invariant":287,"fbjs/lib/keyOf":291}],271:[function(require,module,exports){
+},{"./Object.assign":182,"_process":2,"fbjs/lib/invariant":310,"fbjs/lib/keyOf":314}],294:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015, Facebook, Inc.
@@ -31464,7 +38065,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
-},{"./Object.assign":159,"_process":2,"fbjs/lib/emptyFunction":279,"fbjs/lib/warning":298}],272:[function(require,module,exports){
+},{"./Object.assign":182,"_process":2,"fbjs/lib/emptyFunction":302,"fbjs/lib/warning":321}],295:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31551,7 +38152,7 @@ var EventListener = {
 
 module.exports = EventListener;
 }).call(this,require('_process'))
-},{"./emptyFunction":279,"_process":2}],273:[function(require,module,exports){
+},{"./emptyFunction":302,"_process":2}],296:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31588,7 +38189,7 @@ var ExecutionEnvironment = {
 };
 
 module.exports = ExecutionEnvironment;
-},{}],274:[function(require,module,exports){
+},{}],297:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31621,7 +38222,7 @@ function camelize(string) {
 }
 
 module.exports = camelize;
-},{}],275:[function(require,module,exports){
+},{}],298:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31662,7 +38263,7 @@ function camelizeStyleName(string) {
 }
 
 module.exports = camelizeStyleName;
-},{"./camelize":274}],276:[function(require,module,exports){
+},{"./camelize":297}],299:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31718,7 +38319,7 @@ function containsNode(_x, _x2) {
 }
 
 module.exports = containsNode;
-},{"./isTextNode":289}],277:[function(require,module,exports){
+},{"./isTextNode":312}],300:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31804,7 +38405,7 @@ function createArrayFromMixed(obj) {
 }
 
 module.exports = createArrayFromMixed;
-},{"./toArray":297}],278:[function(require,module,exports){
+},{"./toArray":320}],301:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31891,7 +38492,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":273,"./createArrayFromMixed":277,"./getMarkupWrap":283,"./invariant":287,"_process":2}],279:[function(require,module,exports){
+},{"./ExecutionEnvironment":296,"./createArrayFromMixed":300,"./getMarkupWrap":306,"./invariant":310,"_process":2}],302:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31930,7 +38531,7 @@ emptyFunction.thatReturnsArgument = function (arg) {
 };
 
 module.exports = emptyFunction;
-},{}],280:[function(require,module,exports){
+},{}],303:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -31953,7 +38554,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = emptyObject;
 }).call(this,require('_process'))
-},{"_process":2}],281:[function(require,module,exports){
+},{"_process":2}],304:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -31980,7 +38581,7 @@ function focusNode(node) {
 }
 
 module.exports = focusNode;
-},{}],282:[function(require,module,exports){
+},{}],305:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32014,7 +38615,7 @@ function getActiveElement() /*?DOMElement*/{
 }
 
 module.exports = getActiveElement;
-},{}],283:[function(require,module,exports){
+},{}],306:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32112,7 +38713,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":273,"./invariant":287,"_process":2}],284:[function(require,module,exports){
+},{"./ExecutionEnvironment":296,"./invariant":310,"_process":2}],307:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32151,7 +38752,7 @@ function getUnboundedScrollPosition(scrollable) {
 }
 
 module.exports = getUnboundedScrollPosition;
-},{}],285:[function(require,module,exports){
+},{}],308:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32185,7 +38786,7 @@ function hyphenate(string) {
 }
 
 module.exports = hyphenate;
-},{}],286:[function(require,module,exports){
+},{}],309:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32225,7 +38826,7 @@ function hyphenateStyleName(string) {
 }
 
 module.exports = hyphenateStyleName;
-},{"./hyphenate":285}],287:[function(require,module,exports){
+},{"./hyphenate":308}],310:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32277,7 +38878,7 @@ var invariant = function (condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":2}],288:[function(require,module,exports){
+},{"_process":2}],311:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32301,7 +38902,7 @@ function isNode(object) {
 }
 
 module.exports = isNode;
-},{}],289:[function(require,module,exports){
+},{}],312:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32327,7 +38928,7 @@ function isTextNode(object) {
 }
 
 module.exports = isTextNode;
-},{"./isNode":288}],290:[function(require,module,exports){
+},{"./isNode":311}],313:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32378,9 +38979,9 @@ var keyMirror = function (obj) {
 
 module.exports = keyMirror;
 }).call(this,require('_process'))
-},{"./invariant":287,"_process":2}],291:[function(require,module,exports){
-module.exports=require(134)
-},{"/Users/cwest/web/MikesMags/node_modules/react-tap-event-plugin/node_modules/fbjs/lib/keyOf.js":134}],292:[function(require,module,exports){
+},{"./invariant":310,"_process":2}],314:[function(require,module,exports){
+module.exports=require(157)
+},{"/Users/cwest/web/MikesMags/node_modules/react-tap-event-plugin/node_modules/fbjs/lib/keyOf.js":157}],315:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32432,7 +39033,7 @@ function mapObject(object, callback, context) {
 }
 
 module.exports = mapObject;
-},{}],293:[function(require,module,exports){
+},{}],316:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32464,7 +39065,7 @@ function memoizeStringOnly(callback) {
 }
 
 module.exports = memoizeStringOnly;
-},{}],294:[function(require,module,exports){
+},{}],317:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32488,7 +39089,7 @@ if (ExecutionEnvironment.canUseDOM) {
 }
 
 module.exports = performance || {};
-},{"./ExecutionEnvironment":273}],295:[function(require,module,exports){
+},{"./ExecutionEnvironment":296}],318:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32518,7 +39119,7 @@ if (!curPerformance || !curPerformance.now) {
 var performanceNow = curPerformance.now.bind(curPerformance);
 
 module.exports = performanceNow;
-},{"./performance":294}],296:[function(require,module,exports){
+},{"./performance":317}],319:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -32569,7 +39170,7 @@ function shallowEqual(objA, objB) {
 }
 
 module.exports = shallowEqual;
-},{}],297:[function(require,module,exports){
+},{}],320:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -32629,7 +39230,7 @@ function toArray(obj) {
 
 module.exports = toArray;
 }).call(this,require('_process'))
-},{"./invariant":287,"_process":2}],298:[function(require,module,exports){
+},{"./invariant":310,"_process":2}],321:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-2015, Facebook, Inc.
@@ -32689,12 +39290,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":279,"_process":2}],299:[function(require,module,exports){
+},{"./emptyFunction":302,"_process":2}],322:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
 
-},{"./lib/React":161}],300:[function(require,module,exports){
+},{"./lib/React":184}],323:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -32741,6 +39342,7 @@ var AddMagazine = _react2['default'].createClass({
         var _this = this;
         var apiURL = _modelsGlobal2['default'].apiEndpoint;
         $.when($.ajax(apiURL + 'getMags.php')).done(function (data) {
+            console.log(data);
             _modelsStore2['default'].setStore('magdata', JSON.parse(data), { persist: true }, _this.setState({
                 'magdata': JSON.parse(data)
             }));
@@ -32769,7 +39371,7 @@ var AddMagazine = _react2['default'].createClass({
 
 module.exports = AddMagazine;
 
-},{"../elements/MagEdit":303,"../elements/MagListing":305,"../models/Global":306,"../models/Store":307,"react":299,"react-dom":107,"react-router":127}],301:[function(require,module,exports){
+},{"../elements/MagEdit":327,"../elements/MagListing":329,"../models/Global":331,"../models/Store":332,"react":322,"react-dom":130,"react-router":150}],324:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -32842,7 +39444,7 @@ var Layout = _react2['default'].createClass({
 
 module.exports = Layout;
 
-},{"material-ui/lib/select-field":58,"material-ui/lib/text-field":73,"react":299,"react-dom":107,"react-router":127}],302:[function(require,module,exports){
+},{"material-ui/lib/select-field":72,"material-ui/lib/text-field":89,"react":322,"react-dom":130,"react-router":150}],325:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -32955,7 +39557,68 @@ var Magazines = _react2['default'].createClass({
 
 module.exports = Magazines;
 
-},{"../models/Global":306,"../models/Store":307,"material-ui/lib/card/card":38,"material-ui/lib/card/card-media":35,"material-ui/lib/card/card-text":36,"material-ui/lib/card/card-title":37,"react":299,"react-dom":107,"react-router":127}],303:[function(require,module,exports){
+},{"../models/Global":331,"../models/Store":332,"material-ui/lib/card/card":39,"material-ui/lib/card/card-media":36,"material-ui/lib/card/card-text":37,"material-ui/lib/card/card-title":38,"react":322,"react-dom":130,"react-router":150}],326:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var mainPadding = 20;
+
+var style = {
+    border: 'none',
+    margin: 0,
+    padding: 0,
+    position: 'relative',
+    label: {
+        fontSize: '1.6rem',
+        margin: mainPadding + 'px' + ' 0',
+        display: 'block',
+        color: 'black'
+    }
+};
+
+var StylePropable = require('material-ui/lib/mixins/style-propable');
+
+var Fieldset = _react2['default'].createClass({
+    displayName: 'Fieldset',
+
+    mixins: [StylePropable], // making styling relative to this component instance
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            style: {}
+        };
+    },
+
+    getInitialState: function getInitialState() {
+        return {};
+    },
+
+    componentDidMount: function componentDidMount() {},
+
+    componentWillUnmount: function componentWillUnmount() {},
+
+    render: function render() {
+        return _react2['default'].createElement(
+            'fieldset',
+            { style: this.mergeStyles(style, this.props.style) },
+            _react2['default'].createElement(
+                'label',
+                { style: style.label },
+                this.props.title
+            ),
+            this.props.children
+        );
+    }
+});
+
+module.exports = Fieldset;
+
+},{"material-ui/lib/mixins/style-propable":65,"react":322}],327:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -32978,7 +39641,15 @@ var _modelsGlobal2 = _interopRequireDefault(_modelsGlobal);
 
 // elements
 var TextField = require('material-ui/lib/text-field');
+var TwoColumnLayout = require('./TwoColumnLayout');
+var Fieldset = require('./Fieldset');
 var SelectField = require('material-ui/lib/select-field');
+var DatePicker = require('material-ui/lib/date-picker/date-picker');
+var DatePickerDialog = require('material-ui/lib/date-picker/date-picker-dialog');
+var DropDownMenu = require('material-ui/lib/drop-down-menu');
+var FontIcon = require('material-ui/lib/font-icon');
+var FlatButton = require('material-ui/lib/flat-button');
+var Paper = require('material-ui/lib/paper');
 
 var MagEdit = _react2['default'].createClass({
     displayName: 'MagEdit',
@@ -32989,22 +39660,138 @@ var MagEdit = _react2['default'].createClass({
 
     getDefaultProps: function getDefaultProps() {
         return {
-            magdata: []
+            magdata: {}
         };
     },
 
     getInitialState: function getInitialState() {
-        return {};
+        return {
+            magdata: {
+                id: null,
+                publisher_id: 0,
+                summary: '',
+                date: '',
+                image: '',
+                selected_magid: 0,
+                price: '',
+                condition: '',
+                selected_condition: 0
+            }
+        };
     },
+
+    _deleteRecord: function _deleteRecord() {},
+
     update: function update() {},
 
-    componentDidMount: function componentDidMount() {},
+    applyValues: function applyValues() {
+        this.refs.datePicker.setDate(this.state.magdata.date);
+    },
+
+    ApplyClickedData: function ApplyClickedData(data) {
+        this.setState({
+            magdata: $.extend(this.state.magdata, data)
+        }, this.applyValues);
+    },
+
+    componentDidMount: function componentDidMount() {
+        _modelsStore2['default'].subscribe('clickededit', this.ApplyClickedData);
+    },
 
     render: function render() {
+
+        var magItems = [{ payload: '0', text: 'All Magazines' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
+
+        var magConditions = [{ payload: '0', text: 'Mint' }, { payload: '1', text: 'Excellent' }, { payload: '2', text: 'Very Good' }, { payload: '3', text: 'Good' }];
+        var ColumnOne = _react2['default'].createElement(
+            'div',
+            null,
+            _react2['default'].createElement(
+                Fieldset,
+                { title: 'Select Magazine Publisher' },
+                _react2['default'].createElement(DropDownMenu, {
+                    autoWidth: true,
+                    menuItems: magItems,
+                    style: { width: '100%' },
+                    selectedIndex: this.state.selected_magid,
+                    ref: 'publisher'
+                })
+            ),
+            _react2['default'].createElement(
+                Fieldset,
+                { title: 'Magazine Date' },
+                _react2['default'].createElement(DatePicker, {
+                    ref: 'datePicker',
+                    className: 'MagDatePicker',
+                    hintText: 'Select date...',
+                    mode: 'landscape'
+                })
+            )
+        );
+        var ColumnTwo = _react2['default'].createElement(
+            'div',
+            null,
+            _react2['default'].createElement(
+                Fieldset,
+                { title: 'Magazine Summary' },
+                _react2['default'].createElement(TextField, {
+                    hintText: 'Add Magazine Summary...',
+                    value: this.state.magdata.summary,
+                    fullWidth: true,
+                    multiLine: true,
+                    ref: 'summary' })
+            ),
+            _react2['default'].createElement(
+                Fieldset,
+                { title: 'Pricing' },
+                _react2['default'].createElement(TextField, {
+                    hintText: 'Add Magazine Name...',
+                    value: this.state.magdata.price,
+                    fullWidth: true,
+                    ref: 'price' })
+            ),
+            _react2['default'].createElement(
+                Fieldset,
+                { title: 'Condition' },
+                _react2['default'].createElement(DropDownMenu, {
+                    menuItems: magConditions,
+                    style: { width: '100%' },
+                    selectedIndex: this.state.selected_condition,
+                    ref: 'condition'
+                })
+            )
+        );
+        var header = this.state.magdata.id ? "Updating ID: " + this.state.magdata.id : "Create a New Magazine Record";
         return _react2['default'].createElement(
-            'section',
-            { className: 'MagEdit' },
-            'WIll be edit panel'
+            Paper,
+            { className: 'MagEdit', zDepth: 2 },
+            _react2['default'].createElement(
+                'h3',
+                null,
+                header
+            ),
+            _react2['default'].createElement(TwoColumnLayout, {
+                columnOne: ColumnOne, columnOneWidth: '50%',
+                columnTwo: ColumnTwo, columnTwoWidth: '50%'
+            }),
+            _react2['default'].createElement(TwoColumnLayout, {
+                columnOne: _react2['default'].createElement(
+                    FlatButton,
+                    { onTouchTap: this._deleteRecord, secondary: true, label: 'Delete', labelPosition: 'after' },
+                    _react2['default'].createElement(
+                        FontIcon,
+                        { style: { top: '6px', marginRight: '-5px' }, className: 'remove-icon material-icons', color: 'red' },
+                        'cancel'
+                    )
+                ),
+                columnTwo: _react2['default'].createElement(
+                    'div',
+                    null,
+                    _react2['default'].createElement(FlatButton, { onTouchTap: this._applyFilter, secondary: true, label: 'Add/Update' }),
+                    _react2['default'].createElement(FlatButton, { onTouchTap: this._cancelFilter, secondary: true, label: 'Cancel' })
+                ),
+                columnTwoStyle: { textAlign: 'right' }
+            })
         );
     }
 
@@ -33012,7 +39799,7 @@ var MagEdit = _react2['default'].createClass({
 
 module.exports = MagEdit;
 
-},{"../models/Global":306,"../models/Store":307,"material-ui/lib/select-field":58,"material-ui/lib/text-field":73,"react":299,"react-dom":107}],304:[function(require,module,exports){
+},{"../models/Global":331,"../models/Store":332,"./Fieldset":326,"./TwoColumnLayout":330,"material-ui/lib/date-picker/date-picker":48,"material-ui/lib/date-picker/date-picker-dialog":46,"material-ui/lib/drop-down-menu":52,"material-ui/lib/flat-button":56,"material-ui/lib/font-icon":57,"material-ui/lib/paper":68,"material-ui/lib/select-field":72,"material-ui/lib/text-field":89,"react":322,"react-dom":130}],328:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -33022,6 +39809,10 @@ var _react = require('react');
 var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
 
 // models
 
@@ -33047,16 +39838,18 @@ var MagItem = _react2['default'].createClass({
     },
 
     broadcastEdit: function broadcastEdit() {
-        _modelsStore2['default'].setStore('clickedit', this.props.magData);
+        _modelsStore2['default'].setStore('clickededit', this.props.magData);
     },
 
-    componentDidMount: function componentDidMount() {},
+    componentDidMount: function componentDidMount() {
+        //this.props.magdata.date = new Date(this.props.magdata.date);
+    },
 
     render: function render() {
         return _react2['default'].createElement(
             'div',
             { className: 'magItem', onClick: this.broadcastEdit },
-            this.props.magData.date,
+            (0, _moment2['default'])(this.props.magData.date).format('ll'),
             ' | ',
             this.props.magData.summary
         );
@@ -33066,7 +39859,7 @@ var MagItem = _react2['default'].createClass({
 
 module.exports = MagItem;
 
-},{"../models/Store":307,"react":299,"react-dom":107}],305:[function(require,module,exports){
+},{"../models/Store":332,"moment":128,"react":322,"react-dom":130}],329:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -33105,12 +39898,17 @@ var MagListing = _react2['default'].createClass({
 
     componentDidMount: function componentDidMount() {},
 
+    mutateDate: function mutateDate(data) {
+        data.date = new Date(data.date);
+        return data;
+    },
+
     render: function render() {
         return _react2['default'].createElement(
             'section',
             { className: 'MagListing' },
             this.props.magdata.map(function (mdata, key) {
-                return _react2['default'].createElement(MagItem, { key: key, magData: mdata });
+                return _react2['default'].createElement(MagItem, { key: key, magData: this.mutateDate(mdata) });
             }, this)
         );
     }
@@ -33119,14 +39917,101 @@ var MagListing = _react2['default'].createClass({
 
 module.exports = MagListing;
 
-},{"../models/Store":307,"./MagItem":304,"react":299,"react-dom":107}],306:[function(require,module,exports){
+},{"../models/Store":332,"./MagItem":328,"react":322,"react-dom":130}],330:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var StylePropable = require('material-ui/lib/mixins/style-propable');
+
+var mainPadding = 20;
+var style = {
+    display: '-webkit-box; display: -webkit-flex; display: flex',
+    flexWrap: 'wrap',
+    marginBottom: mainPadding + 'px',
+    left: {
+        width: 'calc(50% - ' + mainPadding / 2 + 'px)',
+        marginRight: mainPadding + 'px',
+        textAlign: 'left'
+    },
+    right: {
+        width: 'calc(50% - ' + mainPadding / 2 + 'px)',
+        textAlign: 'left'
+    }
+};
+
+var TwoColumnLayout = _react2['default'].createClass({
+    displayName: 'TwoColumnLayout',
+
+    mixins: [StylePropable], // making styling relative to this component instance
+
+    getDefaultProps: function getDefaultProps() {
+        return {
+            columnOne: '',
+            columnTwo: '',
+            columnOneWidth: '50%',
+            columnTwoWidth: '50%',
+            columnOneStyle: {},
+            columnTwoStyle: {}
+        };
+    },
+
+    getInitialState: function getInitialState() {
+        return {
+            styleLeft: style.left,
+            styleRight: style.right
+        };
+    },
+
+    render: function render() {
+        if (this.props.columnOneWidth) {
+            Object.assign(this.state.styleLeft, {
+                width: 'calc(' + this.props.columnOneWidth + ' - ' + mainPadding / 2 + 'px)'
+            });
+        }
+        if (this.props.columnTwoWidth) {
+            Object.assign(this.state.styleRight, {
+                width: 'calc(' + this.props.columnTwoWidth + ' - ' + mainPadding / 2 + 'px)'
+            });
+        }
+
+        var styleLeft = this.mergeStyles(this.state.styleLeft, this.props.columnOneStyle);
+        var styleRight = this.mergeStyles(this.state.styleRight, this.props.columnTwoStyle);
+
+        return _react2['default'].createElement(
+            'section',
+            { className: 'TwoColumnLayout', style: style },
+            _react2['default'].createElement(
+                'div',
+                { style: styleLeft },
+                this.props.columnOne
+            ),
+            _react2['default'].createElement(
+                'div',
+                { style: styleRight },
+                this.props.columnTwo
+            )
+        );
+    }
+
+});
+
+module.exports = TwoColumnLayout;
+
+},{"material-ui/lib/mixins/style-propable":65,"react":322,"react-dom":130}],331:[function(require,module,exports){
 'use strict';
 
 module.exports = {
     apiEndpoint: 'http://localhost:8888/MikesMags/build/api/'
 };
 
-},{}],307:[function(require,module,exports){
+},{}],332:[function(require,module,exports){
 /*
  DataStore | Chris West inkorange.com
  Cross component data management container with tie ins to Local Storage persistence

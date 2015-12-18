@@ -17,7 +17,9 @@
                     echo "\"publisher_id\":". $row["publisher_id"] . ",";
                     echo "\"summary\": \"". $row["summary"] . "\",";
                     echo "\"date\": \"". $row["date"] . "\",";
-                    echo "\"image\": \"". $row["image"] . "\"";
+                    echo "\"image\": \"". $row["image"] . "\",";
+                    echo "\"price\": \"". $row["price"] . "\",";
+                    echo "\"condition\": \"". $row["condition"] . "\"";
                 echo "}";
                 $cnt++;
 			}

@@ -26,12 +26,17 @@ const MagListing = React.createClass({
     componentDidMount: function() {
     },
 
+    mutateDate: function(data) {
+        data.date = new Date(data.date);
+        return data;
+    },
+
     render() {
         return (
             <section className="MagListing">
                 {this.props.magdata.map(function(mdata, key) {
                     return (
-                        <MagItem key={key} magData={mdata} />
+                        <MagItem key={key} magData={this.mutateDate(mdata)} />
                     )
                 }, this)}
             </section>

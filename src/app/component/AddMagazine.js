@@ -32,6 +32,7 @@ const AddMagazine = React.createClass({
         $.when(
             $.ajax(apiURL + 'getMags.php')
         ).done(function(data) {
+            console.log(data);
                 Store.setStore('magdata', JSON.parse(data), {persist: true},
                     _this.setState({
                         'magdata' : JSON.parse(data)
