@@ -39640,16 +39640,24 @@ var _modelsGlobal = require('../models/Global');
 var _modelsGlobal2 = _interopRequireDefault(_modelsGlobal);
 
 // elements
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var TextField = require('material-ui/lib/text-field');
 var TwoColumnLayout = require('./TwoColumnLayout');
 var Fieldset = require('./Fieldset');
 var SelectField = require('material-ui/lib/select-field');
 var DatePicker = require('material-ui/lib/date-picker/date-picker');
-var DatePickerDialog = require('material-ui/lib/date-picker/date-picker-dialog');
 var DropDownMenu = require('material-ui/lib/drop-down-menu');
 var FontIcon = require('material-ui/lib/font-icon');
 var FlatButton = require('material-ui/lib/flat-button');
 var Paper = require('material-ui/lib/paper');
+
+var magItems = [{ payload: '', text: 'Select a Publisher...' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
+
+var magConditions = [{ payload: '', text: 'Select a Condition...' }, { payload: 'Mint', text: 'Mint' }, { payload: 'Excellent', text: 'Excellent' }, { payload: 'Very Good', text: 'Very Good' }, { payload: 'Good', text: 'Good' }];
 
 var MagEdit = _react2['default'].createClass({
     displayName: 'MagEdit',
@@ -39680,12 +39688,43 @@ var MagEdit = _react2['default'].createClass({
         };
     },
 
-    _deleteRecord: function _deleteRecord() {},
+    deleteRecord: function deleteRecord() {},
 
-    update: function update() {},
+    update: function update() {
+        var apiURL = _modelsGlobal2['default'].apiEndpoint;
+        var mdate = (0, _moment2['default'])(this.refs.datePicker.getDate());
+        var updatedValues = {
+            id: this.refs.id.getValue(),
+            publisher_id: this.refs.publisher.state.value,
+            summary: this.refs.summary.getValue(),
+            date: mdate.format("YYYY-MM-DD"),
+            image: this.state.magdata.image,
+            price: this.refs.price.getValue(),
+            condition: this.refs.condition.state.value
+        };
+
+        $.when($.post(apiURL + 'updateRecord.php', updatedValues)).done(function (data) {
+            console.log(data);
+        }).fail(function () {
+            console.log('save failed.');
+        });
+    },
 
     applyValues: function applyValues() {
         this.refs.datePicker.setDate(this.state.magdata.date);
+        this.refs.price.setValue(this.state.magdata.price);
+        this.refs.summary.setValue(this.state.magdata.summary);
+        this.refs.id.setValue(this.state.magdata.id);
+        var _this = this;
+        /*
+        magItems.map(function(val, key) {
+            console.log(val.payload, _this.state.magdata.publisher_id, key);
+           if(val.payload == _this.state.magdata.publisher_id) {
+               console.log('found it: ', key);
+               _this.refs.publisher.setValue(key);
+           }
+        });
+        */
     },
 
     ApplyClickedData: function ApplyClickedData(data) {
@@ -39700,19 +39739,24 @@ var MagEdit = _react2['default'].createClass({
 
     render: function render() {
 
-        var magItems = [{ payload: '0', text: 'All Magazines' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
-
-        var magConditions = [{ payload: '0', text: 'Mint' }, { payload: '1', text: 'Excellent' }, { payload: '2', text: 'Very Good' }, { payload: '3', text: 'Good' }];
         var ColumnOne = _react2['default'].createElement(
             'div',
             null,
+            _react2['default'].createElement(
+                Fieldset,
+                { title: 'Magazine ID' },
+                _react2['default'].createElement(TextField, {
+                    hintText: 'Add Custom MagID...',
+                    fullWidth: true,
+                    ref: 'id' })
+            ),
             _react2['default'].createElement(
                 Fieldset,
                 { title: 'Select Magazine Publisher' },
                 _react2['default'].createElement(DropDownMenu, {
                     autoWidth: true,
                     menuItems: magItems,
-                    style: { width: '100%' },
+                    style: { width: '100%', marginLeft: '-20px' },
                     selectedIndex: this.state.selected_magid,
                     ref: 'publisher'
                 })
@@ -39736,7 +39780,6 @@ var MagEdit = _react2['default'].createClass({
                 { title: 'Magazine Summary' },
                 _react2['default'].createElement(TextField, {
                     hintText: 'Add Magazine Summary...',
-                    value: this.state.magdata.summary,
                     fullWidth: true,
                     multiLine: true,
                     ref: 'summary' })
@@ -39745,8 +39788,7 @@ var MagEdit = _react2['default'].createClass({
                 Fieldset,
                 { title: 'Pricing' },
                 _react2['default'].createElement(TextField, {
-                    hintText: 'Add Magazine Name...',
-                    value: this.state.magdata.price,
+                    hintText: 'Add Price...',
                     fullWidth: true,
                     ref: 'price' })
             ),
@@ -39755,7 +39797,7 @@ var MagEdit = _react2['default'].createClass({
                 { title: 'Condition' },
                 _react2['default'].createElement(DropDownMenu, {
                     menuItems: magConditions,
-                    style: { width: '100%' },
+                    style: { width: '100%', marginLeft: '-20px' },
                     selectedIndex: this.state.selected_condition,
                     ref: 'condition'
                 })
@@ -39777,7 +39819,7 @@ var MagEdit = _react2['default'].createClass({
             _react2['default'].createElement(TwoColumnLayout, {
                 columnOne: _react2['default'].createElement(
                     FlatButton,
-                    { onTouchTap: this._deleteRecord, secondary: true, label: 'Delete', labelPosition: 'after' },
+                    { onTouchTap: this.deleteRecord, secondary: true, label: 'Delete', labelPosition: 'after' },
                     _react2['default'].createElement(
                         FontIcon,
                         { style: { top: '6px', marginRight: '-5px' }, className: 'remove-icon material-icons', color: 'red' },
@@ -39787,8 +39829,8 @@ var MagEdit = _react2['default'].createClass({
                 columnTwo: _react2['default'].createElement(
                     'div',
                     null,
-                    _react2['default'].createElement(FlatButton, { onTouchTap: this._applyFilter, secondary: true, label: 'Add/Update' }),
-                    _react2['default'].createElement(FlatButton, { onTouchTap: this._cancelFilter, secondary: true, label: 'Cancel' })
+                    _react2['default'].createElement(FlatButton, { onTouchTap: this.update, secondary: true, label: 'Add/Update' }),
+                    _react2['default'].createElement(FlatButton, { onTouchTap: this.cancelFilter, secondary: true, label: 'Cancel' })
                 ),
                 columnTwoStyle: { textAlign: 'right' }
             })
@@ -39799,7 +39841,7 @@ var MagEdit = _react2['default'].createClass({
 
 module.exports = MagEdit;
 
-},{"../models/Global":331,"../models/Store":332,"./Fieldset":326,"./TwoColumnLayout":330,"material-ui/lib/date-picker/date-picker":48,"material-ui/lib/date-picker/date-picker-dialog":46,"material-ui/lib/drop-down-menu":52,"material-ui/lib/flat-button":56,"material-ui/lib/font-icon":57,"material-ui/lib/paper":68,"material-ui/lib/select-field":72,"material-ui/lib/text-field":89,"react":322,"react-dom":130}],328:[function(require,module,exports){
+},{"../models/Global":331,"../models/Store":332,"./Fieldset":326,"./TwoColumnLayout":330,"material-ui/lib/date-picker/date-picker":48,"material-ui/lib/drop-down-menu":52,"material-ui/lib/flat-button":56,"material-ui/lib/font-icon":57,"material-ui/lib/paper":68,"material-ui/lib/select-field":72,"material-ui/lib/text-field":89,"moment":128,"react":322,"react-dom":130}],328:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
