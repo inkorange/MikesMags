@@ -5,13 +5,6 @@ $myUser = "root";
 $myPass = "root";
 $myDB = "mikesmags";
 
-/*
-$myServer = "mysqlv108.myregisteredsite.com";
-$myUser = "meetingleader2";
-$myPass = "Meeting#1"; // "media8878";
-$myDB = "meetingleader2";
-*/
-
 $dblink = mysql_connect($myServer, $myUser, $myPass);
 if(!$dblink) {
 	echo "could not connect to " . $myServer;
