@@ -8,10 +8,12 @@ const style = {
     padding: 0,
     position: 'relative',
     label : {
-        fontSize: '1.6rem',
-        margin: mainPadding + 'px' + ' 0',
+        fontSize: '1.4rem',
+        textTransform: 'uppercase',
+        margin: mainPadding + 'px' + ' 0 0 0',
         display: 'block',
-        color: 'black'
+        color: '#416d99',
+        fontWeight: '200'
     }
 };
 

@@ -10,6 +10,21 @@ const MagEdit = require('../elements/MagEdit');
 import Store from '../models/Store';
 import Global from '../models/Global';
 
+const magItems = [
+    { payload: '', text: 'Select a Publisher...' },
+    { payload: '1', text: 'Life' },
+    { payload: '2', text: 'Woman\'s Day' },
+    { payload: '3', text: 'Playboy' }
+];
+
+const magConditions = [
+    { payload: '', text: 'Select a Condition...' },
+    { payload: 'Mint', text: 'Mint' },
+    { payload: 'Excellent', text: 'Excellent' },
+    { payload: 'Very Good', text: 'Very Good' },
+    { payload: 'Good', text: 'Good' }
+];
+
 const AddMagazine = React.createClass({
     contextTypes: {
         location: React.PropTypes.object
@@ -27,12 +42,12 @@ const AddMagazine = React.createClass({
     },
 
     _getAppData: function() {
+        console.log('I AM GETTING AN UPDATE!');
         var _this = this;
         var apiURL = Global.apiEndpoint;
         $.when(
             $.ajax(apiURL + 'getMags.php')
         ).done(function(data) {
-            console.log(data);
                 Store.setStore('magdata', JSON.parse(data), {persist: true},
                     _this.setState({
                         'magdata' : JSON.parse(data)
@@ -49,13 +64,15 @@ const AddMagazine = React.createClass({
 
     componentDidMount: function() {
         this._getAppData();
+        Store.subscribe('updated', this._getAppData);
     },
 
     render() {
+        console.log('sending magitems ', magItems);
         return (
             <section className="magazineContent">
-                <MagListing magdata={this.state.magdata}/>
-                <MagEdit />
+                <MagListing magItems={magItems} magdata={this.state.magdata}/>
+                <MagEdit magItems={magItems} magConditions={magConditions} />
 
 
             </section>

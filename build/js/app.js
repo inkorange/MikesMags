@@ -39323,6 +39323,10 @@ var _modelsGlobal2 = _interopRequireDefault(_modelsGlobal);
 var MagListing = require('../elements/MagListing');
 var MagEdit = require('../elements/MagEdit');
 
+var magItems = [{ payload: '', text: 'Select a Publisher...' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
+
+var magConditions = [{ payload: '', text: 'Select a Condition...' }, { payload: 'Mint', text: 'Mint' }, { payload: 'Excellent', text: 'Excellent' }, { payload: 'Very Good', text: 'Very Good' }, { payload: 'Good', text: 'Good' }];
+
 var AddMagazine = _react2['default'].createClass({
     displayName: 'AddMagazine',
 
@@ -39339,10 +39343,10 @@ var AddMagazine = _react2['default'].createClass({
     },
 
     _getAppData: function _getAppData() {
+        console.log('I AM GETTING AN UPDATE!');
         var _this = this;
         var apiURL = _modelsGlobal2['default'].apiEndpoint;
         $.when($.ajax(apiURL + 'getMags.php')).done(function (data) {
-            console.log(data);
             _modelsStore2['default'].setStore('magdata', JSON.parse(data), { persist: true }, _this.setState({
                 'magdata': JSON.parse(data)
             }));
@@ -39356,14 +39360,16 @@ var AddMagazine = _react2['default'].createClass({
 
     componentDidMount: function componentDidMount() {
         this._getAppData();
+        _modelsStore2['default'].subscribe('updated', this._getAppData);
     },
 
     render: function render() {
+        console.log('sending magitems ', magItems);
         return _react2['default'].createElement(
             'section',
             { className: 'magazineContent' },
-            _react2['default'].createElement(MagListing, { magdata: this.state.magdata }),
-            _react2['default'].createElement(MagEdit, null)
+            _react2['default'].createElement(MagListing, { magItems: magItems, magdata: this.state.magdata }),
+            _react2['default'].createElement(MagEdit, { magItems: magItems, magConditions: magConditions })
         );
     }
 
@@ -39457,6 +39463,10 @@ var _reactDom = require('react-dom');
 
 var _reactRouter = require('react-router');
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 // elements
 
 // model
@@ -39525,10 +39535,22 @@ var Magazines = _react2['default'].createClass({
     _handleMagValueChange: function _handleMagValueChange(a, b) {
         console.log(a, b);
     },
+    _formatDate: function _formatDate(dater) {
+        var mdate = (0, _moment2['default'])(dater);
+        return;
+    },
 
     render: function render() {
         var magItems = [{ payload: '0', text: 'All' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
+
+        var imageMap = {
+            1: 'logo-life.jpg',
+            2: 'logo-womens.jpg',
+            3: 'logo-playboy.jpg'
+        };
+
         console.log('map data: ', this.state.magdata);
+
         return _react2['default'].createElement(
             'section',
             { className: 'magazineContent' },
@@ -39539,14 +39561,19 @@ var Magazines = _react2['default'].createClass({
                     _react2['default'].createElement(
                         CardMedia,
                         {
-                            overlay: _react2['default'].createElement(CardTitle, { title: 'Magazine', subtitle: mdata.date })
+                            overlay: _react2['default'].createElement(CardTitle, { subtitle: mdata.summary })
                         },
-                        _react2['default'].createElement('img', { src: 'images/magimage.jpg' })
+                        _react2['default'].createElement('img', { src: 'images/' + imageMap[mdata.publisher_id] })
                     ),
                     _react2['default'].createElement(
                         CardText,
                         { expandable: false, style: { height: '50px' } },
-                        mdata.summary
+                        _react2['default'].createElement(
+                            'p',
+                            { className: 'magprice' },
+                            mdata.price ? '$' + mdata.price : ''
+                        ),
+                        (0, _moment2['default'])(mdata.date).format('MMM D, YYYY')
                     )
                 );
             }, this)
@@ -39557,7 +39584,7 @@ var Magazines = _react2['default'].createClass({
 
 module.exports = Magazines;
 
-},{"../models/Global":331,"../models/Store":332,"material-ui/lib/card/card":39,"material-ui/lib/card/card-media":36,"material-ui/lib/card/card-text":37,"material-ui/lib/card/card-title":38,"react":322,"react-dom":130,"react-router":150}],326:[function(require,module,exports){
+},{"../models/Global":331,"../models/Store":332,"material-ui/lib/card/card":39,"material-ui/lib/card/card-media":36,"material-ui/lib/card/card-text":37,"material-ui/lib/card/card-title":38,"moment":128,"react":322,"react-dom":130,"react-router":150}],326:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -39574,10 +39601,12 @@ var style = {
     padding: 0,
     position: 'relative',
     label: {
-        fontSize: '1.6rem',
-        margin: mainPadding + 'px' + ' 0',
+        fontSize: '1.4rem',
+        textTransform: 'uppercase',
+        margin: mainPadding + 'px' + ' 0 0 0',
         display: 'block',
-        color: 'black'
+        color: '#416d99',
+        fontWeight: '200'
     }
 };
 
@@ -39655,10 +39684,6 @@ var FontIcon = require('material-ui/lib/font-icon');
 var FlatButton = require('material-ui/lib/flat-button');
 var Paper = require('material-ui/lib/paper');
 
-var magItems = [{ payload: '', text: 'Select a Publisher...' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
-
-var magConditions = [{ payload: '', text: 'Select a Condition...' }, { payload: 'Mint', text: 'Mint' }, { payload: 'Excellent', text: 'Excellent' }, { payload: 'Very Good', text: 'Very Good' }, { payload: 'Good', text: 'Good' }];
-
 var MagEdit = _react2['default'].createClass({
     displayName: 'MagEdit',
 
@@ -39680,31 +39705,45 @@ var MagEdit = _react2['default'].createClass({
                 summary: '',
                 date: '',
                 image: '',
-                selected_magid: 0,
                 price: '',
-                condition: '',
-                selected_condition: 0
-            }
+                condition: ''
+            },
+            selected_magid: 0,
+            selected_condition: 0
         };
     },
 
     deleteRecord: function deleteRecord() {},
 
     update: function update() {
+        //console.log(this.refs.publisher, this.refs.publisher.state.value, this.refs.condition.state.value);
         var apiURL = _modelsGlobal2['default'].apiEndpoint;
         var mdate = (0, _moment2['default'])(this.refs.datePicker.getDate());
         var updatedValues = {
             id: this.refs.id.getValue(),
-            publisher_id: this.refs.publisher.state.value,
+            publisher_id: this.props.magItems[this.refs.publisher.state.selectedIndex].payload,
             summary: this.refs.summary.getValue(),
             date: mdate.format("YYYY-MM-DD"),
             image: this.state.magdata.image,
             price: this.refs.price.getValue(),
-            condition: this.refs.condition.state.value
+            condition: this.props.magConditions[this.refs.condition.state.selectedIndex].payload
         };
+        var _this = this;
 
         $.when($.post(apiURL + 'updateRecord.php', updatedValues)).done(function (data) {
-            console.log(data);
+            _modelsStore2['default'].setStore('updated', {});
+            // clear up data once saved.
+            _this.setState({
+                magdata: {
+                    id: null,
+                    publisher_id: 0,
+                    summary: '',
+                    date: '',
+                    image: '',
+                    price: '',
+                    condition: ''
+                }
+            }, _this.applyValues);
         }).fail(function () {
             console.log('save failed.');
         });
@@ -39715,16 +39754,20 @@ var MagEdit = _react2['default'].createClass({
         this.refs.price.setValue(this.state.magdata.price);
         this.refs.summary.setValue(this.state.magdata.summary);
         this.refs.id.setValue(this.state.magdata.id);
-        var _this = this;
-        /*
-        magItems.map(function(val, key) {
-            console.log(val.payload, _this.state.magdata.publisher_id, key);
-           if(val.payload == _this.state.magdata.publisher_id) {
-               console.log('found it: ', key);
-               _this.refs.publisher.setValue(key);
-           }
+        this.setState({
+            selected_magid: this.getIndexofValue(this.props.magItems, this.state.magdata.publisher_id),
+            selected_condition: this.getIndexofValue(this.props.magConditions, this.state.magdata.condition)
         });
-        */
+    },
+
+    getIndexofValue: function getIndexofValue(array, value) {
+        var index = 0;
+        array.map(function (val, key) {
+            if (val.payload == value) {
+                index = key;
+            }
+        });
+        return index;
     },
 
     ApplyClickedData: function ApplyClickedData(data) {
@@ -39755,7 +39798,7 @@ var MagEdit = _react2['default'].createClass({
                 { title: 'Select Magazine Publisher' },
                 _react2['default'].createElement(DropDownMenu, {
                     autoWidth: true,
-                    menuItems: magItems,
+                    menuItems: this.props.magItems,
                     style: { width: '100%', marginLeft: '-20px' },
                     selectedIndex: this.state.selected_magid,
                     ref: 'publisher'
@@ -39796,7 +39839,7 @@ var MagEdit = _react2['default'].createClass({
                 Fieldset,
                 { title: 'Condition' },
                 _react2['default'].createElement(DropDownMenu, {
-                    menuItems: magConditions,
+                    menuItems: this.props.magConditions,
                     style: { width: '100%', marginLeft: '-20px' },
                     selectedIndex: this.state.selected_condition,
                     ref: 'condition'
@@ -39887,13 +39930,38 @@ var MagItem = _react2['default'].createClass({
         //this.props.magdata.date = new Date(this.props.magdata.date);
     },
 
+    getMagName: function getMagName(index) {
+        var name = "";
+        this.props.magItems.map(function (mag, key) {
+            if (index == mag.payload) {
+                name = mag.text;
+            }
+        });
+        return name;
+    },
+
     render: function render() {
         return _react2['default'].createElement(
             'div',
-            { className: 'magItem', onClick: this.broadcastEdit },
-            (0, _moment2['default'])(this.props.magData.date).format('ll'),
-            ' | ',
-            this.props.magData.summary
+            { className: "magItem publisher" + this.props.magData.publisher_id, onClick: this.broadcastEdit },
+            _react2['default'].createElement(
+                'p',
+                { className: 'magprice' },
+                '$',
+                this.props.magData.price ? this.props.magData.price : '--'
+            ),
+            _react2['default'].createElement(
+                'p',
+                null,
+                this.props.magData.id,
+                ' | ',
+                this.getMagName(this.props.magData.publisher_id)
+            ),
+            _react2['default'].createElement(
+                'p',
+                { className: 'magdate' },
+                (0, _moment2['default'])(this.props.magData.date).format('MMM YYYY')
+            )
         );
     }
 
@@ -39950,7 +40018,7 @@ var MagListing = _react2['default'].createClass({
             'section',
             { className: 'MagListing' },
             this.props.magdata.map(function (mdata, key) {
-                return _react2['default'].createElement(MagItem, { key: key, magData: this.mutateDate(mdata) });
+                return _react2['default'].createElement(MagItem, { key: key, magItems: this.props.magItems, magData: this.mutateDate(mdata) });
             }, this)
         );
     }
@@ -40050,7 +40118,7 @@ module.exports = TwoColumnLayout;
 'use strict';
 
 module.exports = {
-    apiEndpoint: 'http://localhost:8888/MikesMags/build/api/'
+    apiEndpoint: window.location.hostname == 'localhost' ? 'http://localhost:8888/MikesMags/build/api/' : '/api/'
 };
 
 },{}],332:[function(require,module,exports){

@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, Link } from 'react-router'
+import m from 'moment'
 
 // elements
 const Card = require('material-ui/lib/card/card');
@@ -68,6 +69,10 @@ const Magazines = React.createClass({
     _handleMagValueChange: function(a,b) {
         console.log(a,b);
     },
+    _formatDate: function(dater) {
+        var mdate = m(dater);
+        return
+    },
 
     render() {
         let magItems = [
@@ -76,19 +81,28 @@ const Magazines = React.createClass({
             { payload: '2', text: 'Woman\'s Day' },
             { payload: '3', text: 'Playboy' }
         ];
+
+        let imageMap = {
+            1: 'logo-life.jpg',
+            2: 'logo-womens.jpg',
+            3: 'logo-playboy.jpg'
+        };
+
         console.log('map data: ', this.state.magdata);
+
         return (
             <section className="magazineContent">
                 {this.state.magdata.map(function(mdata, key) {
                     return (
-                        <Card key={key} className="magCard">
+                        <Card key={key} className={'magCard'}>
                             <CardMedia
-                                overlay={<CardTitle title="Magazine" subtitle={mdata.date}/>}
+                                overlay={<CardTitle subtitle={mdata.summary}/>}
                             >
-                                <img src="images/magimage.jpg"/>
+                                <img src={'images/' + imageMap[mdata.publisher_id]}/>
                             </CardMedia>
                             <CardText expandable={false} style={{height: '50px'}}>
-                                {mdata.summary}
+                                <p className="magprice">{mdata.price ? '$' + mdata.price : ''}</p>
+                                {m(mdata.date).format('MMM D, YYYY')}
                             </CardText>
                         </Card>
                     )

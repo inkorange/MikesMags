@@ -1,3 +1,4 @@
+
 module.exports = {
-    apiEndpoint: 'http://localhost:8888/MikesMags/build/api/'
+    apiEndpoint: window.location.hostname == 'localhost' ? 'http://localhost:8888/MikesMags/build/api/' : '/api/'
 };

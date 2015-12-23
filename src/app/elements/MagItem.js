@@ -29,10 +29,22 @@ const MagItem = React.createClass({
         //this.props.magdata.date = new Date(this.props.magdata.date);
     },
 
+    getMagName: function(index) {
+        var name = "";
+        this.props.magItems.map(function (mag, key) {
+            if (index == mag.payload) {
+                name = mag.text;
+            }
+        });
+        return name;
+    },
+
     render() {
         return (
-            <div className="magItem" onClick={this.broadcastEdit}>
-                {m(this.props.magData.date).format('ll')} | {this.props.magData.summary}
+            <div className={"magItem publisher" + this.props.magData.publisher_id} onClick={this.broadcastEdit}>
+                <p className="magprice">${this.props.magData.price ? this.props.magData.price : '--'}</p>
+                <p>{this.props.magData.id} | {this.getMagName(this.props.magData.publisher_id)}</p>
+                <p className="magdate">{m(this.props.magData.date).format('MMM YYYY')}</p>
             </div>
         )
     }

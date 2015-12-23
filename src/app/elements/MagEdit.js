@@ -17,21 +17,6 @@ const FlatButton = require('material-ui/lib/flat-button');
 const Paper = require('material-ui/lib/paper');
 import m from 'moment'
 
-let magItems = [
-    { payload: '', text: 'Select a Publisher...' },
-    { payload: '1', text: 'Life' },
-    { payload: '2', text: 'Woman\'s Day' },
-    { payload: '3', text: 'Playboy' }
-];
-
-let magConditions = [
-    { payload: '', text: 'Select a Condition...' },
-    { payload: 'Mint', text: 'Mint' },
-    { payload: 'Excellent', text: 'Excellent' },
-    { payload: 'Very Good', text: 'Very Good' },
-    { payload: 'Good', text: 'Good' }
-];
-
 const MagEdit = React.createClass({
     contextTypes: {
         location: React.PropTypes.object
@@ -51,11 +36,11 @@ const MagEdit = React.createClass({
                 summary: '',
                 date: '',
                 image: '',
-                selected_magid: 0,
                 price: '',
-                condition: '',
-                selected_condition: 0
-            }
+                condition: ''
+            },
+            selected_magid: 0,
+            selected_condition: 0
         }
     },
 
@@ -64,22 +49,36 @@ const MagEdit = React.createClass({
     },
 
     update: function() {
+        //console.log(this.refs.publisher, this.refs.publisher.state.value, this.refs.condition.state.value);
         var apiURL = Global.apiEndpoint;
         var mdate = m(this.refs.datePicker.getDate());
         var updatedValues = {
             id: this.refs.id.getValue(),
-            publisher_id: this.refs.publisher.state.value,
+            publisher_id: this.props.magItems[this.refs.publisher.state.selectedIndex].payload,
             summary: this.refs.summary.getValue(),
             date: mdate.format("YYYY-MM-DD"),
             image: this.state.magdata.image,
             price: this.refs.price.getValue(),
-            condition: this.refs.condition.state.value
+            condition: this.props.magConditions[this.refs.condition.state.selectedIndex].payload
         };
+        var _this = this;
 
         $.when(
             $.post(apiURL + 'updateRecord.php', updatedValues)
         ).done(function(data) {
-                console.log(data);
+                Store.setStore('updated', {});
+                // clear up data once saved.
+                _this.setState({
+                    magdata: {
+                        id: null,
+                        publisher_id: 0,
+                        summary: '',
+                        date: '',
+                        image: '',
+                        price: '',
+                        condition: ''
+                    }
+                }, _this.applyValues);
             })
             .fail(function() {
                 console.log('save failed.');
@@ -91,17 +90,20 @@ const MagEdit = React.createClass({
         this.refs.price.setValue(this.state.magdata.price);
         this.refs.summary.setValue(this.state.magdata.summary);
         this.refs.id.setValue(this.state.magdata.id);
-        var _this = this;
-        /*
-        magItems.map(function(val, key) {
-            console.log(val.payload, _this.state.magdata.publisher_id, key);
-           if(val.payload == _this.state.magdata.publisher_id) {
-               console.log('found it: ', key);
-               _this.refs.publisher.setValue(key);
-           }
+        this.setState({
+            selected_magid: this.getIndexofValue(this.props.magItems, this.state.magdata.publisher_id),
+            selected_condition:  this.getIndexofValue(this.props.magConditions, this.state.magdata.condition)
         });
-        */
+    },
 
+    getIndexofValue: function(array, value) {
+        var index = 0;
+        array.map(function(val, key) {
+            if(val.payload == value) {
+                index = key;
+            }
+        });
+        return index;
     },
 
     ApplyClickedData: function(data) {
@@ -127,7 +129,7 @@ const MagEdit = React.createClass({
                 <Fieldset title="Select Magazine Publisher">
                     <DropDownMenu
                         autoWidth={true}
-                        menuItems={magItems}
+                        menuItems={this.props.magItems}
                         style={{width: '100%', marginLeft: '-20px'}}
                         selectedIndex={this.state.selected_magid}
                         ref="publisher"
@@ -163,7 +165,7 @@ const MagEdit = React.createClass({
 
                 <Fieldset title="Condition">
                     <DropDownMenu
-                        menuItems={magConditions}
+                        menuItems={this.props.magConditions}
                         style={{width:'100%', marginLeft: '-20px'}}
                         selectedIndex={this.state.selected_condition}
                         ref="condition"

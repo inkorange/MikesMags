@@ -47,6 +47,13 @@ header {
     position: relative;
     .magCard {
         display: inline-block;
+        background-size: cover;
+        position: relative;
+
+        image {
+            width: 100%;
+        }
+
         width: calc(20% - 20px);
         @media only screen and (max-width: 1000px) {
             width: calc(25% - 20px);
@@ -58,6 +65,15 @@ header {
             width: calc(50% - 20px);
         }
         margin: 10px;
+        .magprice {
+            position: absolute;
+            top: -20px;
+            right: 10px;
+            color: white;
+            font-size: 30px;
+            text-shadow: 0 1px 1px black;
+
+        }
     }
 
     .MagListing {
@@ -69,14 +85,54 @@ header {
         bottom: 0;
         */
         width: 300px;
-        background: rgb(230,230,230);
+
+
+        .magItem {
+            cursor: pointer;
+            background-color: rgb(230,230,230);
+            margin: 5px;
+            padding: 5px 5px 5px 80px;
+            transition: 1s all;
+            background-size: 70px auto;
+            background-repeat: no-repeat;
+            p {
+                padding: 0;
+                margin: 2px;
+                &.magdate {
+                    text-transform: uppercase;
+                    color: #aaaaaa;
+                    font-size: 90%;
+                }
+                &.magprice {
+                    float: right;
+                    font-size: 24px;
+                    color: #aaaaaa;
+                }
+            }
+            &:hover {
+                background-color: rgb(240,240,240);
+                box-shadow: 0 5px 5px rgba(0,0,0, .25);
+            }
+
+
+        }
     }
     .MagEdit {
         padding: 40px;
         margin-left: 300px;
-        min-height: 50px;
+
 
     }
+}
+
+.publisher1 {
+    background-image: url('/images/logo-life.jpg');
+}
+.publisher2 {
+    background-image: url('/images/logo-womens.jpg');
+}
+.publisher3 {
+    background-image: url('/images/logo-playboy.jpg');
 }
 
 .MagDatePicker {
