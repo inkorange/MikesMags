@@ -84,11 +84,6 @@ const Magazines = React.createClass({
     },
 
     render() {
-        let imageMap = {
-            1: 'logo-life.jpg',
-            2: 'logo-womens.jpg',
-            3: 'logo-playboy.jpg'
-        };
 
         console.log('map data: ', this.state.magdata);
 
@@ -100,7 +95,7 @@ const Magazines = React.createClass({
                             <CardMedia
                                 overlay={<CardTitle subtitle={mdata.summary}/>}
                             >
-                                <img src={'images/' + imageMap[mdata.publisher_id]}/>
+                                <img src={'images/' + Global.imageMap[mdata.publisher_id]}/>
                             </CardMedia>
                             <CardText expandable={false} style={{height: '50px'}}>
                                 <p className="magprice">{mdata.price ? '$' + mdata.price : ''}</p>

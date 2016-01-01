@@ -16,5 +16,20 @@ module.exports = {
         { payload: '10', text: 'Daily News' },
         { payload: '11', text: 'Newsday' },
         { payload: '13', text: 'Cosmopolitan' }
-    ]
+    ],
+    imageMap: {
+        1: 'logo-life.jpg',
+        2: 'logo-womens.jpg',
+        3: 'logo-playboy.jpg',
+        4: 'logo-natgeo.jpg',
+        5: 'logo-mccalls.jpg',
+        6: 'logo-look.jpg',
+        7: 'logo-familycircle.jpg',
+        8: 'logo-leslies.jpg',
+        9: 'logo-nyt.jpg',
+        10: 'logo-dailynews.jpg',
+        11: 'logo-newsday.jpg',
+        12: 'logo-misc.jpg',
+        13: 'logo-cosmo.jpg'
+    }
 };

@@ -36,11 +36,14 @@ const AddMagazine = React.createClass({
         };
     },
 
-    _getAppData: function() {
+    _getAppData: function(filter) {
         var _this = this;
         var apiURL = Global.apiEndpoint;
         $.when(
-            $.ajax(apiURL + 'getMags.php')
+            $.ajax({
+                url: apiURL + 'getMags.php',
+                data: filter
+            })
         ).done(function(data) {
                 Store.setStore('magdata', JSON.parse(data), {persist: true},
                     _this.setState({
@@ -56,13 +59,17 @@ const AddMagazine = React.createClass({
             });
     },
 
+    updateFilter: function(filter) {
+        this._getAppData(filter);
+    },
+
     componentDidMount: function() {
         this._getAppData();
         Store.subscribe('updated', this._getAppData);
+        Store.subscribe('updatefilter', this.updateFilter);
     },
 
     render() {
-        console.log('sending magitems ', magItems);
         return (
             <section className="magazineContent">
                 <MagListing magItems={magItems} magdata={this.state.magdata}/>
