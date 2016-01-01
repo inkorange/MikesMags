@@ -2,7 +2,24 @@
 <?php
     //header('Access-Control-Allow-Origin: *');
 	require "db_initialize.php";
-    $sql = "SELECT * FROM magazines ORDER BY date desc";
+
+	$magid = $_GET['magid'];
+    $search = $_GET['search'];
+
+    if($magid != "" && $magid != 0) {
+        $searchStr = "WHERE publisher_id=" . $magid;
+    }
+    if($search != "") {
+        if($magid != "" && $magid != 0) {
+            $searchStr .= " AND ";
+        } else {
+            $searchStr .= " WHERE ";
+        }
+        $searchStr .= " summary LIKE \"%".$search."%\" ";
+    }
+
+    $sql = "SELECT * FROM magazines ".$searchStr." ORDER BY date desc";
+    //echo $sql;
     $cnt = 0;
 		$result = mysql_query($sql);
 		if (mysql_num_rows($result) > 0)

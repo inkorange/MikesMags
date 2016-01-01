@@ -39323,7 +39323,7 @@ var _modelsGlobal2 = _interopRequireDefault(_modelsGlobal);
 var MagListing = require('../elements/MagListing');
 var MagEdit = require('../elements/MagEdit');
 
-var magItems = [{ payload: '', text: 'Select a Publisher...' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
+var magItems = _modelsGlobal2['default'].magazines;
 
 var magConditions = [{ payload: '', text: 'Select a Condition...' }, { payload: 'Mint', text: 'Mint' }, { payload: 'Excellent', text: 'Excellent' }, { payload: 'Very Good', text: 'Very Good' }, { payload: 'Good', text: 'Good' }];
 
@@ -39343,7 +39343,6 @@ var AddMagazine = _react2['default'].createClass({
     },
 
     _getAppData: function _getAppData() {
-        console.log('I AM GETTING AN UPDATE!');
         var _this = this;
         var apiURL = _modelsGlobal2['default'].apiEndpoint;
         $.when($.ajax(apiURL + 'getMags.php')).done(function (data) {
@@ -39391,6 +39390,17 @@ var _reactDom = require('react-dom');
 var _reactRouter = require('react-router');
 
 // elements
+
+// model
+
+var _modelsStore = require('../models/Store');
+
+var _modelsStore2 = _interopRequireDefault(_modelsStore);
+
+var _modelsGlobal = require('../models/Global');
+
+var _modelsGlobal2 = _interopRequireDefault(_modelsGlobal);
+
 var TextField = require('material-ui/lib/text-field');
 var SelectField = require('material-ui/lib/select-field');
 
@@ -39404,7 +39414,12 @@ var Layout = _react2['default'].createClass({
     mixins: [_reactRouter.History],
 
     getInitialState: function getInitialState() {
-        return {};
+        return {
+            filter: {
+                search: '',
+                magid: 0
+            }
+        };
     },
 
     getDefaultProps: function getDefaultProps() {
@@ -39413,10 +39428,31 @@ var Layout = _react2['default'].createClass({
 
     componentDidMount: function componentDidMount() {},
 
-    render: function render() {
-        var menuItems = [{ route: 'get-started', text: 'Get Started' }, { route: 'customization', text: 'Customization' }, { route: 'components', text: 'Components' }];
+    updateSearch: function updateSearch(e) {
+        var _this = this;
 
-        var magItems = [{ payload: '0', text: 'All Magazines' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
+        var searchString = $(e.target).val();
+        this.setState({
+            filter: $.extend(this.state.filter, { search: searchString })
+        }, function () {
+            return _modelsStore2['default'].setStore('updatefilter', _this.state.filter);
+        });
+    },
+
+    updateMagazine: function updateMagazine(e, magid, magobj) {
+        var _this2 = this;
+
+        this.setState({
+            filter: $.extend(this.state.filter, { magid: magobj.payload })
+        }, function () {
+            return _modelsStore2['default'].setStore('updatefilter', _this2.state.filter);
+        });
+    },
+
+    render: function render() {
+
+        var magItems = _modelsGlobal2['default'].magazines;
+
         return _react2['default'].createElement(
             'article',
             { className: 'MainLayout' },
@@ -39433,12 +39469,14 @@ var Layout = _react2['default'].createClass({
                         _react2['default'].createElement(TextField, {
                             hintText: 'Narrow Your Search...',
                             defaultValue: this.state.search,
-                            onChange: this._updateSearch,
+                            onChange: this.updateSearch,
                             style: { marginRight: '20px' }
                         }),
                         _react2['default'].createElement(SelectField, {
                             style: { position: 'relative', top: '18px' },
-                            menuItems: magItems })
+                            menuItems: magItems,
+                            onChange: this.updateMagazine
+                        })
                     )
                 )
             ),
@@ -39450,7 +39488,7 @@ var Layout = _react2['default'].createClass({
 
 module.exports = Layout;
 
-},{"material-ui/lib/select-field":72,"material-ui/lib/text-field":89,"react":322,"react-dom":130,"react-router":150}],325:[function(require,module,exports){
+},{"../models/Global":331,"../models/Store":332,"material-ui/lib/select-field":72,"material-ui/lib/text-field":89,"react":322,"react-dom":130,"react-router":150}],325:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -39506,10 +39544,18 @@ var Magazines = _react2['default'].createClass({
         return {};
     },
 
-    _getAppData: function _getAppData() {
+    updateFilter: function updateFilter(filter) {
+        this._getAppData(filter);
+    },
+
+    _getAppData: function _getAppData(filter) {
         var _this = this;
         var apiURL = _modelsGlobal2['default'].apiEndpoint;
-        $.when($.ajax(apiURL + 'getMags.php')).done(function (data) {
+        filter = filter ? filter : {};
+        $.when($.ajax({
+            url: apiURL + 'getMags.php',
+            data: filter
+        })).done(function (data) {
             _modelsStore2['default'].setStore('magdata', JSON.parse(data), { persist: true }, _this.setState({
                 'magdata': JSON.parse(data)
             }));
@@ -39523,6 +39569,7 @@ var Magazines = _react2['default'].createClass({
 
     componentDidMount: function componentDidMount() {
         this._getAppData();
+        _modelsStore2['default'].subscribe('updatefilter', this.updateFilter);
     },
 
     _triggerLeftNav: function _triggerLeftNav() {
@@ -39537,12 +39584,10 @@ var Magazines = _react2['default'].createClass({
     },
     _formatDate: function _formatDate(dater) {
         var mdate = (0, _moment2['default'])(dater);
-        return;
+        return '';
     },
 
     render: function render() {
-        var magItems = [{ payload: '0', text: 'All' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }];
-
         var imageMap = {
             1: 'logo-life.jpg',
             2: 'logo-womens.jpg',
@@ -40118,7 +40163,8 @@ module.exports = TwoColumnLayout;
 'use strict';
 
 module.exports = {
-    apiEndpoint: window.location.hostname == 'localhost' ? 'http://localhost:8888/MikesMags/build/api/' : '/api/'
+    apiEndpoint: window.location.hostname == 'localhost' ? 'http://localhost:8888/MikesMags/build/api/' : '/api/',
+    magazines: [{ payload: '0', text: 'All Magazines' }, { payload: '12', text: 'Misc' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }, { payload: '4', text: 'National Geographic' }, { payload: '5', text: 'McCalls' }, { payload: '6', text: 'Look' }, { payload: '7', text: 'Family Circle' }, { payload: '8', text: 'Leslies' }, { payload: '9', text: 'New York Times' }, { payload: '10', text: 'Daily News' }, { payload: '11', text: 'Newsday' }, { payload: '13', text: 'Cosmopolitan' }]
 };
 
 },{}],332:[function(require,module,exports){

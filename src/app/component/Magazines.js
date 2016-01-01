@@ -35,11 +35,19 @@ const Magazines = React.createClass({
         };
     },
 
-    _getAppData: function() {
+    updateFilter: function(filter) {
+        this._getAppData(filter);
+    },
+
+    _getAppData: function(filter) {
         var _this = this;
         var apiURL = Global.apiEndpoint;
+        filter = filter ? filter : {};
         $.when(
-            $.ajax(apiURL + 'getMags.php')
+            $.ajax({
+                url: apiURL + 'getMags.php',
+                data: filter
+            })
         ).done(function(data) {
                 Store.setStore('magdata', JSON.parse(data), {persist: true},
                     _this.setState({
@@ -57,6 +65,7 @@ const Magazines = React.createClass({
 
     componentDidMount: function() {
         this._getAppData();
+        Store.subscribe('updatefilter', this.updateFilter);
     },
 
     _triggerLeftNav: function() {
@@ -71,17 +80,10 @@ const Magazines = React.createClass({
     },
     _formatDate: function(dater) {
         var mdate = m(dater);
-        return
+        return '';
     },
 
     render() {
-        let magItems = [
-            { payload: '0', text: 'All' },
-            { payload: '1', text: 'Life' },
-            { payload: '2', text: 'Woman\'s Day' },
-            { payload: '3', text: 'Playboy' }
-        ];
-
         let imageMap = {
             1: 'logo-life.jpg',
             2: 'logo-womens.jpg',

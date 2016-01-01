@@ -10,12 +10,7 @@ const MagEdit = require('../elements/MagEdit');
 import Store from '../models/Store';
 import Global from '../models/Global';
 
-const magItems = [
-    { payload: '', text: 'Select a Publisher...' },
-    { payload: '1', text: 'Life' },
-    { payload: '2', text: 'Woman\'s Day' },
-    { payload: '3', text: 'Playboy' }
-];
+const magItems = Global.magazines;
 
 const magConditions = [
     { payload: '', text: 'Select a Condition...' },
@@ -42,7 +37,6 @@ const AddMagazine = React.createClass({
     },
 
     _getAppData: function() {
-        console.log('I AM GETTING AN UPDATE!');
         var _this = this;
         var apiURL = Global.apiEndpoint;
         $.when(

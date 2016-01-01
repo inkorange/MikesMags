@@ -6,6 +6,10 @@ import { Router, Route, Link, History } from 'react-router'
 const TextField = require('material-ui/lib/text-field');
 const SelectField = require('material-ui/lib/select-field');
 
+// model
+import Store from '../models/Store';
+import Global from '../models/Global';
+
 const Layout = React.createClass({
     contextTypes: {
         location: React.PropTypes.object
@@ -15,7 +19,10 @@ const Layout = React.createClass({
 
     getInitialState: function() {
         return {
-
+            filter: {
+                search: '',
+                magid: 0
+            }
         };
     },
     
@@ -28,19 +35,26 @@ const Layout = React.createClass({
     componentDidMount: function() {
     },
 
-    render() {
-        var menuItems = [
-            { route: 'get-started', text: 'Get Started' },
-            { route: 'customization', text: 'Customization' },
-            { route: 'components', text: 'Components' }
-        ];
+    updateSearch: function(e) {
+        var searchString = $(e.target).val();
+        this.setState({
+            filter: $.extend(this.state.filter, {search: searchString})
+            }, () => Store.setStore('updatefilter', this.state.filter)
+        );
+    },
 
-        let magItems = [
-            { payload: '0', text: 'All Magazines' },
-            { payload: '1', text: 'Life' },
-            { payload: '2', text: 'Woman\'s Day' },
-            { payload: '3', text: 'Playboy' }
-        ];
+    updateMagazine: function(e,magid, magobj) {
+        this.setState({
+                filter: $.extend(this.state.filter, {magid: magobj.payload})
+            }, () => Store.setStore('updatefilter', this.state.filter)
+        );
+
+    },
+
+    render() {
+
+        let magItems = Global.magazines;
+
         return (
             <article className="MainLayout">
                 <header>
@@ -50,12 +64,14 @@ const Layout = React.createClass({
                         <TextField
                             hintText="Narrow Your Search..."
                             defaultValue={this.state.search}
-                            onChange={this._updateSearch}
+                            onChange={this.updateSearch}
                             style={{marginRight: '20px'}}
                         />
                         <SelectField
                             style={{position: 'relative', top: '18px'}}
-                            menuItems={magItems} />
+                            menuItems={magItems}
+                            onChange={this.updateMagazine}
+                        />
                         </div>
                     </nav>
                 </header>
