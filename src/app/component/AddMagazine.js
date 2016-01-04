@@ -74,8 +74,6 @@ const AddMagazine = React.createClass({
             <section className="magazineContent">
                 <MagListing magItems={magItems} magdata={this.state.magdata}/>
                 <MagEdit magItems={magItems} magConditions={magConditions} />
-
-
             </section>
         )
     }

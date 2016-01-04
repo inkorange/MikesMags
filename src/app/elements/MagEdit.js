@@ -40,7 +40,12 @@ const MagEdit = React.createClass({
                 condition: ''
             },
             selected_magid: 0,
-            selected_condition: 0
+            selected_condition: 0,
+            magiderror: '',
+            priceerror: '',
+            dateerror: '',
+            puberror: '',
+            conditionerror: ''
         }
     },
 
@@ -63,26 +68,48 @@ const MagEdit = React.createClass({
         };
         var _this = this;
 
-        $.when(
-            $.post(apiURL + 'updateRecord.php', updatedValues)
-        ).done(function(data) {
-                Store.setStore('updated', {});
-                // clear up data once saved.
-                _this.setState({
-                    magdata: {
-                        id: null,
-                        publisher_id: 0,
-                        summary: '',
-                        date: '',
-                        image: '',
-                        price: '',
-                        condition: ''
-                    }
-                }, _this.applyValues);
-            })
-            .fail(function() {
-                console.log('save failed.');
+        console.log(updatedValues);
+
+        if( updatedValues.id != '' &&
+            updatedValues.price != '' &&
+            updatedValues.date != "" &&
+            updatedValues.publisher_id != 0 &&
+            updatedValues.condition != ""
+        ) {
+            $.when(
+                $.post(apiURL + 'updateRecord.php', updatedValues)
+            ).done(function (data) {
+                    Store.setStore('updated', {});
+                    // clear up data once saved.
+                    _this.setState({
+                        magdata: {
+                            id: null,
+                            publisher_id: 0,
+                            summary: '',
+                            date: '',
+                            image: '',
+                            price: '',
+                            condition: ''
+                        },
+                        magiderror: "",
+                        priceerror: "",
+                        dateerror: {},
+                        puberror: {},
+                        conditionerror: {}
+                    }, _this.applyValues);
+                })
+                .fail(function () {
+                    console.log('save failed.');
+                });
+        } else {
+            this.setState({
+                magiderror: updatedValues.id == "" ? "The ID field is required." : "",
+                priceerror: updatedValues.price == "" ? "The price is required." : "",
+                dateerror: updatedValues.date == "" ? {color:'red'} : {},
+                puberror: updatedValues.publisher_id == "0" ? {borderColor:'red'} : {},
+                conditionerror: updatedValues.condition == "" ? {borderColor:'red'} : {}
             });
+        }
     },
 
     applyValues: function() {
@@ -124,7 +151,9 @@ const MagEdit = React.createClass({
                 <TextField
                     hintText="Add Custom MagID..."
                     fullWidth={true}
-                    ref="id" />
+                    ref="id"
+                    errorText={this.state.magiderror}
+                />
                 </Fieldset>
                 <Fieldset title="Select Magazine Publisher">
                     <DropDownMenu
@@ -133,6 +162,7 @@ const MagEdit = React.createClass({
                         style={{width: '100%', marginLeft: '-20px'}}
                         selectedIndex={this.state.selected_magid}
                         ref="publisher"
+                        underlineStyle={this.state.puberror}
                     />
                 </Fieldset>
 
@@ -142,6 +172,7 @@ const MagEdit = React.createClass({
                         className="MagDatePicker"
                         hintText="Select date..."
                         mode="landscape"
+                        style={this.state.dateerror}
                     />
                 </Fieldset>
             </div>
@@ -160,6 +191,7 @@ const MagEdit = React.createClass({
                     <TextField
                         hintText="Add Price..."
                         fullWidth={true}
+                        errorText={this.state.priceerror}
                         ref="price" />
                 </Fieldset>
 
@@ -169,6 +201,7 @@ const MagEdit = React.createClass({
                         style={{width:'100%', marginLeft: '-20px'}}
                         selectedIndex={this.state.selected_condition}
                         ref="condition"
+                        underlineStyle={this.state.conditionerror}
                     />
                 </Fieldset>
             </div>
