@@ -5,6 +5,7 @@ import { Router, Route, Link, History } from 'react-router'
 // elements
 const TextField = require('material-ui/lib/text-field');
 const SelectField = require('material-ui/lib/select-field');
+const DropDownMenu =    require('material-ui/lib/drop-down-menu');
 
 // model
 import Store from '../models/Store';
@@ -67,10 +68,10 @@ const Layout = React.createClass({
                             onChange={this.updateSearch}
                             style={{marginRight: '20px'}}
                         />
-                        <SelectField
-                            style={{position: 'relative', top: '18px'}}
+                        <DropDownMenu
                             menuItems={magItems}
                             onChange={this.updateMagazine}
+                            style={{height: '45px'}}
                         />
                         </div>
                     </nav>
