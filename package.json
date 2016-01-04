@@ -25,12 +25,13 @@
     "express": "^4.13.3",
     "gulp-concat": "^2.6.0",
     "gulp-path": "^2.0.2",
-    "material-ui": "^0.13.0",
-    "http-rewrite-middleware": "^0.1.6",
-    "moment": "^2.10.6",
+    "history": "^1.17.0",
     "react": "^0.14.0",
     "react-router": "^1.0.0-rc4",
     "react-addons-update": "^0.14.0",
-    "react-dom": "^0.14.0"
+    "react-dom": "^0.14.0",
+    "material-ui": "^0.14.0",
+    "http-rewrite-middleware": "^0.1.6",
+    "moment": "^2.10.6"
   }
 }
