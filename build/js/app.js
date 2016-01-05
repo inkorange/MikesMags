@@ -44653,6 +44653,7 @@ var _modelsGlobal2 = _interopRequireDefault(_modelsGlobal);
 var TextField = require('material-ui/lib/text-field');
 var SelectField = require('material-ui/lib/select-field');
 var DropDownMenu = require('material-ui/lib/drop-down-menu');
+var MenuItem = require('material-ui/lib/menus/menu-item');
 
 var Layout = _react2['default'].createClass({
     displayName: 'Layout',
@@ -44676,7 +44677,11 @@ var Layout = _react2['default'].createClass({
         return {};
     },
 
-    componentDidMount: function componentDidMount() {},
+    componentDidMount: function componentDidMount() {
+        this.setState({
+            filter: _modelsStore2['default'].getStore('updatefilter')
+        });
+    },
 
     updateSearch: function updateSearch(e) {
         var _this = this;
@@ -44685,23 +44690,28 @@ var Layout = _react2['default'].createClass({
         this.setState({
             filter: $.extend(this.state.filter, { search: searchString })
         }, function () {
-            return _modelsStore2['default'].setStore('updatefilter', _this.state.filter);
+            return _modelsStore2['default'].setStore('updatefilter', _this.state.filter, { persist: true });
         });
     },
 
-    updateMagazine: function updateMagazine(e, magid, magobj) {
+    updateMagazine: function updateMagazine(e, pos, magid) {
         var _this2 = this;
 
         this.setState({
-            filter: $.extend(this.state.filter, { magid: magobj.payload })
+            filter: $.extend(this.state.filter, { magid: magid })
         }, function () {
-            return _modelsStore2['default'].setStore('updatefilter', _this2.state.filter);
+            return _modelsStore2['default'].setStore('updatefilter', _this2.state.filter, { persist: true });
         });
     },
 
     render: function render() {
 
         var magItems = _modelsGlobal2['default'].magazines;
+
+        var magOptions = [];
+        magItems.map(function (option, key) {
+            magOptions.push(_react2['default'].createElement(MenuItem, { value: option.payload, key: key, primaryText: option.text }));
+        });
 
         return _react2['default'].createElement(
             'article',
@@ -44718,15 +44728,19 @@ var Layout = _react2['default'].createClass({
                         null,
                         _react2['default'].createElement(TextField, {
                             hintText: 'Narrow Your Search...',
-                            defaultValue: this.state.search,
+                            value: this.state.filter.search,
                             onChange: this.updateSearch,
                             style: { marginRight: '20px' }
                         }),
-                        _react2['default'].createElement(DropDownMenu, {
-                            menuItems: magItems,
-                            onChange: this.updateMagazine,
-                            style: { height: '45px' }
-                        })
+                        _react2['default'].createElement(
+                            DropDownMenu,
+                            {
+                                onChange: this.updateMagazine,
+                                style: { height: '45px' },
+                                value: this.state.filter.magid
+                            },
+                            magOptions
+                        )
                     )
                 )
             ),
@@ -44738,7 +44752,7 @@ var Layout = _react2['default'].createClass({
 
 module.exports = Layout;
 
-},{"../models/Global":364,"../models/Store":365,"material-ui/lib/drop-down-menu":56,"material-ui/lib/select-field":81,"material-ui/lib/text-field":104,"react":355,"react-dom":163,"react-router":183}],358:[function(require,module,exports){
+},{"../models/Global":364,"../models/Store":365,"material-ui/lib/drop-down-menu":56,"material-ui/lib/menus/menu-item":65,"material-ui/lib/select-field":81,"material-ui/lib/text-field":104,"react":355,"react-dom":163,"react-router":183}],358:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -44818,7 +44832,7 @@ var Magazines = _react2['default'].createClass({
     },
 
     componentDidMount: function componentDidMount() {
-        this._getAppData();
+        this._getAppData(_modelsStore2['default'].getStore('updatefilter'));
         _modelsStore2['default'].subscribe('updatefilter', this.updateFilter);
     },
 
@@ -45437,7 +45451,7 @@ module.exports = TwoColumnLayout;
 
 module.exports = {
     apiEndpoint: window.location.hostname == 'localhost' ? 'http://localhost:8888/MikesMags/build/api/' : '/api/',
-    magazines: [{ payload: '0', text: 'All Magazines' }, { payload: '12', text: 'Misc' }, { payload: '1', text: 'Life' }, { payload: '2', text: 'Woman\'s Day' }, { payload: '3', text: 'Playboy' }, { payload: '4', text: 'National Geographic' }, { payload: '5', text: 'McCalls' }, { payload: '6', text: 'Look' }, { payload: '7', text: 'Family Circle' }, { payload: '8', text: 'Leslies' }, { payload: '9', text: 'New York Times' }, { payload: '10', text: 'Daily News' }, { payload: '11', text: 'Newsday' }, { payload: '13', text: 'Cosmopolitan' }],
+    magazines: [{ payload: 0, text: 'All Magazines' }, { payload: 12, text: 'Misc' }, { payload: 1, text: 'Life' }, { payload: 2, text: 'Woman\'s Day' }, { payload: 3, text: 'Playboy' }, { payload: 4, text: 'National Geographic' }, { payload: 5, text: 'McCalls' }, { payload: 6, text: 'Look' }, { payload: 7, text: 'Family Circle' }, { payload: 8, text: 'Leslies' }, { payload: 9, text: 'New York Times' }, { payload: 10, text: 'Daily News' }, { payload: 11, text: 'Newsday' }, { payload: 13, text: 'Cosmopolitan' }],
     imageMap: {
         1: 'logo-life.jpg',
         2: 'logo-womens.jpg',

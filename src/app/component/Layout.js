@@ -6,6 +6,7 @@ import { Router, Route, Link, History } from 'react-router'
 const TextField = require('material-ui/lib/text-field');
 const SelectField = require('material-ui/lib/select-field');
 const DropDownMenu =    require('material-ui/lib/drop-down-menu');
+const MenuItem =        require('material-ui/lib/menus/menu-item');
 
 // model
 import Store from '../models/Store';
@@ -34,20 +35,23 @@ const Layout = React.createClass({
     },
 
     componentDidMount: function() {
+        this.setState({
+            filter: Store.getStore('updatefilter')
+        });
     },
 
     updateSearch: function(e) {
         var searchString = $(e.target).val();
         this.setState({
             filter: $.extend(this.state.filter, {search: searchString})
-            }, () => Store.setStore('updatefilter', this.state.filter)
+            }, () => Store.setStore('updatefilter', this.state.filter, {persist: true})
         );
     },
 
-    updateMagazine: function(e,magid, magobj) {
+    updateMagazine: function(e,pos, magid) {
         this.setState({
-                filter: $.extend(this.state.filter, {magid: magobj.payload})
-            }, () => Store.setStore('updatefilter', this.state.filter)
+                filter: $.extend(this.state.filter, {magid: magid})
+            }, () => Store.setStore('updatefilter', this.state.filter, {persist: true})
         );
 
     },
@@ -55,6 +59,11 @@ const Layout = React.createClass({
     render() {
 
         let magItems = Global.magazines;
+
+        var magOptions = [];
+        magItems.map(function(option,key) {
+            magOptions.push(<MenuItem value={option.payload} key={key} primaryText={option.text}/>);
+        });
 
         return (
             <article className="MainLayout">
@@ -64,15 +73,17 @@ const Layout = React.createClass({
                         <div>
                         <TextField
                             hintText="Narrow Your Search..."
-                            defaultValue={this.state.search}
+                            value={this.state.filter.search}
                             onChange={this.updateSearch}
                             style={{marginRight: '20px'}}
                         />
                         <DropDownMenu
-                            menuItems={magItems}
                             onChange={this.updateMagazine}
                             style={{height: '45px'}}
-                        />
+                            value={this.state.filter.magid}
+                        >
+                            {magOptions}
+                        </DropDownMenu>
                         </div>
                     </nav>
                 </header>

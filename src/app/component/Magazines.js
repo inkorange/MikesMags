@@ -64,7 +64,7 @@ const Magazines = React.createClass({
     },
 
     componentDidMount: function() {
-        this._getAppData();
+        this._getAppData(Store.getStore('updatefilter'));
         Store.subscribe('updatefilter', this.updateFilter);
     },
 
