@@ -125,6 +125,25 @@ header {
     }
 }
 
+.emailMagCard {
+    position: relative;
+    .magprice {
+        position: absolute;
+        top: -20px;
+        right: 10px;
+        color: white;
+        font-size: 30px;
+        text-shadow: 0 1px 1px black;
+    }
+    .magdate {
+        font-size: 20px;
+        margin-top: -10px;
+    }
+    fieldset:first-of-type {
+        margin-top: -20px!important;
+    }
+}
+
 .publisher1 { background-image: url('/images/logo-life.jpg'); }
 .publisher2 { background-image: url('/images/logo-womens.jpg'); }
 .publisher3 { background-image: url('/images/logo-playboy.jpg'); }

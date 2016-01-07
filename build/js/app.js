@@ -44945,18 +44945,20 @@ var Magazines = _react2['default'].createClass({
             _react2['default'].createElement(
                 _materialUiLibDialog2['default'],
                 {
-                    title: 'Contact Seller About this Magazine',
+                    title: 'Contact MikesMags',
                     actions: actions,
                     modal: false,
+                    bodyStyle: { overflow: 'auto' },
                     open: this.state.dialogOpen,
+                    autoDetectWindowHeight: true,
                     onRequestClose: this.handleClose },
                 _react2['default'].createElement(
                     Card,
-                    null,
+                    { className: 'emailMagCard' },
                     _react2['default'].createElement(
                         CardMedia,
                         { overlay: _react2['default'].createElement(CardTitle, { subtitle: this.state.dialog.summary }) },
-                        _react2['default'].createElement('div', { style: { height: '250px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + _modelsGlobal2['default'].imageMap[this.state.dialog.publisher_id] + ')' } })
+                        _react2['default'].createElement('div', { style: { height: '200px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + _modelsGlobal2['default'].imageMap[this.state.dialog.publisher_id] + ')' } })
                     ),
                     _react2['default'].createElement(
                         CardText,
@@ -44966,7 +44968,11 @@ var Magazines = _react2['default'].createClass({
                             { className: 'magprice' },
                             this.state.dialog.price ? '$' + this.state.dialog.price : ''
                         ),
-                        (0, _moment2['default'])(this.state.dialog.date).format('MMM D, YYYY')
+                        _react2['default'].createElement(
+                            'p',
+                            { className: 'magdate' },
+                            (0, _moment2['default'])(this.state.dialog.date).format('MMM D, YYYY')
+                        )
                     ),
                     _react2['default'].createElement(
                         Fieldset,

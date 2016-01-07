@@ -543,6 +543,28 @@ header nav > div div {
   margin-left: 300px;
 }
 
+.emailMagCard {
+  position: relative;
+}
+
+.emailMagCard .magprice {
+  position: absolute;
+  top: -20px;
+  right: 10px;
+  color: white;
+  font-size: 30px;
+  text-shadow: 0 1px 1px black;
+}
+
+.emailMagCard .magdate {
+  font-size: 20px;
+  margin-top: -10px;
+}
+
+.emailMagCard fieldset:first-of-type {
+  margin-top: -20px !important;
+}
+
 .publisher1 {
   background-image: url("/images/logo-life.jpg");
 }

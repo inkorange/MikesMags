@@ -149,19 +149,21 @@ const Magazines = React.createClass({
                     )
                 }, this)}
                 <Dialog
-                    title="Contact Seller About this Magazine"
+                    title="Contact MikesMags"
                     actions={actions}
                     modal={false}
+                    bodyStyle={{overflow: 'auto'}}
                     open={this.state.dialogOpen}
+                    autoDetectWindowHeight={true}
                     onRequestClose={this.handleClose}>
-                    <Card>
+                    <Card className={'emailMagCard'}>
                         <CardMedia overlay={<CardTitle subtitle={this.state.dialog.summary}/>}>
-                            <div style={{height: '250px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + Global.imageMap[this.state.dialog.publisher_id] + ')'}}>
+                            <div style={{height: '200px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + Global.imageMap[this.state.dialog.publisher_id] + ')'}}>
                             </div>
                         </CardMedia>
                         <CardText expandable={false} style={{height: '50px'}}>
                             <p className="magprice">{this.state.dialog.price ? '$' + this.state.dialog.price : ''}</p>
-                            {m(this.state.dialog.date).format('MMM D, YYYY')}
+                            <p className="magdate">{m(this.state.dialog.date).format('MMM D, YYYY')}</p>
                         </CardText>
 
                         <Fieldset title="Sender's Name" style={{margin: '10px'}}>
