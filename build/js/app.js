@@ -44771,6 +44771,14 @@ var _moment2 = _interopRequireDefault(_moment);
 
 // elements
 
+var _materialUiLibDialog = require('material-ui/lib/dialog');
+
+var _materialUiLibDialog2 = _interopRequireDefault(_materialUiLibDialog);
+
+var _materialUiLibFlatButton = require('material-ui/lib/flat-button');
+
+var _materialUiLibFlatButton2 = _interopRequireDefault(_materialUiLibFlatButton);
+
 // model
 
 var _modelsStore = require('../models/Store');
@@ -44786,6 +44794,11 @@ var CardMedia = require('material-ui/lib/card/card-media');
 var CardText = require('material-ui/lib/card/card-text');
 var CardTitle = require('material-ui/lib/card/card-title');
 
+var TextField = require('material-ui/lib/text-field');
+
+var FontIcon = require('material-ui/lib/font-icon');
+var Fieldset = require('../elements/Fieldset');
+
 var Magazines = _react2['default'].createClass({
     displayName: 'Magazines',
 
@@ -44799,8 +44812,11 @@ var Magazines = _react2['default'].createClass({
         return {
             magdata: [],
             magid: magid ? magid : 0,
-            search: search ? search : ''
-
+            search: search ? search : '',
+            dialogOpen: false,
+            dialog: [],
+            sendernameerror: "",
+            senderemailerror: ""
         };
     },
 
@@ -44851,17 +44867,60 @@ var Magazines = _react2['default'].createClass({
         return '';
     },
 
+    _loadDetail: function _loadDetail(data) {
+        console.log(data);
+        this.setState({
+            dialogOpen: true,
+            dialog: data
+        });
+    },
+
+    handleClose: function handleClose() {
+        this.setState({ dialogOpen: false });
+    },
+
+    sendEmail: function sendEmail() {
+        var _this2 = this;
+
+        console.log('will send contact emial...');
+        setTimeout(function () {
+            _this2.setState({ dialogOpen: false });
+        }, 2000);
+    },
+
     render: function render() {
 
         console.log('map data: ', this.state.magdata);
+
+        var actions = [_react2['default'].createElement(
+            _materialUiLibFlatButton2['default'],
+            {
+                onTouchTap: this.handleClose,
+                secondary: true,
+                label: 'Close',
+                labelPosition: 'after' },
+            _react2['default'].createElement(
+                FontIcon,
+                { style: { top: '6px', marginRight: '-5px' }, className: 'remove-icon material-icons', color: 'red' },
+                'cancel'
+            )
+        ), _react2['default'].createElement(_materialUiLibFlatButton2['default'], {
+            label: 'Submit Information Request',
+            primary: true,
+            keyboardFocused: true,
+            onTouchTap: this.sendEmail })];
 
         return _react2['default'].createElement(
             'section',
             { className: 'magazineContent' },
             this.state.magdata.map(function (mdata, key) {
+                var _this3 = this;
+
                 return _react2['default'].createElement(
                     Card,
-                    { key: key, className: 'magCard' },
+                    { key: key, className: 'magCard', onClick: function () {
+                            return _this3._loadDetail(mdata);
+                        } },
                     _react2['default'].createElement(
                         CardMedia,
                         {
@@ -44880,7 +44939,54 @@ var Magazines = _react2['default'].createClass({
                         (0, _moment2['default'])(mdata.date).format('MMM D, YYYY')
                     )
                 );
-            }, this)
+            }, this),
+            _react2['default'].createElement(
+                _materialUiLibDialog2['default'],
+                {
+                    title: 'Contact Seller About this Magazine',
+                    actions: actions,
+                    modal: false,
+                    contentStyle: { width: '500px' },
+                    open: this.state.dialogOpen,
+                    onRequestClose: this.handleClose },
+                _react2['default'].createElement(
+                    Card,
+                    null,
+                    _react2['default'].createElement(
+                        CardMedia,
+                        { overlay: _react2['default'].createElement(CardTitle, { subtitle: this.state.dialog.summary }) },
+                        _react2['default'].createElement('div', { style: { height: '300px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + _modelsGlobal2['default'].imageMap[this.state.dialog.publisher_id] + ')' } })
+                    ),
+                    _react2['default'].createElement(
+                        CardText,
+                        { expandable: false, style: { height: '50px' } },
+                        _react2['default'].createElement(
+                            'p',
+                            { className: 'magprice' },
+                            this.state.dialog.price ? '$' + this.state.dialog.price : ''
+                        ),
+                        (0, _moment2['default'])(this.state.dialog.date).format('MMM D, YYYY')
+                    ),
+                    _react2['default'].createElement(
+                        Fieldset,
+                        { title: 'Sender\'s Name', style: { margin: '10px' } },
+                        _react2['default'].createElement(TextField, {
+                            hintText: 'Your name...',
+                            fullWidth: true,
+                            errorText: this.state.sendernameerror
+                        })
+                    ),
+                    _react2['default'].createElement(
+                        Fieldset,
+                        { title: 'Email Address', style: { margin: '10px' } },
+                        _react2['default'].createElement(TextField, {
+                            hintText: 'Enter a valid email address...',
+                            fullWidth: true,
+                            errorText: this.state.senderemailerror
+                        })
+                    )
+                )
+            )
         );
     }
 
@@ -44888,7 +44994,7 @@ var Magazines = _react2['default'].createClass({
 
 module.exports = Magazines;
 
-},{"../models/Global":364,"../models/Store":365,"material-ui/lib/card/card":43,"material-ui/lib/card/card-media":40,"material-ui/lib/card/card-text":41,"material-ui/lib/card/card-title":42,"moment":161,"react":355,"react-dom":163,"react-router":183}],359:[function(require,module,exports){
+},{"../elements/Fieldset":359,"../models/Global":364,"../models/Store":365,"material-ui/lib/card/card":43,"material-ui/lib/card/card-media":40,"material-ui/lib/card/card-text":41,"material-ui/lib/card/card-title":42,"material-ui/lib/dialog":55,"material-ui/lib/flat-button":59,"material-ui/lib/font-icon":60,"material-ui/lib/text-field":104,"moment":161,"react":355,"react-dom":163,"react-router":183}],359:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -44987,6 +45093,7 @@ var DropDownMenu = require('material-ui/lib/drop-down-menu');
 var FontIcon = require('material-ui/lib/font-icon');
 var FlatButton = require('material-ui/lib/flat-button');
 var Paper = require('material-ui/lib/paper');
+var MenuItem = require('material-ui/lib/menus/menu-item');
 
 var MagEdit = _react2['default'].createClass({
     displayName: 'MagEdit',
@@ -45012,13 +45119,11 @@ var MagEdit = _react2['default'].createClass({
                 price: '',
                 condition: ''
             },
-            selected_magid: 0,
-            selected_condition: 0,
             magiderror: '',
             priceerror: '',
             dateerror: '',
-            puberror: '',
-            conditionerror: ''
+            puberror: {},
+            conditionerror: {}
         };
     },
 
@@ -45027,19 +45132,19 @@ var MagEdit = _react2['default'].createClass({
     update: function update() {
         //console.log(this.refs.publisher, this.refs.publisher.state.value, this.refs.condition.state.value);
         var apiURL = _modelsGlobal2['default'].apiEndpoint;
-        var mdate = (0, _moment2['default'])(this.refs.datePicker.getDate());
+        var mdate = (0, _moment2['default'])(this.state.magdata.date);
         var updatedValues = {
-            id: this.refs.id.getValue(),
-            publisher_id: this.props.magItems[this.refs.publisher.state.selectedIndex].payload,
-            summary: this.refs.summary.getValue(),
+            id: this.state.magdata.id,
+            publisher_id: this.state.magdata.publisher_id,
+            summary: this.state.magdata.summary,
             date: mdate.format("YYYY-MM-DD"),
             image: this.state.magdata.image,
-            price: this.refs.price.getValue(),
-            condition: this.props.magConditions[this.refs.condition.state.selectedIndex].payload
+            price: this.state.magdata.price,
+            condition: this.state.magdata.condition
         };
         var _this = this;
 
-        console.log(updatedValues);
+        //console.log('updated values: ', updatedValues);
 
         if (updatedValues.id != '' && updatedValues.price != '' && updatedValues.date != "" && updatedValues.publisher_id != 0 && updatedValues.condition != "") {
             $.when($.post(apiURL + 'updateRecord.php', updatedValues)).done(function (data) {
@@ -45060,7 +45165,7 @@ var MagEdit = _react2['default'].createClass({
                     dateerror: {},
                     puberror: {},
                     conditionerror: {}
-                }, _this.applyValues);
+                });
             }).fail(function () {
                 console.log('save failed.');
             });
@@ -45068,21 +45173,54 @@ var MagEdit = _react2['default'].createClass({
             this.setState({
                 magiderror: updatedValues.id == "" ? "The ID field is required." : "",
                 priceerror: updatedValues.price == "" ? "The price is required." : "",
-                dateerror: updatedValues.date == "" ? { color: 'red' } : {},
+                dateerror: updatedValues.date == "" ? "The date field is required." : "",
                 puberror: updatedValues.publisher_id == "0" ? { borderColor: 'red' } : {},
                 conditionerror: updatedValues.condition == "" ? { borderColor: 'red' } : {}
             });
         }
     },
 
-    applyValues: function applyValues() {
-        this.refs.datePicker.setDate(this.state.magdata.date);
-        this.refs.price.setValue(this.state.magdata.price);
-        this.refs.summary.setValue(this.state.magdata.summary);
-        this.refs.id.setValue(this.state.magdata.id);
+    cancelEdit: function cancelEdit() {
+        this.replaceState(this.getInitialState());
+    },
+
+    updateMagazine: function updateMagazine(e, pos, magid) {
         this.setState({
-            selected_magid: this.getIndexofValue(this.props.magItems, this.state.magdata.publisher_id),
-            selected_condition: this.getIndexofValue(this.props.magConditions, this.state.magdata.condition)
+            magdata: $.extend(this.state.magdata, { publisher_id: magid })
+        });
+    },
+
+    updateCondition: function updateCondition(e, pos, condition) {
+        this.setState({
+            magdata: $.extend(this.state.magdata, { condition: condition })
+        });
+    },
+
+    updateDate: function updateDate(e) {
+        var datestr = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, { date: datestr })
+        });
+    },
+
+    updateID: function updateID(e) {
+        var idstr = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, { id: idstr })
+        });
+    },
+
+    updateSummary: function updateSummary(e) {
+        var summarystr = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, { summary: summarystr })
+        });
+    },
+
+    updatePrice: function updatePrice(e) {
+        var price = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, { price: price })
         });
     },
 
@@ -45098,8 +45236,13 @@ var MagEdit = _react2['default'].createClass({
 
     ApplyClickedData: function ApplyClickedData(data) {
         this.setState({
-            magdata: $.extend(this.state.magdata, data)
-        }, this.applyValues);
+            magdata: $.extend(this.state.magdata, data),
+            magiderror: "",
+            priceerror: "",
+            dateerror: "",
+            puberror: {},
+            conditionerror: {}
+        });
     },
 
     componentDidMount: function componentDidMount() {
@@ -45107,6 +45250,16 @@ var MagEdit = _react2['default'].createClass({
     },
 
     render: function render() {
+
+        var magOptions = [];
+        this.props.magItems.map(function (option, key) {
+            magOptions.push(_react2['default'].createElement(MenuItem, { value: option.payload, key: key, primaryText: option.text }));
+        });
+
+        var conditionOptions = [];
+        this.props.magConditions.map(function (option, key) {
+            conditionOptions.push(_react2['default'].createElement(MenuItem, { value: option.payload, key: key, primaryText: option.text }));
+        });
 
         var ColumnOne = _react2['default'].createElement(
             'div',
@@ -45117,31 +45270,33 @@ var MagEdit = _react2['default'].createClass({
                 _react2['default'].createElement(TextField, {
                     hintText: 'Add Custom MagID...',
                     fullWidth: true,
-                    ref: 'id',
+                    value: this.state.magdata.id,
+                    onChange: this.updateID,
                     errorText: this.state.magiderror
                 })
             ),
             _react2['default'].createElement(
                 Fieldset,
                 { title: 'Select Magazine Publisher' },
-                _react2['default'].createElement(DropDownMenu, {
-                    autoWidth: true,
-                    menuItems: this.props.magItems,
-                    style: { width: '100%', marginLeft: '-20px' },
-                    selectedIndex: this.state.selected_magid,
-                    ref: 'publisher',
-                    underlineStyle: this.state.puberror
-                })
+                _react2['default'].createElement(
+                    DropDownMenu,
+                    {
+                        autoWidth: true,
+                        style: { width: '100%', marginLeft: '-20px' },
+                        value: this.state.magdata.publisher_id,
+                        onChange: this.updateMagazine,
+                        underlineStyle: this.state.puberror },
+                    magOptions
+                )
             ),
             _react2['default'].createElement(
                 Fieldset,
-                { title: 'Magazine Date' },
-                _react2['default'].createElement(DatePicker, {
-                    ref: 'datePicker',
-                    className: 'MagDatePicker',
+                { title: 'Magazine Date (YYYY-MM-DD)' },
+                _react2['default'].createElement(TextField, {
+                    value: this.state.magdata.date,
+                    onChange: this.updateDate,
                     hintText: 'Select date...',
-                    mode: 'landscape',
-                    style: this.state.dateerror
+                    fullWidth: true
                 })
             )
         );
@@ -45155,6 +45310,8 @@ var MagEdit = _react2['default'].createClass({
                     hintText: 'Add Magazine Summary...',
                     fullWidth: true,
                     multiLine: true,
+                    value: this.state.magdata.summary,
+                    onChange: this.updateSummary,
                     ref: 'summary' })
             ),
             _react2['default'].createElement(
@@ -45163,19 +45320,23 @@ var MagEdit = _react2['default'].createClass({
                 _react2['default'].createElement(TextField, {
                     hintText: 'Add Price...',
                     fullWidth: true,
+                    value: this.state.magdata.price,
+                    onChange: this.updatePrice,
                     errorText: this.state.priceerror,
                     ref: 'price' })
             ),
             _react2['default'].createElement(
                 Fieldset,
                 { title: 'Condition' },
-                _react2['default'].createElement(DropDownMenu, {
-                    menuItems: this.props.magConditions,
-                    style: { width: '100%', marginLeft: '-20px' },
-                    selectedIndex: this.state.selected_condition,
-                    ref: 'condition',
-                    underlineStyle: this.state.conditionerror
-                })
+                _react2['default'].createElement(
+                    DropDownMenu,
+                    {
+                        style: { width: '100%', marginLeft: '-20px' },
+                        value: this.state.magdata.condition,
+                        onChange: this.updateCondition,
+                        underlineStyle: this.state.conditionerror },
+                    conditionOptions
+                )
             )
         );
         var header = this.state.magdata.id ? "Updating ID: " + this.state.magdata.id : "Create a New Magazine Record";
@@ -45205,7 +45366,7 @@ var MagEdit = _react2['default'].createClass({
                     'div',
                     null,
                     _react2['default'].createElement(FlatButton, { onTouchTap: this.update, secondary: true, label: 'Add/Update' }),
-                    _react2['default'].createElement(FlatButton, { onTouchTap: this.cancelFilter, secondary: true, label: 'Cancel' })
+                    _react2['default'].createElement(FlatButton, { onTouchTap: this.cancelEdit, secondary: true, label: 'Cancel' })
                 ),
                 columnTwoStyle: { textAlign: 'right' }
             })
@@ -45216,7 +45377,7 @@ var MagEdit = _react2['default'].createClass({
 
 module.exports = MagEdit;
 
-},{"../models/Global":364,"../models/Store":365,"./Fieldset":359,"./TwoColumnLayout":363,"material-ui/lib/date-picker/date-picker":52,"material-ui/lib/drop-down-menu":56,"material-ui/lib/flat-button":59,"material-ui/lib/font-icon":60,"material-ui/lib/paper":73,"material-ui/lib/select-field":81,"material-ui/lib/text-field":104,"moment":161,"react":355,"react-dom":163}],361:[function(require,module,exports){
+},{"../models/Global":364,"../models/Store":365,"./Fieldset":359,"./TwoColumnLayout":363,"material-ui/lib/date-picker/date-picker":52,"material-ui/lib/drop-down-menu":56,"material-ui/lib/flat-button":59,"material-ui/lib/font-icon":60,"material-ui/lib/menus/menu-item":65,"material-ui/lib/paper":73,"material-ui/lib/select-field":81,"material-ui/lib/text-field":104,"moment":161,"react":355,"react-dom":163}],361:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -45350,7 +45511,7 @@ var MagListing = _react2['default'].createClass({
             'section',
             { className: 'MagListing' },
             this.props.magdata.map(function (mdata, key) {
-                return _react2['default'].createElement(MagItem, { key: key, magItems: this.props.magItems, magData: this.mutateDate(mdata) });
+                return _react2['default'].createElement(MagItem, { key: key, magItems: this.props.magItems, magData: mdata });
             }, this)
         );
     }

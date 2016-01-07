@@ -36,7 +36,7 @@ const MagListing = React.createClass({
             <section className="MagListing">
                 {this.props.magdata.map(function(mdata, key) {
                     return (
-                        <MagItem key={key} magItems={this.props.magItems} magData={this.mutateDate(mdata)} />
+                        <MagItem key={key} magItems={this.props.magItems} magData={mdata} />
                     )
                 }, this)}
             </section>

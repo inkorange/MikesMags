@@ -9,6 +9,12 @@ const CardMedia = require('material-ui/lib/card/card-media');
 const CardText = require('material-ui/lib/card/card-text');
 const CardTitle = require('material-ui/lib/card/card-title');
 
+const TextField = require('material-ui/lib/text-field');
+import Dialog from 'material-ui/lib/dialog';
+import FlatButton from 'material-ui/lib/flat-button';
+const FontIcon = require('material-ui/lib/font-icon');
+const Fieldset = require('../elements/Fieldset');
+
 // model
 import Store from '../models/Store';
 import Global from '../models/Global';
@@ -24,8 +30,11 @@ const Magazines = React.createClass({
         return {
             magdata: [],
             magid: (magid ? magid : 0),
-            search: (search ? search : '')
-
+            search: (search ? search : ''),
+            dialogOpen: false,
+            dialog: [],
+            sendernameerror: "",
+            senderemailerror: ""
         }
     },
 
@@ -83,15 +92,50 @@ const Magazines = React.createClass({
         return '';
     },
 
+    _loadDetail: function(data) {
+        console.log(data);
+        this.setState({
+            dialogOpen: true,
+            dialog: data
+        });
+    },
+
+    handleClose: function() {
+        this.setState({dialogOpen: false});
+    },
+
+    sendEmail: function() {
+        console.log('will send contact emial...');
+        setTimeout(() => {
+            this.setState({dialogOpen: false});
+        }, 2000);
+    },
+
     render() {
 
         console.log('map data: ', this.state.magdata);
+
+        const actions = [
+
+            <FlatButton
+                onTouchTap={this.handleClose}
+                secondary={true}
+                label="Close"
+                labelPosition="after">
+                <FontIcon style={{top: '6px',marginRight: '-5px'}} className="remove-icon material-icons" color={'red'}>cancel</FontIcon>
+            </FlatButton>,
+            <FlatButton
+                label="Submit Information Request"
+                primary={true}
+                keyboardFocused={true}
+                onTouchTap={this.sendEmail} />,
+        ];
 
         return (
             <section className="magazineContent">
                 {this.state.magdata.map(function(mdata, key) {
                     return (
-                        <Card key={key} className={'magCard'}>
+                        <Card key={key} className={'magCard'} onClick={() => this._loadDetail(mdata)}>
                             <CardMedia
                                 overlay={<CardTitle subtitle={mdata.summary}/>}
                             >
@@ -104,6 +148,39 @@ const Magazines = React.createClass({
                         </Card>
                     )
                 }, this)}
+                <Dialog
+                    title="Contact Seller About this Magazine"
+                    actions={actions}
+                    modal={false}
+                    contentStyle={{width:'500px'}}
+                    open={this.state.dialogOpen}
+                    onRequestClose={this.handleClose}>
+                    <Card>
+                        <CardMedia overlay={<CardTitle subtitle={this.state.dialog.summary}/>}>
+                            <div style={{height: '300px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + Global.imageMap[this.state.dialog.publisher_id] + ')'}}>
+                            </div>
+                        </CardMedia>
+                        <CardText expandable={false} style={{height: '50px'}}>
+                            <p className="magprice">{this.state.dialog.price ? '$' + this.state.dialog.price : ''}</p>
+                            {m(this.state.dialog.date).format('MMM D, YYYY')}
+                        </CardText>
+
+                        <Fieldset title="Sender's Name" style={{margin: '10px'}}>
+                            <TextField
+                                hintText="Your name..."
+                                fullWidth={true}
+                                errorText={this.state.sendernameerror}
+                            />
+                        </Fieldset>
+                        <Fieldset title="Email Address" style={{margin: '10px'}}>
+                            <TextField
+                                hintText="Enter a valid email address..."
+                                fullWidth={true}
+                                errorText={this.state.senderemailerror}
+                            />
+                        </Fieldset>
+                    </Card>
+                </Dialog>
             </section>
         )
     }

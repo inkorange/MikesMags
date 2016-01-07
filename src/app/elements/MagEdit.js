@@ -15,6 +15,8 @@ const DropDownMenu =    require('material-ui/lib/drop-down-menu');
 const FontIcon = require('material-ui/lib/font-icon');
 const FlatButton = require('material-ui/lib/flat-button');
 const Paper = require('material-ui/lib/paper');
+const MenuItem =        require('material-ui/lib/menus/menu-item');
+
 import m from 'moment'
 
 const MagEdit = React.createClass({
@@ -39,13 +41,11 @@ const MagEdit = React.createClass({
                 price: '',
                 condition: ''
             },
-            selected_magid: 0,
-            selected_condition: 0,
             magiderror: '',
             priceerror: '',
             dateerror: '',
-            puberror: '',
-            conditionerror: ''
+            puberror: {},
+            conditionerror: {}
         }
     },
 
@@ -56,19 +56,19 @@ const MagEdit = React.createClass({
     update: function() {
         //console.log(this.refs.publisher, this.refs.publisher.state.value, this.refs.condition.state.value);
         var apiURL = Global.apiEndpoint;
-        var mdate = m(this.refs.datePicker.getDate());
+        var mdate = m(this.state.magdata.date);
         var updatedValues = {
-            id: this.refs.id.getValue(),
-            publisher_id: this.props.magItems[this.refs.publisher.state.selectedIndex].payload,
-            summary: this.refs.summary.getValue(),
+            id: this.state.magdata.id,
+            publisher_id: this.state.magdata.publisher_id,
+            summary: this.state.magdata.summary,
             date: mdate.format("YYYY-MM-DD"),
             image: this.state.magdata.image,
-            price: this.refs.price.getValue(),
-            condition: this.props.magConditions[this.refs.condition.state.selectedIndex].payload
+            price: this.state.magdata.price,
+            condition: this.state.magdata.condition
         };
         var _this = this;
 
-        console.log(updatedValues);
+        //console.log('updated values: ', updatedValues);
 
         if( updatedValues.id != '' &&
             updatedValues.price != '' &&
@@ -96,7 +96,7 @@ const MagEdit = React.createClass({
                         dateerror: {},
                         puberror: {},
                         conditionerror: {}
-                    }, _this.applyValues);
+                    });
                 })
                 .fail(function () {
                     console.log('save failed.');
@@ -105,21 +105,54 @@ const MagEdit = React.createClass({
             this.setState({
                 magiderror: updatedValues.id == "" ? "The ID field is required." : "",
                 priceerror: updatedValues.price == "" ? "The price is required." : "",
-                dateerror: updatedValues.date == "" ? {color:'red'} : {},
+                dateerror: updatedValues.date == "" ? "The date field is required." : "",
                 puberror: updatedValues.publisher_id == "0" ? {borderColor:'red'} : {},
                 conditionerror: updatedValues.condition == "" ? {borderColor:'red'} : {}
             });
         }
     },
 
-    applyValues: function() {
-        this.refs.datePicker.setDate(this.state.magdata.date);
-        this.refs.price.setValue(this.state.magdata.price);
-        this.refs.summary.setValue(this.state.magdata.summary);
-        this.refs.id.setValue(this.state.magdata.id);
+    cancelEdit: function() {
+        this.replaceState(this.getInitialState());
+    },
+
+    updateMagazine: function(e,pos, magid) {
         this.setState({
-            selected_magid: this.getIndexofValue(this.props.magItems, this.state.magdata.publisher_id),
-            selected_condition:  this.getIndexofValue(this.props.magConditions, this.state.magdata.condition)
+            magdata: $.extend(this.state.magdata, {publisher_id: magid})
+        });
+    },
+
+    updateCondition: function(e,pos, condition) {
+        this.setState({
+            magdata: $.extend(this.state.magdata, {condition: condition})
+        });
+    },
+
+    updateDate: function(e) {
+        var datestr = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, {date: datestr})
+        });
+    },
+
+    updateID: function(e) {
+        var idstr = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, {id: idstr})
+        });
+    },
+
+    updateSummary: function(e) {
+        var summarystr = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, {summary: summarystr})
+        });
+    },
+
+    updatePrice: function(e) {
+        var price = $(e.target).val();
+        this.setState({
+            magdata: $.extend(this.state.magdata, {price: price})
         });
     },
 
@@ -135,8 +168,13 @@ const MagEdit = React.createClass({
 
     ApplyClickedData: function(data) {
         this.setState({
-            magdata: $.extend(this.state.magdata, data)
-        }, this.applyValues )
+            magdata: $.extend(this.state.magdata, data),
+            magiderror: "",
+            priceerror: "",
+            dateerror: "",
+            puberror: {},
+            conditionerror: {}
+        });
     },
 
     componentDidMount: function() {
@@ -145,34 +183,44 @@ const MagEdit = React.createClass({
 
     render() {
 
+        var magOptions = [];
+        this.props.magItems.map(function(option,key) {
+            magOptions.push(<MenuItem value={option.payload} key={key} primaryText={option.text}/>);
+        });
+
+        var conditionOptions = [];
+        this.props.magConditions.map(function(option,key) {
+            conditionOptions.push(<MenuItem value={option.payload} key={key} primaryText={option.text}/>);
+        });
+
         const ColumnOne = (
             <div>
                 <Fieldset title="Magazine ID">
                 <TextField
                     hintText="Add Custom MagID..."
                     fullWidth={true}
-                    ref="id"
+                    value={this.state.magdata.id}
+                    onChange={this.updateID}
                     errorText={this.state.magiderror}
                 />
                 </Fieldset>
                 <Fieldset title="Select Magazine Publisher">
                     <DropDownMenu
                         autoWidth={true}
-                        menuItems={this.props.magItems}
                         style={{width: '100%', marginLeft: '-20px'}}
-                        selectedIndex={this.state.selected_magid}
-                        ref="publisher"
-                        underlineStyle={this.state.puberror}
-                    />
+                        value={this.state.magdata.publisher_id}
+                        onChange={this.updateMagazine}
+                        underlineStyle={this.state.puberror}>
+                        {magOptions}
+                    </DropDownMenu>
                 </Fieldset>
 
-                <Fieldset title="Magazine Date">
-                    <DatePicker
-                        ref="datePicker"
-                        className="MagDatePicker"
+                <Fieldset title="Magazine Date (YYYY-MM-DD)">
+                    <TextField
+                        value={this.state.magdata.date}
+                        onChange={this.updateDate}
                         hintText="Select date..."
-                        mode="landscape"
-                        style={this.state.dateerror}
+                        fullWidth={true}
                     />
                 </Fieldset>
             </div>
@@ -184,6 +232,8 @@ const MagEdit = React.createClass({
                         hintText="Add Magazine Summary..."
                         fullWidth={true}
                         multiLine={true}
+                        value={this.state.magdata.summary}
+                        onChange={this.updateSummary}
                         ref="summary" />
                 </Fieldset>
 
@@ -191,18 +241,20 @@ const MagEdit = React.createClass({
                     <TextField
                         hintText="Add Price..."
                         fullWidth={true}
+                        value={this.state.magdata.price}
+                        onChange={this.updatePrice}
                         errorText={this.state.priceerror}
                         ref="price" />
                 </Fieldset>
 
                 <Fieldset title="Condition">
                     <DropDownMenu
-                        menuItems={this.props.magConditions}
                         style={{width:'100%', marginLeft: '-20px'}}
-                        selectedIndex={this.state.selected_condition}
-                        ref="condition"
-                        underlineStyle={this.state.conditionerror}
-                    />
+                        value={this.state.magdata.condition}
+                        onChange={this.updateCondition}
+                        underlineStyle={this.state.conditionerror} >
+                        {conditionOptions}
+                    </DropDownMenu>
                 </Fieldset>
             </div>
         );
@@ -224,7 +276,7 @@ const MagEdit = React.createClass({
                     columnTwo={(
                         <div>
                             <FlatButton onTouchTap={this.update} secondary={true} label="Add/Update" />
-                            <FlatButton onTouchTap={this.cancelFilter} secondary={true} label="Cancel" />
+                            <FlatButton onTouchTap={this.cancelEdit} secondary={true} label="Cancel" />
                         </div>
                     )}
                     columnTwoStyle={{textAlign: 'right'}}
