@@ -44678,9 +44678,11 @@ var Layout = _react2['default'].createClass({
     },
 
     componentDidMount: function componentDidMount() {
-        this.setState({
-            filter: _modelsStore2['default'].getStore('updatefilter')
-        });
+        if (_modelsStore2['default'].getStore('updatefilter')) {
+            this.setState({
+                filter: $.extend(this.state.filter, _modelsStore2['default'].getStore('updatefilter'))
+            });
+        }
     },
 
     updateSearch: function updateSearch(e) {
@@ -44946,7 +44948,6 @@ var Magazines = _react2['default'].createClass({
                     title: 'Contact Seller About this Magazine',
                     actions: actions,
                     modal: false,
-                    contentStyle: { width: '500px' },
                     open: this.state.dialogOpen,
                     onRequestClose: this.handleClose },
                 _react2['default'].createElement(
@@ -44955,7 +44956,7 @@ var Magazines = _react2['default'].createClass({
                     _react2['default'].createElement(
                         CardMedia,
                         { overlay: _react2['default'].createElement(CardTitle, { subtitle: this.state.dialog.summary }) },
-                        _react2['default'].createElement('div', { style: { height: '300px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + _modelsGlobal2['default'].imageMap[this.state.dialog.publisher_id] + ')' } })
+                        _react2['default'].createElement('div', { style: { height: '250px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + _modelsGlobal2['default'].imageMap[this.state.dialog.publisher_id] + ')' } })
                     ),
                     _react2['default'].createElement(
                         CardText,

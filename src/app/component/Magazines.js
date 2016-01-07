@@ -152,12 +152,11 @@ const Magazines = React.createClass({
                     title="Contact Seller About this Magazine"
                     actions={actions}
                     modal={false}
-                    contentStyle={{width:'500px'}}
                     open={this.state.dialogOpen}
                     onRequestClose={this.handleClose}>
                     <Card>
                         <CardMedia overlay={<CardTitle subtitle={this.state.dialog.summary}/>}>
-                            <div style={{height: '300px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + Global.imageMap[this.state.dialog.publisher_id] + ')'}}>
+                            <div style={{height: '250px', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: 'url(images/' + Global.imageMap[this.state.dialog.publisher_id] + ')'}}>
                             </div>
                         </CardMedia>
                         <CardText expandable={false} style={{height: '50px'}}>

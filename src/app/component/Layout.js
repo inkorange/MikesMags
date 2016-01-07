@@ -35,9 +35,11 @@ const Layout = React.createClass({
     },
 
     componentDidMount: function() {
-        this.setState({
-            filter: Store.getStore('updatefilter')
-        });
+        if(Store.getStore('updatefilter')) {
+            this.setState({
+                filter: $.extend(this.state.filter, Store.getStore('updatefilter'))
+            });
+        }
     },
 
     updateSearch: function(e) {
