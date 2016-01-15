@@ -14,6 +14,8 @@ var handleErrors = require('../util/handleErrors');
 var source       = require('vinyl-source-stream');
 var config       = require('../config').browserify;
 var babelify     = require('babelify');
+var streamify    = require('gulp-streamify');
+var uglify       = require('gulp-uglify');
 
 gulp.task('browserify', function(callback) {
 
@@ -44,6 +46,7 @@ gulp.task('browserify', function(callback) {
         // stream gulp compatible. Specifiy the
         // desired output filename here.
         .pipe(source(bundleConfig.outputName))
+        .pipe(streamify(uglify({compress: !config.debug})))
         // Specify the output destination
         .pipe(gulp.dest(bundleConfig.dest))
         .on('end', reportFinished);
