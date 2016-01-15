@@ -105,10 +105,30 @@ const Magazines = React.createClass({
     },
 
     sendEmail: function() {
-        console.log('will send contact emial...');
-        setTimeout(() => {
-            this.setState({dialogOpen: false});
-        }, 2000);
+        var apiURL = Global.apiEndpoint;
+        var username =  this.refs.username.getValue();
+        var useremail = this.refs.useremail.getValue();
+        var message = this.refs.message.getValue();
+        var payload = {
+            name: username,
+            email: useremail,
+            message: message
+        };
+        var _this = this;
+        $.when(
+            $.ajax({
+                url: apiURL + 'sendContact.php',
+                data: payload,
+                type: 'POST'
+            })
+        ).done(function(data) {
+            console.log('sent email action: ', data)
+            setTimeout(() => {
+                _this.setState({dialogOpen: false});
+            }, 2000);
+        }).fail(() => {console.log('failed email.')} );
+
+
     },
 
     render() {
@@ -169,15 +189,25 @@ const Magazines = React.createClass({
                         <Fieldset title="Sender's Name" style={{margin: '10px'}}>
                             <TextField
                                 hintText="Your name..."
+                                ref="username"
                                 fullWidth={true}
                                 errorText={this.state.sendernameerror}
                             />
                         </Fieldset>
                         <Fieldset title="Email Address" style={{margin: '10px'}}>
                             <TextField
+                                ref="useremail"
                                 hintText="Enter a valid email address..."
                                 fullWidth={true}
                                 errorText={this.state.senderemailerror}
+                            />
+                        </Fieldset>
+                        <Fieldset title="Message (optional)" style={{margin: '10px'}}>
+                            <TextField
+                                ref="message"
+                                hintText="Submit a message..."
+                                fullWidth={true}
+                                multiLine={true}
                             />
                         </Fieldset>
                     </Card>

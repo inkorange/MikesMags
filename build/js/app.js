@@ -44882,12 +44882,28 @@ var Magazines = _react2['default'].createClass({
     },
 
     sendEmail: function sendEmail() {
-        var _this2 = this;
-
-        console.log('will send contact emial...');
-        setTimeout(function () {
-            _this2.setState({ dialogOpen: false });
-        }, 2000);
+        var apiURL = _modelsGlobal2['default'].apiEndpoint;
+        var username = this.refs.username.getValue();
+        var useremail = this.refs.useremail.getValue();
+        var message = this.refs.message.getValue();
+        var payload = {
+            name: username,
+            email: useremail,
+            message: message
+        };
+        var _this = this;
+        $.when($.ajax({
+            url: apiURL + 'sendContact.php',
+            data: payload,
+            type: 'POST'
+        })).done(function (data) {
+            console.log('sent email action: ', data);
+            setTimeout(function () {
+                _this.setState({ dialogOpen: false });
+            }, 2000);
+        }).fail(function () {
+            console.log('failed email.');
+        });
     },
 
     render: function render() {
@@ -44916,12 +44932,12 @@ var Magazines = _react2['default'].createClass({
             'section',
             { className: 'magazineContent' },
             this.state.magdata.map(function (mdata, key) {
-                var _this3 = this;
+                var _this2 = this;
 
                 return _react2['default'].createElement(
                     Card,
                     { key: key, className: 'magCard', onClick: function () {
-                            return _this3._loadDetail(mdata);
+                            return _this2._loadDetail(mdata);
                         } },
                     _react2['default'].createElement(
                         CardMedia,
@@ -44979,6 +44995,7 @@ var Magazines = _react2['default'].createClass({
                         { title: 'Sender\'s Name', style: { margin: '10px' } },
                         _react2['default'].createElement(TextField, {
                             hintText: 'Your name...',
+                            ref: 'username',
                             fullWidth: true,
                             errorText: this.state.sendernameerror
                         })
@@ -44987,9 +45004,20 @@ var Magazines = _react2['default'].createClass({
                         Fieldset,
                         { title: 'Email Address', style: { margin: '10px' } },
                         _react2['default'].createElement(TextField, {
+                            ref: 'useremail',
                             hintText: 'Enter a valid email address...',
                             fullWidth: true,
                             errorText: this.state.senderemailerror
+                        })
+                    ),
+                    _react2['default'].createElement(
+                        Fieldset,
+                        { title: 'Message (optional)', style: { margin: '10px' } },
+                        _react2['default'].createElement(TextField, {
+                            ref: 'message',
+                            hintText: 'Submit a message...',
+                            fullWidth: true,
+                            multiLine: true
                         })
                     )
                 )
