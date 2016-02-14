@@ -50,7 +50,17 @@ const MagEdit = React.createClass({
     },
 
     deleteRecord: function() {
-
+        var apiURL = Global.apiEndpoint;
+        var that = this;
+        $.when(
+            $.post(apiURL + 'deleteRecord.php', {id: this.state.magdata.id})
+        ).done(function (data) {
+                Store.setStore('updated', {});
+                that.replaceState(that.getInitialState());
+            })
+            .fail(function () {
+                console.log('save failed.');
+            });
     },
 
     update: function() {
